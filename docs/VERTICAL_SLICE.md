@@ -1,5 +1,39 @@
 # VEILBOUND — First Playable Vertical Slice
 
+## Current Implementation Status
+
+**Current playable branch:** `feature/vertical-slice-foundation`  
+**Current playable version:** `v0.1.3-resonance`  
+**Last updated:** 2026-08-29
+
+Implemented and awaiting owner-device acceptance:
+
+- [x] zero-build `index.html` launch
+- [x] Greyhaven prototype
+- [x] Hollow March Field 1 and Field 2
+- [x] four-direction movement and collision
+- [x] Shardblade attack, health, damage, knockback, and i-frames
+- [x] Save V1 local persistence and room-transition autosave
+- [x] autosave on page hide / app background transition
+- [x] defeated-enemy persistence
+- [x] Forgotten Relic Chamber
+- [x] Axiom awakening sequence
+- [x] Resonance ability grant persistence
+- [x] Resonance v1 input on touch, keyboard, and controller
+- [x] Resonance expanding pulse
+- [x] authored Resonance nodes with persistent discovery flags
+- [x] first hidden Vein route clue in Hollow March Field 2
+- [x] portrait cinematic flash clipping so letterbox remains void-black
+
+Still required before Phase 1 exits:
+
+- [ ] owner-device acceptance of `v0.1.3-resonance`
+- [ ] second ranged/area-control enemy fully authored and accepted
+- [ ] Greyhaven NPC/dialogue interaction layer
+- [ ] first save/rest point
+- [ ] Sunken Archive entrance
+- [ ] reusable switch/door/push puzzle primitives
+
 ## Objective
 
 Prove the game's core identity and architecture with a compact, high-quality sequence before expanding production.
@@ -84,6 +118,23 @@ Exact physical layout may change after playtesting. The functional sequence shou
 - Tether object interaction
 - Tether combat use
 
+### Resonance v1 contract
+
+Resonance is a short Axiom pulse, not a permanent detective-vision overlay.
+
+The first implementation must:
+- use a dedicated input separate from Shardblade attack
+- emit a visible expanding pulse
+- react only to authored compatible ancient objects
+- persist discovered mechanisms/routes through Save V1 flags
+- work on touch, keyboard, and controller
+- reveal useful information without solving unrelated puzzles automatically
+
+Current mappings:
+- Touch: dedicated `◇` button
+- Keyboard: `E`, `R`, or Shift
+- Controller: secondary face button / B-style action
+
 ### Puzzle
 Use the doctrine: Teach -> Test -> Combine -> Twist -> Master.
 
@@ -117,6 +168,7 @@ The Archivist must include:
 - basic cinematic camera language
 - location title cards or equivalent introduction treatment
 - musical identities or production placeholders with defined intent
+- portrait letterbox regions remain intentionally dark and are never contaminated by gameplay/cinematic fullscreen effects
 
 ### Persistence
 Initial save schema should support:
@@ -130,6 +182,8 @@ Initial save schema should support:
 - defeated boss flags
 - settings
 
+Current Save V1 additionally persists authored defeated-enemy IDs and Resonance discovery flags. Page hide/background transitions should request an autosave in addition to room-transition autosaves.
+
 Do not overbuild cloud services during this slice. Keep the persistence contract clean enough to support cloud synchronization later.
 
 ## Acceptance Criteria
@@ -141,10 +195,12 @@ It is ready for expansion only when:
 - room transitions are stable
 - save/reload preserves meaningful world state
 - no required puzzle can soft-lock progression
+- Resonance is understandable without becoming a generic scanning overlay
 - Tether is understandable without excessive text instruction
 - the Archivist encounter is readable and recoverable
 - viewed cinematic sequences do not become irritating on retry
 - the game remains usable in phone and tablet layouts
+- portrait presentation keeps non-gameplay letterbox regions dark and intentional
 - performance remains stable during normal combat and boss effects
 - the final reveal lands clearly without requiring lore exposition
 

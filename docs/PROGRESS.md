@@ -18,10 +18,7 @@ Do not mark work complete here until it exists in the active development branch.
 ### ORACLE / FORGE
 - Initialized `OuterHeavenX/VEILBOUND`.
 - Established `feature/vertical-slice-foundation`.
-- Added studio agent handbook.
-- Added canon foundation.
-- Added architecture foundation.
-- Added first vertical-slice definition.
+- Added studio agent handbook, canon, architecture, and vertical-slice definition.
 - Preserved zero-build `index.html` launch requirement.
 
 ---
@@ -30,11 +27,8 @@ Do not mark work complete here until it exists in the active development branch.
 
 ### FORGE / WRAITH / ARCHITECT
 - Added responsive Canvas 2D runtime.
-- Added Greyhaven prototype.
-- Added Hollow March Field 1 and Field 2.
-- Added four-direction movement and facing.
-- Added authored collision.
-- Added room transitions.
+- Added Greyhaven prototype and Hollow March Fields 1–2.
+- Added four-direction movement/facing, authored collision, and room transitions.
 - Added keyboard, touch joystick, and controller movement.
 - Added prototype Kael silhouette with mask, Shardblade, and Axiom glow.
 
@@ -47,76 +41,73 @@ Do not mark work complete here until it exists in the active development branch.
 ## 2026-08-29 — v0.1.2 Combat
 
 ### FORGE
-- Added Shardblade attack input.
-- Added directional melee overlap.
-- Added enemy health and defeat state.
-- Added player health, damage, knockback, and invulnerability frames.
-- Added bounded particles and hit flashes.
-- Added Save Schema V1 runtime integration.
-- Added room-transition autosave.
-- Added stable enemy IDs and defeated-enemy persistence.
+- Added Shardblade attack, directional melee overlap, enemy health/defeat, player damage, knockback, i-frames, particles, and hit flashes.
+- Added Save Schema V1 runtime integration, transition autosave, stable enemy IDs, and defeated-enemy persistence.
 
 ### SCRIBE / SPECTER / WRAITH
-- Added Forgotten Relic Chamber.
-- Added first Axiom awakening cinematic/dialogue pass.
-- Preserved canon beats `RESONANCE DETECTED` and `BOUND USER CONFIRMED`.
-- Added persistent Axiom awakening flag.
-- Granted and persisted Resonance ability.
+- Added Forgotten Relic Chamber and first Axiom awakening sequence.
+- Preserved `RESONANCE DETECTED` and `BOUND USER CONFIRMED`.
+- Added persistent Axiom awakening flag and Resonance grant.
 
 ### Owner-device result
-- iPhone reached Forgotten Relic Chamber successfully.
-- Save V1 HUD state visible.
-- Axiom chamber rendered.
-- Important visual defect found: cyan cinematic flash contaminated portrait letterbox areas above and below the 16:9 world viewport.
-- Result: iPhone acceptance remained partial, not complete.
+- iPhone reached Forgotten Relic Chamber.
+- Visual defect found: cyan cinematic flash contaminated portrait letterbox areas.
 
 ---
 
 ## 2026-08-29 — v0.1.3 Resonance
 
 ### FORGE — portrait rendering correction
-- Full physical canvas is now cleared to void black every frame.
-- Gameplay remains contained inside the authored 960×540 world viewport.
-- Cinematic cyan flash is clipped to the scaled gameplay viewport.
-- Portrait letterbox regions should remain intentionally void-black during Axiom flashes.
+- Full physical canvas clears to void black every frame.
+- Gameplay remains inside the authored 960×540 world viewport.
+- Cinematic cyan flash is clipped to the gameplay viewport.
 
 ### FORGE / ARCHITECT — Resonance v1
 - Added dedicated Resonance action separate from Shardblade attack.
-- Added touch `◇` Axiom button.
-- Added keyboard Resonance mapping: `E`, `R`, or Shift.
-- Added controller secondary-face-button Resonance mapping.
-- Added expanding Resonance pulse.
-- Added cooldown behavior.
-- Added authored per-room Resonance nodes.
-- Added persistent discovery flags through Save V1 world flags.
-- Added first Hollow March Field 2 buried Vein route discovery.
-- Added first Forgotten Relic Chamber core-memory response.
-- Resonance remains selective rather than becoming a generic detective-vision overlay.
+- Added touch `◇` button, keyboard `E`/`R`/Shift, and controller secondary-face-button mapping.
+- Added expanding pulse, cooldown, authored room nodes, and persistent discovery flags.
+- Added first Hollow March Field 2 buried Vein route discovery and chamber core-memory response.
 
 ### FORGE — persistence hardening
-- Added autosave request on `pagehide`.
-- Added autosave request when the document becomes hidden/backgrounded.
-- Existing room-transition autosave remains in place.
+- Added autosave on `pagehide` and when the document becomes hidden/backgrounded.
 
-### Documentation
-- Updated `docs/VERTICAL_SLICE.md` for v0.1.3.
-- Added this progress log.
+### Owner-device result
+- [x] iPhone portrait cyan contamination confirmed fixed by owner screenshot.
+- [x] Forgotten Relic Chamber renders correctly in landscape.
+- [!] Progression blocker discovered: an existing dormant Save V1 could reload directly inside `awakeningRuin`. Because the awakening was originally scheduled by the room-transition event, a reload inside the chamber could leave Kael standing on the Axiom core while the HUD remained `AXIOM: DORMANT`.
 
-### Acceptance required next
-- [ ] Confirm portrait cyan contamination is gone on iPhone.
-- [ ] Refresh/reopen while standing in the Forgotten Relic Chamber and confirm room/position persists.
-- [ ] Confirm Axiom awakening does not replay after successful save.
-- [ ] Confirm `◇` Resonance button appears after awakening.
-- [ ] Use Resonance in Hollow March Field 2 and confirm buried Vein route becomes visible.
-- [ ] Refresh after discovery and confirm the revealed route remains visible.
-- [ ] Confirm Shardblade and Resonance can be used independently on touch.
+---
+
+## 2026-08-29 — v0.1.3 Awakening Save-Recovery Hotfix
+
+### FORGE
+- Added targeted Save V1 normalization recovery for the exact incomplete state `roomId=awakeningRuin` + no `story.axiomAwakened` flag + no Resonance ability.
+- Affected saves are safely moved to the Hollow March Field 2 chamber threshold at `(895, 270)` on load.
+- Re-entering the chamber then uses the normal authored room transition, which schedules the Axiom awakening sequence.
+- Successfully awakened saves are never moved or altered by this recovery rule.
+- Recovery is annotated in save metadata as `awakeningRuin.dormant.v0.1.3` for later migration/audit work.
+
+### Why this approach
+- It repairs already-created owner-device saves without deleting progress or granting the story ability silently.
+- It preserves the actual SPECTER awakening sequence instead of skipping directly to an unlocked ability.
+- It is intentionally narrow and can be removed/replaced when the runtime gains a general trigger-state restoration system.
+
+### Acceptance required now
+- [ ] Reload the current dormant chamber save.
+- [ ] Confirm Kael resumes immediately outside the chamber in Hollow March Field 2.
+- [ ] Walk east/re-enter the Forgotten Relic Chamber.
+- [ ] Confirm the awakening sequence starts automatically after entry.
+- [ ] Complete the dialogue and confirm HUD becomes `AXIOM: RESONANCE ◇`.
+- [ ] Confirm the separate `◇` touch button appears.
+- [ ] Refresh/reopen and confirm the awakened state persists without replaying the sequence.
+- [ ] Use Resonance in Hollow March Field 2 and confirm buried Vein route discovery persists.
 - [ ] Repeat equivalent acceptance on iPad later.
 
 ---
 
 ## Current immediate production order
 
-1. Owner-device acceptance of `v0.1.3-resonance`.
+1. Owner-device acceptance of the v0.1.3 awakening recovery + Resonance flow.
 2. Finish second ranged/area-control enemy behavior and telegraphing.
 3. Build Greyhaven interaction/NPC dialogue layer.
 4. Add first save/rest point.

@@ -71,18 +71,20 @@ Do not mark work complete here until it exists in the active development branch.
 ### FORGE — persistence hardening
 - Added autosave on `pagehide` and when the document becomes hidden/backgrounded.
 
-### Owner-device result
-- [x] iPhone portrait cyan contamination confirmed fixed by owner screenshot.
+### iPhone owner-device acceptance — PASS
+- [x] Portrait cyan contamination is fixed.
 - [x] Forgotten Relic Chamber renders correctly in landscape.
-- [x] Axiom awakening sequence successfully completed on iPhone after save-recovery hotfix.
-- [x] HUD visibly changes to `AXIOM: RESONANCE ◇`.
-- [x] Dedicated `◇` Resonance touch control visibly appears and functions.
-- [x] Forgotten Relic Chamber Resonance core responds with `CORE MEMORY FRAGMENT FOUND.` dialogue.
-- [x] Hollow March Field 2 buried Vein route is visibly revealed by Resonance as a cyan route trace.
-- [ ] Refresh/reopen after awakening and confirm awakened state persists without replaying the sequence.
-- [ ] Refresh/reopen after Field 2 route discovery and confirm the route remains revealed.
-- [ ] Confirm Shardblade and Resonance remain independently usable after reload.
+- [x] Axiom awakening sequence completed after the targeted save-recovery hotfix.
+- [x] HUD changes to `AXIOM: RESONANCE ◇`.
+- [x] Dedicated `◇` Resonance touch control appears and functions.
+- [x] Forgotten Relic Chamber core responds with `CORE MEMORY FRAGMENT FOUND.`.
+- [x] Hollow March Field 2 buried Vein route is visibly revealed by Resonance.
+- [x] Refresh/reopen preserves the awakened Axiom state and player progress.
+- [x] Refresh/reopen preserves Resonance discoveries, including the Field 2 route.
+- [x] Shardblade and Resonance remain available as separate controls after persistence restore.
 - [ ] Repeat equivalent acceptance on iPad later.
+
+**Result:** `v0.1.3-resonance` is accepted on iPhone. Save V1 persistence, Axiom awakening, Resonance acquisition, authored Resonance discovery, and portrait/landscape presentation are proven on the owner device.
 
 ---
 
@@ -101,20 +103,21 @@ Do not mark work complete here until it exists in the active development branch.
 - It is intentionally narrow and can be removed/replaced when the runtime gains a general trigger-state restoration system.
 
 ### Owner-device result
-- [x] Recovery path succeeded: owner progressed from dormant chamber state into the authored awakening.
-- [x] Resonance was granted rather than silently injected by migration.
-- [x] Post-awakening chamber core interaction and Field 2 Resonance discovery both work on iPhone.
+- [x] Recovery path succeeded.
+- [x] Resonance was granted through the authored sequence rather than silently injected by migration.
+- [x] Post-awakening chamber core interaction and Field 2 Resonance discovery work on iPhone.
+- [x] Subsequent refresh preserves progress correctly.
 
 ---
 
 ## Current immediate production order
 
-1. Finish the remaining reload/persistence checks for v0.1.3 on iPhone.
-2. Finish second ranged/area-control enemy behavior and telegraphing.
-3. Build Greyhaven interaction/NPC dialogue layer.
-4. Add first save/rest point.
-5. Build Sunken Archive entrance revealed through Resonance progression.
-6. Build reusable switch, persistent door, and push/manipulation primitives.
-7. Build Tether acquisition and teaching sequence.
-8. Build Archivist boss framework.
-9. Complete vertical-slice presentation and device acceptance pass.
+1. Build and tune the second ranged/area-control enemy with readable telegraphing.
+2. Build Greyhaven interaction/NPC dialogue layer.
+3. Add first save/rest point.
+4. Build Sunken Archive entrance revealed through Resonance progression.
+5. Build reusable switch, persistent door, and push/manipulation primitives.
+6. Build Tether acquisition and teaching sequence.
+7. Build Archivist boss framework.
+8. Complete vertical-slice presentation and device acceptance pass.
+9. Repeat equivalent acceptance on iPad before the vertical-slice release gate.

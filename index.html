@@ -20,13 +20,25 @@
     <canvas id="game-canvas" width="1280" height="720" tabindex="0" aria-label="VEILBOUND game canvas"></canvas>
 
     <div id="hud" class="hud" hidden>
-      <div class="hud-brand">VEILBOUND <span class="hud-version">v0.1.1-playable</span></div>
-      <div id="hud-room">GREYHAVEN</div>
+      <div>
+        <div class="hud-brand">VEILBOUND <span class="hud-version">v0.1.2-combat</span></div>
+        <div id="hud-health" class="hud-health" aria-label="Health">◆ ◆ ◆ ◆ ◆ ◆</div>
+      </div>
+      <div class="hud-right">
+        <div id="hud-room">GREYHAVEN</div>
+        <div id="save-status" class="save-status">SAVE V1 READY</div>
+      </div>
+    </div>
+
+    <div id="dialogue" class="dialogue" hidden aria-live="polite">
+      <div id="dialogue-speaker" class="dialogue-speaker"></div>
+      <div id="dialogue-text" class="dialogue-text"></div>
+      <div class="dialogue-hint">TAP / A / SPACE</div>
     </div>
 
     <div id="touch-controls" class="touch-controls" hidden aria-label="Touch controls">
       <div id="touch-stick" class="touch-stick" aria-hidden="true"><div id="touch-knob" class="touch-knob"></div></div>
-      <button id="action-button" class="action-button" type="button" aria-label="Interact or use Axiom">A</button>
+      <button id="action-button" class="action-button" type="button" aria-label="Attack with Shardblade">⚔</button>
     </div>
 
     <div id="fatal-error" class="fatal-error" hidden role="alert">
@@ -35,7 +47,8 @@
     </div>
   </main>
 
-  <!-- Deliberately classic-script based for true zero-build, file:// friendly startup. -->
+  <!-- Classic scripts preserve true zero-build, file:// friendly startup. -->
+  <script src="./src/core/SaveManager.js"></script>
   <script src="./src/main.js"></script>
 </body>
 </html>

@@ -74,7 +74,15 @@ Do not mark work complete here until it exists in the active development branch.
 ### Owner-device result
 - [x] iPhone portrait cyan contamination confirmed fixed by owner screenshot.
 - [x] Forgotten Relic Chamber renders correctly in landscape.
-- [!] Progression blocker discovered: an existing dormant Save V1 could reload directly inside `awakeningRuin`. Because the awakening was originally scheduled by the room-transition event, a reload inside the chamber could leave Kael standing on the Axiom core while the HUD remained `AXIOM: DORMANT`.
+- [x] Axiom awakening sequence successfully completed on iPhone after save-recovery hotfix.
+- [x] HUD visibly changes to `AXIOM: RESONANCE ◇`.
+- [x] Dedicated `◇` Resonance touch control visibly appears and functions.
+- [x] Forgotten Relic Chamber Resonance core responds with `CORE MEMORY FRAGMENT FOUND.` dialogue.
+- [x] Hollow March Field 2 buried Vein route is visibly revealed by Resonance as a cyan route trace.
+- [ ] Refresh/reopen after awakening and confirm awakened state persists without replaying the sequence.
+- [ ] Refresh/reopen after Field 2 route discovery and confirm the route remains revealed.
+- [ ] Confirm Shardblade and Resonance remain independently usable after reload.
+- [ ] Repeat equivalent acceptance on iPad later.
 
 ---
 
@@ -92,22 +100,16 @@ Do not mark work complete here until it exists in the active development branch.
 - It preserves the actual SPECTER awakening sequence instead of skipping directly to an unlocked ability.
 - It is intentionally narrow and can be removed/replaced when the runtime gains a general trigger-state restoration system.
 
-### Acceptance required now
-- [ ] Reload the current dormant chamber save.
-- [ ] Confirm Kael resumes immediately outside the chamber in Hollow March Field 2.
-- [ ] Walk east/re-enter the Forgotten Relic Chamber.
-- [ ] Confirm the awakening sequence starts automatically after entry.
-- [ ] Complete the dialogue and confirm HUD becomes `AXIOM: RESONANCE ◇`.
-- [ ] Confirm the separate `◇` touch button appears.
-- [ ] Refresh/reopen and confirm the awakened state persists without replaying the sequence.
-- [ ] Use Resonance in Hollow March Field 2 and confirm buried Vein route discovery persists.
-- [ ] Repeat equivalent acceptance on iPad later.
+### Owner-device result
+- [x] Recovery path succeeded: owner progressed from dormant chamber state into the authored awakening.
+- [x] Resonance was granted rather than silently injected by migration.
+- [x] Post-awakening chamber core interaction and Field 2 Resonance discovery both work on iPhone.
 
 ---
 
 ## Current immediate production order
 
-1. Owner-device acceptance of the v0.1.3 awakening recovery + Resonance flow.
+1. Finish the remaining reload/persistence checks for v0.1.3 on iPhone.
 2. Finish second ranged/area-control enemy behavior and telegraphing.
 3. Build Greyhaven interaction/NPC dialogue layer.
 4. Add first save/rest point.

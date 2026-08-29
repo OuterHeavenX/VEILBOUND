@@ -2,117 +2,62 @@
 
 This is the chronological implementation log for meaningful production milestones.
 
-Use this file together with:
-- `ROADMAP.md` for planned direction and phase gates
-- `docs/VERTICAL_SLICE.md` for the first complete playable slice
-- `docs/CANON.md` for story/world truth
-- `docs/ARCHITECTURE.md` for technical contracts
-- `AGENTS.md` for ownership
-
-Do not mark work complete here until it exists in the active development branch.
+Use this file together with `ROADMAP.md`, `docs/VERTICAL_SLICE.md`, `docs/CANON.md`, `docs/ARCHITECTURE.md`, `docs/COMBAT.md`, and `AGENTS.md`. Do not mark owner-device acceptance complete until it has actually been tested.
 
 ---
 
 ## 2026-08-29 — v0.1.0 Foundation
-
-### ORACLE / FORGE
-- Initialized `OuterHeavenX/VEILBOUND`.
-- Established `feature/vertical-slice-foundation`.
-- Added studio agent handbook, canon, architecture, and vertical-slice definition.
-- Preserved zero-build `index.html` launch requirement.
-
----
+- Initialized repository and `feature/vertical-slice-foundation`.
+- Added agent handbook, canon, architecture, vertical-slice definition, and zero-build launch contract.
 
 ## 2026-08-29 — v0.1.1 Playable
-
-### FORGE / WRAITH / ARCHITECT
-- Added responsive Canvas 2D runtime.
-- Added Greyhaven prototype and Hollow March Fields 1–2.
-- Added four-direction movement/facing, authored collision, and room transitions.
-- Added keyboard, touch joystick, and controller movement.
-- Added prototype Kael silhouette with mask, Shardblade, and Axiom glow.
-
-### Owner-device result
-- iPhone static-host launch confirmed.
-- Touch movement visibly working.
-
----
+- Added responsive Canvas 2D runtime, Greyhaven, Hollow March Fields 1–2, movement, collision, transitions, keyboard/touch/controller input, and prototype Kael.
+- iPhone static-host launch and touch movement confirmed.
 
 ## 2026-08-29 — v0.1.2 Combat
+- Added Shardblade melee, enemy/player damage, knockback, i-frames, hit feedback, Save V1, enemy persistence, Forgotten Relic Chamber, and Axiom awakening sequence.
+- Owner device exposed portrait cinematic-flash contamination and dormant chamber save-state issue.
 
-### FORGE
-- Added Shardblade attack, directional melee overlap, enemy health/defeat, player damage, knockback, i-frames, particles, and hit flashes.
-- Added Save Schema V1 runtime integration, transition autosave, stable enemy IDs, and defeated-enemy persistence.
-
-### SCRIBE / SPECTER / WRAITH
-- Added Forgotten Relic Chamber and first Axiom awakening sequence.
-- Preserved `RESONANCE DETECTED` and `BOUND USER CONFIRMED`.
-- Added persistent Axiom awakening flag and Resonance grant.
-
-### Owner-device result
-- iPhone reached Forgotten Relic Chamber.
-- Visual defect found: cyan cinematic flash contaminated portrait letterbox areas.
-
----
-
-## 2026-08-29 — v0.1.3 Resonance
-
-### FORGE — portrait rendering correction
-- Full physical canvas clears to void black every frame.
-- Gameplay remains inside the authored 960×540 world viewport.
-- Cinematic cyan flash is clipped to the gameplay viewport.
-
-### FORGE / ARCHITECT — Resonance v1
-- Added dedicated Resonance action separate from Shardblade attack.
-- Added touch `◇` button, keyboard `E`/`R`/Shift, and controller secondary-face-button mapping.
-- Added expanding pulse, cooldown, authored room nodes, and persistent discovery flags.
-- Added first Hollow March Field 2 buried Vein route discovery and chamber core-memory response.
-
-### FORGE — persistence hardening
-- Added autosave on `pagehide` and when the document becomes hidden/backgrounded.
-
-### iPhone owner-device acceptance — PASS
-- [x] Portrait cyan contamination is fixed.
-- [x] Forgotten Relic Chamber renders correctly in landscape.
-- [x] Axiom awakening sequence completed after the targeted save-recovery hotfix.
-- [x] HUD changes to `AXIOM: RESONANCE ◇`.
-- [x] Dedicated `◇` Resonance touch control appears and functions.
-- [x] Forgotten Relic Chamber core responds with `CORE MEMORY FRAGMENT FOUND.`.
-- [x] Hollow March Field 2 buried Vein route is visibly revealed by Resonance.
-- [x] Refresh/reopen preserves the awakened Axiom state and player progress.
-- [x] Refresh/reopen preserves Resonance discoveries, including the Field 2 route.
-- [x] Shardblade and Resonance remain available as separate controls after persistence restore.
+## 2026-08-29 — v0.1.3 Resonance — iPhone ACCEPTED
+- Fixed portrait letterbox rendering.
+- Added dedicated Resonance input/pulse, authored Resonance nodes, persistent discoveries, and page-hide/background autosave.
+- Added targeted recovery for incomplete dormant-chamber saves.
+- [x] Axiom awakening completes on iPhone.
+- [x] Resonance unlock persists after refresh/reopen.
+- [x] Chamber core memory response works.
+- [x] Hollow March Field 2 buried Vein route discovery works and persists.
+- [x] Shardblade and Resonance remain separate controls.
 - [ ] Repeat equivalent acceptance on iPad later.
 
-**Result:** `v0.1.3-resonance` is accepted on iPhone. Save V1 persistence, Axiom awakening, Resonance acquisition, authored Resonance discovery, and portrait/landscape presentation are proven on the owner device.
-
 ---
 
-## 2026-08-29 — v0.1.3 Awakening Save-Recovery Hotfix
+## 2026-08-29 — v0.1.4 Vein Sentry
 
-### FORGE
-- Added targeted Save V1 normalization recovery for the exact incomplete state `roomId=awakeningRuin` + no `story.axiomAwakened` flag + no Resonance ability.
-- Affected saves are safely moved to the Hollow March Field 2 chamber threshold at `(895, 270)` on load.
-- Re-entering the chamber then uses the normal authored room transition, which schedules the Axiom awakening sequence.
-- Successfully awakened saves are never moved or altered by this recovery rule.
-- Recovery is annotated in save metadata as `awakeningRuin.dormant.v0.1.3` for later migration/audit work.
+### FORGE / ARCHITECT — ranged combat implementation
+- Added data-driven EnemyRegistry consumption to the runtime.
+- Added a live Vein Sentry state machine: Observe → Position → Telegraph → Fire → Recover.
+- Added phone-readable amber charge ring and dashed aim-line telegraph.
+- Added cyan energy projectiles with lifetime, wall collision, player collision, damage, i-frames, and knockback.
+- Projectiles are cleared on room transitions and player recovery so attacks cannot leak across rooms.
+- Added Resonance combat interaction: a Resonance pulse that reaches a Sentry during Telegraph interrupts the shot and enters a temporary Disrupted state.
+- Added visible cyan disruption ring to communicate the successful interrupt window.
+- Preserved Shardblade as the damage/finisher tool; Resonance disrupts rather than dealing direct enemy damage.
+- Kept the authored mixed encounter in Hollow March Field 2: one March Husk plus one Vein Sentry.
 
-### Why this approach
-- It repairs already-created owner-device saves without deleting progress or granting the story ability silently.
-- It preserves the actual SPECTER awakening sequence instead of skipping directly to an unlocked ability.
-- It is intentionally narrow and can be removed/replaced when the runtime gains a general trigger-state restoration system.
-
-### Owner-device result
-- [x] Recovery path succeeded.
-- [x] Resonance was granted through the authored sequence rather than silently injected by migration.
-- [x] Post-awakening chamber core interaction and Field 2 Resonance discovery work on iPhone.
-- [x] Subsequent refresh preserves progress correctly.
+### Owner-device acceptance — PENDING
+- [ ] HUD displays `v0.1.4-sentry` after refresh.
+- [ ] Vein Sentry visibly cycles into an amber telegraph before firing.
+- [ ] Projectile is readable and dodgeable on iPhone landscape.
+- [ ] Projectile contact removes one health diamond and applies knockback without repeated instant damage.
+- [ ] Resonance during the amber telegraph cancels the shot and visibly disrupts the Sentry.
+- [ ] Kael can close in and defeat the disrupted Sentry with the Shardblade.
+- [ ] Defeated Sentry remains defeated after room transition/refresh because its stable enemy ID persists.
+- [ ] No regression to Axiom/Resonance save state or portrait letterboxing.
 
 ---
 
 ## Current immediate production order
-
-1. Build and tune the second ranged/area-control enemy with readable telegraphing.
+1. Complete v0.1.4 Vein Sentry iPhone acceptance.
 2. Build Greyhaven interaction/NPC dialogue layer.
 3. Add first save/rest point.
 4. Build Sunken Archive entrance revealed through Resonance progression.

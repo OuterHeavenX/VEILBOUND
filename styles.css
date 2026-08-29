@@ -5,6 +5,7 @@
   --ink: #e8edf0;
   --muted: #8d9aa3;
   --axiom: #7fe7e1;
+  --danger: #d96f6f;
 }
 
 * { box-sizing: border-box; }
@@ -88,6 +89,45 @@ button { font: inherit; }
 }
 
 .hud-version { color: var(--muted); margin-left: 0.55rem; }
+.hud-health { margin-top: 7px; color: var(--danger); letter-spacing: 0.18em; }
+.hud-right { text-align: right; }
+.save-status { margin-top: 7px; color: var(--muted); font-size: 0.78em; opacity: 0.8; }
+
+.dialogue {
+  position: absolute;
+  left: max(18px, env(safe-area-inset-left));
+  right: max(18px, env(safe-area-inset-right));
+  bottom: max(118px, calc(env(safe-area-inset-bottom) + 102px));
+  z-index: 7;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 16px 18px 14px;
+  border: 1px solid rgba(127, 231, 225, 0.36);
+  background: rgba(5, 10, 12, 0.92);
+  box-shadow: 0 14px 44px rgba(0,0,0,0.42), inset 0 0 30px rgba(127,231,225,0.025);
+  pointer-events: auto;
+}
+
+.dialogue-speaker {
+  color: var(--axiom);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  margin-bottom: 7px;
+}
+
+.dialogue-text {
+  color: var(--ink);
+  font-size: clamp(0.82rem, 2.3vw, 1rem);
+  line-height: 1.55;
+}
+
+.dialogue-hint {
+  margin-top: 10px;
+  color: var(--muted);
+  text-align: right;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+}
 
 .touch-controls {
   position: absolute;
@@ -137,6 +177,7 @@ button { font: inherit; }
   box-shadow: 0 0 22px rgba(127, 231, 225, 0.1), inset 0 0 20px rgba(127, 231, 225, 0.05);
   pointer-events: auto;
   touch-action: manipulation;
+  font-size: 1.15rem;
 }
 
 .action-button:active { transform: scale(0.94); }
@@ -147,11 +188,13 @@ button { font: inherit; }
 
 @media (pointer: fine) {
   .touch-controls { display: none !important; }
+  .dialogue { bottom: 28px; }
 }
 
 @media (max-width: 520px) {
   .touch-stick { width: 104px; height: 104px; }
   .action-button { width: 68px; height: 68px; }
+  .dialogue { bottom: max(126px, calc(env(safe-area-inset-bottom) + 108px)); }
 }
 
 @keyframes pulse {

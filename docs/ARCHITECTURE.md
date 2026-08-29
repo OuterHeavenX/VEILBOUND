@@ -14,6 +14,24 @@ This document defines the intended architecture before implementation expands.
 - Strong debug visibility for collisions, room state, transitions, and performance.
 - Content code should not need to patch engine internals.
 
+## Zero-Setup Launch Contract
+
+`index.html` is the canonical launch point for the project.
+
+Requirements:
+- Opening `index.html` directly must boot the game without a package install or build step.
+- Static hosting on GitHub Pages, Cloudflare Pages, or equivalent must work from the repository root.
+- The launch shell must not depend on a local dev server for basic startup.
+- The initial runtime uses classic browser scripts and Canvas 2D so `file://` startup remains viable while the modular engine is being established.
+- Any future dependency or module-system change must preserve an out-of-box launch path, either by committing browser-ready output or by maintaining a zero-build runtime entry.
+- Startup failures must present a visible user-facing error instead of leaving a blank screen.
+- Mobile safe areas and responsive canvas sizing are required from the first playable build.
+
+The current foundation boot files are:
+- `index.html`
+- `styles.css`
+- `src/main.js`
+
 ## Proposed Source Layout
 
 ```text
@@ -85,7 +103,7 @@ src/
     cutscenes/
 ```
 
-The exact implementation language/library is not yet canonized by this document. The module boundaries are the important contract.
+The module boundaries are the important contract. Any future library adoption must preserve the zero-setup launch contract above.
 
 ## Runtime Ownership
 

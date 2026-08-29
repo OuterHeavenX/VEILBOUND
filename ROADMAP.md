@@ -341,38 +341,40 @@ Owners: WRAITH + SCRIBE + ARCHITECT + FORGE
 
 ### Core exterior
 
-- [~] Main exterior prototype.
-- [ ] Wayfarer's Rest.
-- [ ] Relic Workshop.
-- [ ] Market Row.
-- [ ] Old Lift Station.
-- [ ] Archivist's House.
-- [ ] Bell Tower landmark.
+Exteriors only. No landmark has a walkable interior yet, and none is required by this item.
+
+- [x] Main exterior prototype.
+- [x] Wayfarer's Rest.
+- [x] Relic Workshop.
+- [x] Market Row.
+- [x] Old Lift Station.
+- [x] Archivist's House.
+- [x] Bell Tower landmark.
 
 ### NPC layer
 
-- [ ] Innkeeper.
-- [ ] Workshop NPC.
-- [ ] Archivist/researcher NPC.
-- [ ] ordinary resident.
-- [ ] optional side-story NPC.
+- [x] Innkeeper. (MARETH)
+- [x] Workshop NPC. (TOLL)
+- [x] Archivist/researcher NPC. (ISEN)
+- [x] ordinary resident. (BRAY)
+- [x] optional side-story NPC. (WREN)
 
 ### Gameplay purpose
 
-- [ ] establish Kael as relic hunter.
-- [ ] establish ancient technology as common but poorly understood.
-- [ ] give concrete reason to leave town.
-- [ ] show one inactive mechanism for future backtracking.
-- [ ] first save/rest location.
-- [ ] one future upgrade/service hook.
+- [x] establish Kael as relic hunter.
+- [x] establish ancient technology as common but poorly understood.
+- [x] give concrete reason to leave town.
+- [x] show one inactive mechanism for future backtracking.
+- [x] first save/rest location.
+- [x] one future upgrade/service hook.
 
 ### Future persistent evolution flags
 
-- [ ] Greyhaven reaction to awakened Axiom.
-- [ ] Greyhaven reaction to Archive opening.
-- [ ] Greyhaven reaction to Archivist defeat.
-- [ ] service unlocks.
-- [ ] NPC quest-stage flags.
+- [x] Greyhaven reaction to awakened Axiom.
+- [~] Greyhaven reaction to Archive opening. Authored; `story.archiveOpened` is not set by any content yet.
+- [~] Greyhaven reaction to Archivist defeat. Authored; `boss.archivist.defeated` is not set by any content yet.
+- [~] service unlocks. Repair offer and its flag exist; no service is purchasable yet.
+- [x] NPC quest-stage flags.
 
 ## 1.3 Hollow March Field 1
 
@@ -1059,7 +1061,7 @@ Immediate:
 - [x] Resonance v1.
 - [x] portrait flash clipping.
 - [ ] second enemy/projectile or area-control foundation.
-- [ ] NPC interaction cleanup.
+- [x] NPC interaction cleanup.
 - [x] debug overlay.
 - [ ] event bus.
 - [ ] dungeon object primitives.

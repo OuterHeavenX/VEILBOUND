@@ -148,6 +148,25 @@ Owns acquired abilities and common Axiom rules. Individual abilities implement t
 ### CutsceneSystem
 Runs data/script-driven cinematic sequences while preserving clear control over player input, camera, dialogue, animation, sound/music cues, and skip behavior.
 
+### InteractionSystem
+
+Resolves the player's current interactable target and plays its authored response.
+
+- Interaction content is data, not code: `src/data/interactables.js` maps a room id to an
+  ordered list of interactables, each with a stable authored id.
+- Kinds: `npc`, `object`, `rest`. `solid: true` gives an entry a body the player collides with.
+- Targeting picks the nearest entry within `reach`, and is suppressed while dialogue is open
+  or the player is down. The action control resolves to `interact` when a target is in reach
+  and falls back to `attack` otherwise, so touch keeps a single action button.
+- `lines` is an ordered variant list. The first variant whose `when` clause passes is the one
+  that plays, so world-state reactions are authored above the defaults. Clauses read
+  `flag`, `notFlag`, and `ability`.
+- Effects run when the dialogue closes: `set` writes world flags, `rest` restores health and
+  saves. Every interactable may also declare a `metFlag` for first-meeting variants.
+
+Dialogue that reacts to world state is the mechanism behind canon's requirement that Greyhaven
+changes over the course of the game.
+
 ## Data-Driven Room Contract
 
 A room definition should be capable of describing at minimum:

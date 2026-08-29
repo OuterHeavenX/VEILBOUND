@@ -17,7 +17,8 @@
       <noscript>VEILBOUND requires JavaScript to run.</noscript>
     </section>
     <canvas id="game-canvas" width="1280" height="720" tabindex="0" aria-label="VEILBOUND game canvas"></canvas>
-    <div id="hud" class="hud" hidden><div><div class="hud-brand">VEILBOUND <span class="hud-version">v0.1.4-sentry</span></div><div id="hud-health" class="hud-health" aria-label="Health">◆ ◆ ◆ ◆ ◆ ◆</div><div id="hud-ability" class="hud-ability">AXIOM: DORMANT</div></div><div class="hud-right"><div id="hud-room">GREYHAVEN</div><div id="save-status" class="save-status">SAVE V1 READY</div></div></div>
+    <div id="hud" class="hud" hidden><div><div class="hud-brand">VEILBOUND <span class="hud-version">v0.1.5-greyhaven</span></div><div id="hud-health" class="hud-health" aria-label="Health">◆ ◆ ◆ ◆ ◆ ◆</div><div id="hud-ability" class="hud-ability">AXIOM: DORMANT</div></div><div class="hud-right"><div id="hud-room">GREYHAVEN</div><div id="save-status" class="save-status">SAVE V1 READY</div></div></div>
+    <div id="interact-prompt" class="interact-prompt" hidden aria-live="polite"><span id="interact-prompt-verb" class="interact-prompt-verb">TALK</span><span id="interact-prompt-name" class="interact-prompt-name"></span></div>
     <pre id="debug-overlay" class="debug-overlay" hidden aria-hidden="true"></pre>
     <div id="dialogue" class="dialogue" hidden aria-live="polite"><div id="dialogue-speaker" class="dialogue-speaker"></div><div id="dialogue-text" class="dialogue-text"></div><div class="dialogue-hint">TAP / A / SPACE</div></div>
     <div id="touch-controls" class="touch-controls" hidden aria-label="Touch controls"><div id="touch-stick" class="touch-stick" aria-hidden="true"><div id="touch-knob" class="touch-knob"></div></div><div class="touch-actions"><button id="resonance-button" class="resonance-button" type="button" aria-label="Use Axiom Resonance" hidden>◇</button><button id="action-button" class="action-button" type="button" aria-label="Attack with Shardblade">⚔</button></div></div>
@@ -26,6 +27,7 @@
   <!-- Classic scripts preserve true zero-build, file:// friendly startup. -->
   <script src="./src/core/SaveManager.js"></script>
   <script src="./src/data/enemies.js"></script>
+  <script src="./src/data/interactables.js"></script>
   <script src="./src/main.js"></script>
 </body>
 </html>

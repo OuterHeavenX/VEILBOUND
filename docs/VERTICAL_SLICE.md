@@ -3,7 +3,7 @@
 ## Current Implementation Status
 
 **Current playable branch:** `feature/vertical-slice-foundation`  
-**Current playable version:** `v0.1.3-resonance`  
+**Current playable version:** `v0.1.5-greyhaven`  
 **Last updated:** 2026-08-29
 
 Implemented and awaiting owner-device acceptance:
@@ -24,13 +24,19 @@ Implemented and awaiting owner-device acceptance:
 - [x] authored Resonance nodes with persistent discovery flags
 - [x] first hidden Vein route clue in Hollow March Field 2
 - [x] portrait cinematic flash clipping so letterbox remains void-black
+- [x] Vein Sentry ranged enemy with telegraph, projectiles, and Resonance disruption
+- [x] development diagnostics overlay and development-mode toggle
+- [x] Greyhaven authored as six exterior landmarks
+- [x] interaction system with world-state-reactive NPC dialogue
+- [x] first save/rest point at the Wayfarer's Rest hearth
+- [x] dormant Old Lift Station as an authored backtracking hook
 
 Still required before Phase 1 exits:
 
 - [ ] owner-device acceptance of `v0.1.3-resonance`
 - [ ] second ranged/area-control enemy fully authored and accepted
-- [ ] Greyhaven NPC/dialogue interaction layer
-- [ ] first save/rest point
+- [x] Greyhaven NPC/dialogue interaction layer
+- [x] first save/rest point
 - [ ] Sunken Archive entrance
 - [ ] reusable switch/door/push puzzle primitives
 

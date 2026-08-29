@@ -97,13 +97,86 @@ Use this file together with `ROADMAP.md`, `docs/VERTICAL_SLICE.md`, `docs/CANON.
 
 ---
 
+## 2026-08-29 — v0.1.5 Greyhaven
+
+Next item in the production order after v0.1.4: the Greyhaven interaction/NPC dialogue
+layer and the first save/rest point.
+
+### ARCHITECT / FORGE — interaction system
+- Added `src/data/interactables.js`: authored interaction content keyed by room id, every
+  entry carrying a stable persistent id.
+- Added target resolution, a contextual on-screen prompt, and a contextual action control.
+  The action button and Space/Z/J resolve to `interact` when a target is in reach and fall
+  back to the Shardblade otherwise, so touch keeps one action button.
+- Added ordered dialogue variants gated on `flag` / `notFlag` / `ability`, so an NPC's lines
+  change with world state instead of being fixed.
+- Added post-dialogue effects: `set` writes world flags, `rest` restores health and saves.
+- Solid interactables have collision bodies, so NPCs occupy space instead of being walked
+  through.
+- Save Schema V1 is unchanged. Everything new is a world flag, so existing saves load as-is.
+
+### WRAITH / SCRIBE — Greyhaven authored
+- Rebuilt the Greyhaven exterior from a three-box prototype into six named landmarks:
+  Wayfarer's Rest, Relic Workshop, Market Row, Old Lift Station, Archivist's House, and the
+  Bell Tower, each with its own silhouette, collision, and world-space label.
+- Added five NPCs with distinct palettes and marks: MARETH (innkeeper), TOLL (workshop),
+  ISEN (researcher), BRAY (resident), and WREN (side story).
+- The dialogue establishes Kael as a relic hunter, shows ancient technology as common and
+  poorly understood, and gives a concrete reason to leave town: ISEN names the sealed chamber
+  east past the second field and asks for what is written on its walls.
+- Every NPC has an awakened-Axiom variant, so returning to Greyhaven after the awakening is a
+  visibly changed town. Archive-opened and Archivist-defeated variants are authored but not
+  yet reachable, because nothing sets those flags yet.
+
+### First save/rest point
+- The Wayfarer's Rest hearth restores health to full and saves. It is repeatable, and its
+  first use is acknowledged by MARETH.
+
+### Backtracking hook
+- The Old Lift Station is the authored inactive mechanism. Before the awakening Kael reads it
+  as dead. After the awakening the Axiom reports `TRANSIT NODE — GREYHAVEN. STATUS: DORMANT`
+  and `INSUFFICIENT AUTHORITY. RETURN WHEN THE ARCHIVE ANSWERS.`
+- Greyhaven now has its own Resonance node on the lift station, so a returning player with
+  Resonance has something to find in the starting town.
+
+### Future upgrade/service hook
+- TOLL offers to rebuild the Shardblade's fractured conductor in exchange for a whole one,
+  setting `greyhaven.service.shardbladeRepairOffered`. No service is purchasable yet.
+
+### Diagnostics
+- The debug overlay's `TARGET` row now reports the real interactable target, which is what
+  the architecture specified it for. The nearest Resonance node moved to its own `NODE` row.
+- Debug shapes now draw interactable reach radii and solid NPC bodies.
+
+### Verification
+- Chromium, 960×560. All eight Greyhaven interactables show a prompt, play their first-meeting
+  lines, and set their flags. Repeat, awakened, archive-opened, and archivist-defeated variants
+  each resolve to the correct lines.
+- Resting at 2 health restores to 6 and persists the save.
+- Walking into MARETH stops the player at the edge of her collision body.
+- A Resonance pulse at the lift station records `greyhaven.liftStationScanned` and persists it.
+- Clear of any landmark the prompt hides, the button returns to the Shardblade glyph, and the
+  attack fires normally.
+- The east road still runs Greyhaven → Field 1 and back, reporting entry `west` and `east`.
+- No console or page errors in any pass.
+
+### Owner-device acceptance — PENDING
+- [ ] HUD displays `v0.1.5-greyhaven` after refresh.
+- [ ] The interact prompt is readable on iPhone and does not collide with the touch controls.
+- [ ] The action button visibly changes between the Shardblade and the interact glyph.
+- [ ] Tapping the action button next to an NPC starts dialogue instead of swinging.
+- [ ] Resting at the hearth refills health and reports a save.
+- [ ] Returning to Greyhaven after the awakening shows the changed dialogue.
+- [ ] Landmark labels stay legible at phone scale in landscape and portrait.
+- [ ] v0.1.4 Vein Sentry acceptance re-verified on this build, since the version string moved.
+
+---
+
 ## Current immediate production order
-1. Complete v0.1.4 Vein Sentry iPhone acceptance.
-2. Build Greyhaven interaction/NPC dialogue layer.
-3. Add first save/rest point.
-4. Build Sunken Archive entrance revealed through Resonance progression.
-5. Build reusable switch, persistent door, and push/manipulation primitives.
-6. Build Tether acquisition and teaching sequence.
-7. Build Archivist boss framework.
-8. Complete vertical-slice presentation and device acceptance pass.
-9. Repeat equivalent acceptance on iPad before the vertical-slice release gate.
+1. Complete v0.1.5 Greyhaven iPhone acceptance, including the deferred v0.1.4 Sentry items.
+2. Build Sunken Archive entrance revealed through Resonance progression.
+3. Build reusable switch, persistent door, and push/manipulation primitives.
+4. Build Tether acquisition and teaching sequence.
+5. Build Archivist boss framework.
+6. Complete vertical-slice presentation and device acceptance pass.
+7. Repeat equivalent acceptance on iPad before the vertical-slice release gate.

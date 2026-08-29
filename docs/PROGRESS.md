@@ -56,6 +56,47 @@ Use this file together with `ROADMAP.md`, `docs/VERTICAL_SLICE.md`, `docs/CANON.
 
 ---
 
+## 2026-08-29 — Development diagnostics
+
+### FORGE / ARCHITECT — debug overlay, runtime diagnostics, development-mode toggle
+- Implemented the `docs/ARCHITECTURE.md` "Development Diagnostics" contract in full.
+- Added a DOM diagnostics panel: FPS, average and peak frame time, room id, entry id,
+  player position and facing, health/i-frame/attack timers, Resonance state and pulse
+  radius, entity counts, current interactable target, per-enemy state with timers and
+  distance, and active world flags.
+- Added canvas debug shapes in world space: collision rects, exit rects, Resonance node
+  radii, enemy hurtboxes, Vein Sentry engage/retreat ranges, projectile hitboxes, the
+  player hurtbox, and the Shardblade arc.
+- Added a development-mode toggle: `F3` or `` ` `` on keyboard, `?debug` in the URL for
+  touch devices. The keyboard toggle persists in `settings.debugOverlay`; `?debug` forces
+  the overlay on for one session without writing the setting.
+- Extracted the melee reach, arc, active window, and husk aggro range into shared
+  constants read by both the simulation and the overlay, so drawn boxes cannot drift.
+- Added authored `entry` names to every room exit so the overlay can report a real entry
+  id instead of a synthesized one.
+- The overlay is off by default, is `pointer-events: none`, and does not run its text
+  refresh or shape pass while disabled, so the shipping path is unchanged.
+- Runtime version deliberately left at `v0.1.4-sentry`: this is development tooling with
+  no gameplay surface, and the pending v0.1.4 owner-device acceptance checklist asserts
+  that exact HUD string. ORACLE owns the call on folding it into a numbered build.
+
+### Verification
+- Chromium, 900×520: overlay hidden by default; `F3` and `` ` `` toggle it; the setting
+  survives reload in both directions; `?debug` enables it without writing the setting.
+- Entry id reports `west` after walking Greyhaven → Hollow March Field 1, and `restore`
+  on a loaded save.
+- Vein Sentry telegraph countdown, husk chase/idle, Resonance cooldown, pulse radius, and
+  live attack/i-frame timers all read correctly during play.
+- Combat regression: both Field 1 husks still die to the Shardblade and persist as
+  defeated after the constant extraction. No console or page errors.
+
+### Owner-device acceptance — PENDING
+- [ ] `?debug` shows the diagnostics panel on iPhone without breaking touch controls.
+- [ ] Panel stays legible and inside the safe area in landscape and portrait.
+- [ ] Reported FPS on device matches perceived smoothness closely enough to be useful.
+
+---
+
 ## Current immediate production order
 1. Complete v0.1.4 Vein Sentry iPhone acceptance.
 2. Build Greyhaven interaction/NPC dialogue layer.

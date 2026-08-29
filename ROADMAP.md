@@ -301,9 +301,9 @@ Phases 0–4 are the committed production target. Phases 5–9 remain directiona
 - [x] Collision.
 - [x] Save V1.
 - [ ] Event bus/presentation hooks.
-- [ ] Debug overlay.
-- [ ] Runtime diagnostics.
-- [ ] Development-mode toggle.
+- [x] Debug overlay.
+- [x] Runtime diagnostics.
+- [x] Development-mode toggle.
 - [ ] Save migration registry before schema-breaking public changes.
 
 ## Phase 0 gate
@@ -1060,7 +1060,7 @@ Immediate:
 - [x] portrait flash clipping.
 - [ ] second enemy/projectile or area-control foundation.
 - [ ] NPC interaction cleanup.
-- [ ] debug overlay.
+- [x] debug overlay.
 - [ ] event bus.
 - [ ] dungeon object primitives.
 
@@ -1072,7 +1072,7 @@ Before slice completion:
 - [ ] cutscene viewed-state.
 - [ ] settings persistence.
 - [ ] save migrations.
-- [ ] performance diagnostics.
+- [~] performance diagnostics.
 
 ## WRAITH — Visuals
 

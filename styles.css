@@ -208,6 +208,29 @@ button { font: inherit; }
 
 .fatal-error { background: #12090b; }
 .fatal-error h2 { margin: 0 0 0.8rem; font-size: 1.2rem; }
+.debug-overlay {
+  position: absolute;
+  z-index: 5;
+  top: calc(max(14px, env(safe-area-inset-top)) + 92px);
+  left: max(16px, env(safe-area-inset-left));
+  max-width: min(58vw, 460px);
+  max-height: 58svh;
+  overflow: hidden;
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid rgba(127, 231, 225, 0.22);
+  border-radius: 6px;
+  background: rgba(7, 10, 13, 0.78);
+  color: var(--axiom);
+  font: inherit;
+  font-size: clamp(0.52rem, 1.35vw, 0.68rem);
+  line-height: 1.42;
+  letter-spacing: 0.04em;
+  white-space: pre;
+  pointer-events: none;
+  text-shadow: 0 1px 3px #000;
+}
+
 [hidden] { display: none !important; }
 
 @media (pointer: fine) {
@@ -220,6 +243,7 @@ button { font: inherit; }
   .action-button { width: 68px; height: 68px; }
   .resonance-button { width: 52px; height: 52px; margin-bottom: 40px; }
   .dialogue { bottom: max(132px, calc(env(safe-area-inset-bottom) + 114px)); }
+  .debug-overlay { max-width: 74vw; max-height: 46svh; font-size: 0.5rem; }
 }
 
 @keyframes pulse {

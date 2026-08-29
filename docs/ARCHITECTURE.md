@@ -252,15 +252,35 @@ Viewed-state should be persistable for major cinematics so retry behavior can sh
 
 ## Development Diagnostics
 
-Before content scale-up, add optional debug overlays for:
-- FPS/frame time
-- collision shapes
-- attack hitboxes/hurtboxes
+Implemented as an optional overlay that is off by default and never ships enabled.
+
+**Toggle**
+- `F3` or `` ` `` on a keyboard.
+- `?debug` appended to the URL, for touch devices with no keyboard.
+- The keyboard toggle is persisted in `settings.debugOverlay`, so a device stays in
+  development mode across reloads. `?debug` forces the overlay on for one session
+  without writing the setting.
+
+**Text panel** (DOM, refreshed on a fixed interval rather than every frame)
+- FPS, rolling average frame time, and worst frame time in the sample window
 - room id and entry id
-- player coordinates
+- player coordinates and facing
+- health, invulnerability, attack and cooldown timers
+- Resonance availability, cooldown, and live pulse radius
+- entity counts for enemies, projectiles, and particles
+- current interactable target and whether it has already been read
+- per-enemy id, health, current state with state timer, and distance
 - active world flags
-- current interactable target
-- current enemy state
+
+**World shapes** (canvas, drawn in world space)
+- collision rectangles and exit rectangles
+- authored Resonance node radii, including undiscovered ones
+- enemy hurtboxes plus Vein Sentry engage and retreat ranges
+- projectile hitboxes and the player hurtbox
+- the Shardblade arc; a hit lands when that arc overlaps an enemy hurtbox
+
+The reach, arc, active window, and husk aggro range used by the overlay are the same
+constants the simulation reads, so the drawn boxes cannot drift from real behaviour.
 
 ## Production Gate
 

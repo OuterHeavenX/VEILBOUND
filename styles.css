@@ -28,7 +28,7 @@ button { font: inherit; }
   width: 100vw;
   height: 100svh;
   min-height: 100vh;
-  background: radial-gradient(circle at 50% 38%, rgba(67, 106, 109, 0.12), transparent 36%), linear-gradient(180deg, #0b1014 0%, #06080a 100%);
+  background: #070a0d;
 }
 
 #game-canvas {
@@ -38,6 +38,7 @@ button { font: inherit; }
   touch-action: none;
   outline: none;
   image-rendering: pixelated;
+  background: #070a0d;
 }
 
 .boot-screen,
@@ -90,6 +91,7 @@ button { font: inherit; }
 
 .hud-version { color: var(--muted); margin-left: 0.55rem; }
 .hud-health { margin-top: 7px; color: var(--danger); letter-spacing: 0.18em; }
+.hud-ability { margin-top: 7px; color: var(--axiom); font-size: 0.72em; opacity: 0.85; }
 .hud-right { text-align: right; }
 .save-status { margin-top: 7px; color: var(--muted); font-size: 0.78em; opacity: 0.8; }
 
@@ -97,13 +99,13 @@ button { font: inherit; }
   position: absolute;
   left: max(18px, env(safe-area-inset-left));
   right: max(18px, env(safe-area-inset-right));
-  bottom: max(118px, calc(env(safe-area-inset-bottom) + 102px));
+  bottom: max(124px, calc(env(safe-area-inset-bottom) + 108px));
   z-index: 7;
   max-width: 760px;
   margin: 0 auto;
   padding: 16px 18px 14px;
   border: 1px solid rgba(127, 231, 225, 0.36);
-  background: rgba(5, 10, 12, 0.92);
+  background: rgba(5, 10, 12, 0.94);
   box-shadow: 0 14px 44px rgba(0,0,0,0.42), inset 0 0 30px rgba(127,231,225,0.025);
   pointer-events: auto;
 }
@@ -144,7 +146,7 @@ button { font: inherit; }
   height: 118px;
   border: 1px solid rgba(232, 237, 240, 0.18);
   border-radius: 50%;
-  background: rgba(4, 8, 10, 0.28);
+  background: rgba(4, 8, 10, 0.34);
   box-shadow: inset 0 0 24px rgba(127, 231, 225, 0.05);
   pointer-events: auto;
   touch-action: none;
@@ -164,23 +166,45 @@ button { font: inherit; }
   transform: translate(0, 0);
 }
 
-.action-button {
+.touch-actions {
   position: absolute;
-  right: max(26px, env(safe-area-inset-right));
-  bottom: max(30px, env(safe-area-inset-bottom));
-  width: 76px;
-  height: 76px;
+  right: max(24px, env(safe-area-inset-right));
+  bottom: max(28px, env(safe-area-inset-bottom));
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.action-button,
+.resonance-button {
   border-radius: 50%;
-  border: 1px solid rgba(127, 231, 225, 0.55);
   color: var(--axiom);
-  background: rgba(5, 14, 17, 0.58);
-  box-shadow: 0 0 22px rgba(127, 231, 225, 0.1), inset 0 0 20px rgba(127, 231, 225, 0.05);
+  background: rgba(5, 14, 17, 0.68);
+  box-shadow: 0 0 22px rgba(127, 231, 225, 0.10), inset 0 0 20px rgba(127, 231, 225, 0.05);
   pointer-events: auto;
   touch-action: manipulation;
+}
+
+.action-button {
+  width: 76px;
+  height: 76px;
+  border: 1px solid rgba(127, 231, 225, 0.55);
   font-size: 1.15rem;
 }
 
-.action-button:active { transform: scale(0.94); }
+.resonance-button {
+  width: 58px;
+  height: 58px;
+  margin-bottom: 46px;
+  border: 1px solid rgba(127, 231, 225, 0.72);
+  font-size: 1.05rem;
+}
+
+.action-button:active,
+.resonance-button:active { transform: scale(0.94); }
+
+.resonance-button.cooldown { opacity: 0.35; }
 
 .fatal-error { background: #12090b; }
 .fatal-error h2 { margin: 0 0 0.8rem; font-size: 1.2rem; }
@@ -194,7 +218,8 @@ button { font: inherit; }
 @media (max-width: 520px) {
   .touch-stick { width: 104px; height: 104px; }
   .action-button { width: 68px; height: 68px; }
-  .dialogue { bottom: max(126px, calc(env(safe-area-inset-bottom) + 108px)); }
+  .resonance-button { width: 52px; height: 52px; margin-bottom: 40px; }
+  .dialogue { bottom: max(132px, calc(env(safe-area-inset-bottom) + 114px)); }
 }
 
 @keyframes pulse {

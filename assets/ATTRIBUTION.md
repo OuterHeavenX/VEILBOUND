@@ -69,10 +69,13 @@ rest of this file asks.
   kept as reference. Neither is loaded: the awake one has NPCs painted into it that would
   fight the game's own NPC sprites, and the three plates are independent generations whose
   lighting does not match, so they cannot be composited.
-- `fields/field-1-roads.png` and `fields/field-2-vein.png` are the two Hollow March fields,
-  each with a JPEG beside it for the runtime. Which painting is which field is an authoring
-  choice recorded in `src/data/roomArt.js`; both paint their road through the same exit bands,
-  so the pair can be swapped.
+- `fields/field-1-shrine.png` and `fields/field-2-vein.png` are the two Hollow March fields,
+  a matched pair of rainswept wilderness, each with a JPEG beside it for the runtime. Which
+  painting is which field is an authoring choice recorded in `src/data/roomArt.js`; both paint
+  their road through the same exit bands, so the pair can be swapped.
+- `greyhaven/town-ground-only.png` is the town's ground layer with its buildings removed, kept
+  as reference. It was briefly mistaken for a field and wired to Hollow March in v0.3.5; it is
+  town land, and the owner said so.
 - The seven `buildings/*.png` elevations are unused: they are front-facing sprites of
   structures already baked into the town plate, so they are material for a future room.
 

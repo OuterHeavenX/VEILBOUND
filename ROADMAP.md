@@ -2,9 +2,9 @@
 
 **Document owner:** ORACLE — Game Director & Planning  
 **Repository:** `OuterHeavenX/VEILBOUND`  
-**Integration branch:** `main` — carries the full slice as of `v0.3.5-march`  
+**Integration branch:** `main` — carries the full slice as of `v0.3.6-march`  
 **Current development branch:** `claude/todo-implementation-td5zeq`  
-**Current playable version:** `v0.3.5-march`  
+**Current playable version:** `v0.3.6-march`  
 **Roadmap status:** ACTIVE  
 **Last roadmap update:** 2026-08-30
 
@@ -62,7 +62,7 @@ that is already cited; add new rules at the end.
 
 ---
 
-## 3. Current playable state — v0.3.5-march
+## 3. Current playable state — v0.3.6-march
 
 ### Foundation / presentation
 - [x] zero-build Canvas 2D runtime
@@ -160,9 +160,9 @@ hardware.
 | `v0.3.2-cistern` | Cistern Walk, Sluice Gallery, Reliquary Span, shortcut | `docs/SUNKEN_ARCHIVE.md` § Cistern wing acceptance |
 | `v0.3.3-threshold` | landscape gate, key-art title | `docs/PROGRESS.md` § v0.3.3 |
 | `v0.3.4-greyhaven` | painted Greyhaven town plate | `docs/PROGRESS.md` § v0.3.4 |
-| `v0.3.5-march` | painted Hollow March fields, collision re-authored to them | `docs/PROGRESS.md` § v0.3.5 |
+| `v0.3.6-march` | painted Hollow March fields, collision authored to them | `docs/PROGRESS.md` § v0.3.5-6 |
 
-One device pass on `v0.3.5-march` covers all six, since each release carries the ones
+One device pass on `v0.3.6-march` covers all six, since each release carries the ones
 before it. That pass is the single largest open item in this roadmap.
 
 ---
@@ -381,7 +381,7 @@ Still held until justified:
 
 # 10. Immediate production order
 
-1. Test `v0.3.5-march` on iPhone using the checklist in `docs/SUNKEN_ARCHIVE.md`, plus:
+1. Test `v0.3.6-march` on iPhone using the checklist in `docs/SUNKEN_ARCHIVE.md`, plus:
    the world sits centred with even letterboxing; the stick appears under the thumb
    anywhere on the left; each region sounds distinct and music sits under the cues; the
    rotate gate appears upright and hands the game back on turning.

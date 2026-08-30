@@ -6,6 +6,52 @@ Use this file together with `ROADMAP.md`, `docs/VERTICAL_SLICE.md`, `docs/CANON.
 
 ---
 
+## 2026-08-30 — v0.3.6 The right Field 1
+
+The owner supplied the actual Field 1 plate and said plainly what the previous entry got
+wrong: the roads-and-walls picture is town land, not a field. Both mistakes were mine, in
+opposite directions — first I called it the town's ground layer, then, told the remaining two
+plates were the fields, I moved it to Hollow March rather than questioning which two.
+
+The two fields are a matched pair of rainswept wilderness: one with a sunken jogged road and
+its Vein shrine south-east, one with a straight road and its shrine standing north of it.
+They share a palette, a weather, and a scale, which the roads plate never did — it shares all
+of those with Greyhaven, which is what misled me twice.
+
+- **Field 1** takes the straight-road plate. Its shrine stands north of the road as scenery.
+- **Field 2** keeps the sunken-road plate, whose shrine sits south of the road on the same
+  side as the Archive descent that `march.field2.veinMarker` reveals.
+- `greyhaven/town-ground-only.png` goes back to being a Greyhaven reference layer, unwired.
+
+### Field 1's collision, authored to the real painting
+
+Six obstacles rather than the four corner trees the roads plate had: the Vein shrine, a stump
+and a boulder north of the road, the pine's trunk, and a boulder and stump south of it. The
+road is clear across the full width, and both exit bands sit on it.
+
+The pine blocks at its trunk, not its canopy — the lesson from the previous entry, applied
+first time here rather than after a suite failed two rooms away.
+
+### Note for a later pass
+
+Field 1's Vein shrine is prominent, lit, and carries a glowing rune tablet, and Field 1 has no
+Resonance node. Reading it is an obvious beat, but it is authored content nobody has asked
+for, so it is recorded here rather than invented.
+
+### Verification
+- The offline geometry audit passes on both fields, including every position the browser
+  suites seed.
+- `fields2` still walks the whole route: Field 1 west to Greyhaven and back, east to Field 2,
+  Resonance at Field 2's shrine, the descent into the Archive.
+- Every suite passes with no change to any assertion. Nothing in the previous milestone's
+  machinery needed rework — only which file each field names.
+
+### Owner-device acceptance — PENDING
+- [ ] Field 1 and Field 2 read as different places rather than one plate reused.
+- [ ] Kael reads against both at phone scale.
+- [ ] The Field 1 shrine does not look like it should do something yet.
+
+
 ## 2026-08-30 — v0.3.5 The Hollow March is painted
 
 Correction to the previous entry: two of the eleven uploads were Hollow March fields, not a

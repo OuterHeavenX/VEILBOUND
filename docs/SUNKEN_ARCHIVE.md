@@ -55,7 +55,7 @@ Goal: establish the Archive's identity before asking the player to solve anythin
 
 - Entry is reachable from Hollow March Field 2 only after `march.field2.resonanceRouteRevealed`.
 - A long dry central causeway runs between drowned side chambers.
-- Deep water is visually water and mechanically impassable; collision and art must agree.
+- Deep water is visually water and mechanically impassable; collision and art agree through shared authored geometry.
 - First entry records `archive.entered` and gives one concise Axiom acknowledgement.
 - No required fight in the arrival room.
 
@@ -67,8 +67,8 @@ Goal: teach the first reusable dungeon mechanism under light combat pressure.
 - One authored floor switch: `archive.vestibule.floorSwitch`.
 - Standing on the switch sets persistent flag `archive.vestibule.sealOpen`.
 - The south seal is a real collision body while closed and disappears from collision when opened.
-- The room exit also requires the same flag, preventing transition desynchronization.
-- Switch state survives room changes and save/reload.
+- The south exit also requires the same flag, preventing transition desynchronization.
+- Switch state survives room changes and Save V1 reload through the world flag.
 
 This is deliberately simple. The player should immediately understand the visual language of plate → mechanism → opened route before later rooms combine it with movement, enemies, Resonance, push blocks, and Tether.
 
@@ -82,6 +82,12 @@ Goal: combine existing combat/exploration language with authored Resonance and e
 - The Axiom identifies deeper manipulation infrastructure but cannot operate it yet.
 - The deeper Archive bulkhead remains sealed in this milestone.
 - The room points directly toward the later Tether acquisition path without granting Tether early.
+
+Current memory response:
+
+- `CATALOG MEMORY LATTICE RESPONDING.`
+- `DEEPER ACCESS REQUIRES MANIPULATION AUTHORITY.`
+- `PROTOCOL TRACE: TETHER.`
 
 ## Reusable puzzle primitive contract
 
@@ -103,25 +109,28 @@ A door is closed while its flag is false. A closed door participates in player, 
 
 Exit definitions may declare `requiresFlag`. A gated exit is neither rendered as available nor transitioned through until its flag is true.
 
+This contract is now live in `src/main.js` and should be extracted into dedicated puzzle modules as the dungeon grows rather than allowing the main runtime to become the permanent home of every dungeon rule.
+
 ## Tether boundary
 
 Tether is **not** granted in the v0.3.0 opening pass.
 
-The opening must make the player curious about a missing manipulation capability. The later midpoint acquisition will then feel like an answer to a problem the dungeon has already shown rather than an arbitrary new power.
+The opening deliberately shows a missing manipulation capability before granting it. The later midpoint acquisition should therefore feel like an answer to a problem the player has already seen.
 
 ## Acceptance — opening pass
 
 Implementation:
-- [ ] Resonance-gated Eastern Descent connects from Hollow March Field 2.
-- [ ] Eastern Descent is traversable with water/collision agreement.
-- [ ] First-entry Axiom acknowledgement occurs once and persists.
-- [ ] Vestibule mixed encounter functions with existing XP/JP/coin rewards.
-- [ ] Floor switch opens the seal.
-- [ ] Seal state persists across room change and reload.
-- [ ] Catalog Rotunda is reachable after the seal.
-- [ ] Rotunda Resonance node records its memory flag.
-- [ ] Deeper bulkhead clearly foreshadows Tether without granting it.
-- [ ] Returning to the Hollow March remains possible.
+- [x] Resonance-gated Eastern Descent connects from Hollow March Field 2.
+- [x] Deep-water art and collision use matching authored geometry.
+- [x] First-entry Axiom acknowledgement is protected by persistent `archive.entered`.
+- [x] Vestibule reuses the existing Husk + Vein Sentry combat and progression reward pipeline.
+- [x] Floor switch writes the seal-open flag.
+- [x] Closed seal participates in collision and disappears when opened.
+- [x] Seal/open-exit state is driven by the same persistent flag.
+- [x] Catalog Rotunda is wired behind the seal.
+- [x] Rotunda Resonance node writes `archive.rotunda.resonanceRead`.
+- [x] Deeper bulkhead remains closed and explicitly foreshadows Tether without granting it.
+- [x] Return exits remain wired back to Hollow March Field 2.
 
 Owner device:
 - [ ] iPhone landscape readability.
@@ -129,4 +138,18 @@ Owner device:
 - [ ] Touch movement does not snag on Archive collision.
 - [ ] Switch and seal state remain understandable at phone scale.
 - [ ] Mixed encounter remains readable with water/circuitry background.
+- [ ] XP / JP / coin rewards still work in the Vestibule and Rotunda.
+- [ ] Character menu opens correctly from inside the dungeon.
 - [ ] Save/reload inside each Archive room restores safely.
+- [ ] Opened Vestibule seal remains open after backtracking and refresh.
+
+## Next Archive production pass
+
+1. Owner-device acceptance of the three opening rooms.
+2. Extract reusable switch/door handling if the opening proves stable.
+3. Add the first push/manipulation block.
+4. Add water/energy-routing state.
+5. Build the first meaningful shortcut loop.
+6. Build the Tether acquisition chamber and safe teaching use.
+7. Expand into combined Tether traversal/combat/mechanism rooms.
+8. Build the Archivist approach and boss framework.

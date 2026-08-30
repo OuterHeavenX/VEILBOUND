@@ -437,8 +437,67 @@ draw it directly with no prerendering step.
 
 ---
 
+## 2026-08-30 — v0.2.0 Terrain and repopulation
+
+Two owner requests: use the path and ground sets that were uploaded but left unwired in
+v0.1.9, and make enemies come back when you leave a room and return.
+
+### FORGE / WRAITH — ground and paths
+- The sheets are 16px autotile sets: mostly edge, corner and junction pieces meant to be
+  assembled in Tiled. The bundled `Roads.tmx` turned out to be a showcase of one-off
+  arrangements with no straight runs, so it gave no reusable road pattern.
+- Rather than reimplement autotiling, the interior field tile of each sheet is selected by
+  seam analysis: fully opaque, and its right edge continues into its own left edge, top into
+  bottom. That produced a clean grass, dirt and cobble tile, each verified by rendering a
+  tiled patch before use.
+- Edges are handled by authored geometry instead. Every path rectangle in
+  `src/data/terrain.js` was checked against the room's collision rectangles before authoring;
+  the one overlap found, the Greyhaven spur running under the Old Lift Station, was trimmed
+  to the station's base.
+- Greyhaven gets the cobbled east road and the spur to the lift. Field 2 gets a straight
+  track. Field 1's track bends south around the landmark tree and rejoins beyond it, which is
+  also the eastward guide the roadmap asked that field for.
+- The sets are brighter and more saturated than Eidol, so a wash is painted over the tiled
+  terrain only, never over props or characters. Its alpha is one value in `terrain.js`; set it
+  to 0 to see the sheets untouched.
+- When a tile sheet is missing the room falls back to its flat colour and the hand-drawn
+  roads. Verified by serving the tile sheets as 404.
+
+### FORGE — enemies repopulate
+- Ordinary enemies now repopulate their room on every entry.
+- Persistence is kept as an explicit per-enemy opt-in, so a boss or a story kill can still
+  stay defeated and the Save V1 machinery is unchanged. Saves that still carry old defeat
+  flags no longer suppress spawns, because the flag is only read for enemies that opt in.
+- This is a deliberate reversal of an accepted feature. `docs/COMBAT.md` and the roadmap's
+  persistence entries were corrected rather than left claiming the old behaviour, and rule
+  2.6's "defeated enemy/boss" example now records that it is opt-in.
+
+### Bug found while testing this
+- A player death inside `updateEnemies` calls `spawnRoomEnemies`, which empties and refills
+  the enemy array mid-iteration, leaving the remaining indices undefined and throwing. The
+  same hazard existed in `updateProjectiles`. Latent before, because dying with enemies left
+  alive was rare; routine once enemies repopulate. Both loops now tolerate a vanished index.
+
+### Verification
+- Tiles picked by seam analysis, then confirmed by rendering tiled patches rather than
+  trusting the score.
+- All path rectangles verified clear of collision before authoring.
+- Repopulation: a cleared field is empty, a round trip through Greyhaven brings both husks
+  back at full health, and a save still carrying both defeat flags spawns them anyway.
+- Terrain fallback verified with the tile sheets served as 404.
+- Full v0.1.4 through v0.1.9 regression passes. Assertions that encoded the old
+  defeat-persistence behaviour were updated rather than deleted.
+
+### Owner-device acceptance — PENDING
+- [ ] HUD displays `v0.2.0-terrain` after refresh.
+- [ ] Tiled ground and paths read well at phone scale and hold their frame rate.
+- [ ] The terrain wash sits the tile sets close enough to the Eidol palette, or wants tuning.
+- [ ] Repopulating enemies feel like pressure rather than a chore on the walk east.
+
+---
+
 ## Current immediate production order
-1. Complete v0.1.9 iPhone acceptance, including the deferred v0.1.3 through v0.1.8 items.
+1. Complete v0.2.0 iPhone acceptance, including the deferred v0.1.3 through v0.1.9 items.
 2. Build Sunken Archive entrance revealed through Resonance progression.
 3. Build reusable switch, persistent door, and push/manipulation primitives.
 4. Build Tether acquisition and teaching sequence.

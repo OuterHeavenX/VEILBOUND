@@ -89,10 +89,20 @@ Before marking ranged combat complete:
 - [x] Projectile collision with solid world removes the projectile.
 - [x] Shardblade can defeat the Sentry.
 - [x] Resonance interrupts an active telegraph without dealing damage.
-- [x] Sentry defeat persists through Save V1.
+- [~] Sentry defeat persists through Save V1. The machinery works and is still correct, but
+      persistence is now opt-in per enemy and the Sentry does not opt in: see Repopulation.
 - [x] Room transitions clear transient projectiles.
 - [x] Mixed Husk + Sentry encounter is playable without unavoidable damage.
 - [ ] iPhone owner-device acceptance completed.
+
+## Repopulation
+
+Ordinary enemies repopulate their room on every entry, by owner decision. Persistence is kept
+as an explicit per-enemy opt-in so a boss or a story kill can still stay defeated, and saves
+that still carry old defeat flags no longer suppress spawns.
+
+This trades the "clear the road once" feel for standing pressure on every crossing. The
+encounter design above is unchanged; what changes is that it can be met more than once.
 
 ## Enemy art
 

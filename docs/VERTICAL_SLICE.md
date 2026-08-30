@@ -3,7 +3,7 @@
 ## Current Implementation Status
 
 **Current playable branch:** `feature/vertical-slice-foundation`  
-**Current playable version:** `v0.1.9-bestiary`  
+**Current playable version:** `v0.2.0-terrain`  
 **Last updated:** 2026-08-29
 
 Implemented and awaiting owner-device acceptance:
@@ -38,10 +38,12 @@ Implemented and awaiting owner-device acceptance:
 - [x] character sprites for Kael and all five Greyhaven NPCs, prerendered from the uploaded models
 - [x] enemy sprites for the March Husk and Vein Sentry, with death animations
 - [x] authored Hollow March scenery from the forest set
+- [x] tiled ground and paths from the uploaded tile sets, including the Greyhaven road
+- [x] enemies repopulate their room on re-entry
 
 Still required before Phase 1 exits:
 
-- [ ] owner-device acceptance of `v0.1.9-bestiary`, carrying the unconfirmed v0.1.3 through v0.1.8 items
+- [ ] owner-device acceptance of `v0.2.0-terrain`, carrying the unconfirmed v0.1.3 through v0.1.9 items
 - [~] second ranged/area-control enemy fully authored; acceptance outstanding
 - [x] Greyhaven NPC/dialogue interaction layer
 - [x] first save/rest point

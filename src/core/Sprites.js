@@ -126,6 +126,22 @@
       return true;
     },
 
+    // Fills a rectangle by repeating one 16px tile. Used for ground and paths; the tile
+    // sets are autotile sheets, so only interior field tiles tile cleanly this way.
+    fillTiles(ctx, file, tx, ty, x, y, w, h, tile = 16) {
+      const record = sheet(file);
+      if (!record.ready) return false;
+      const sx = tx * tile, sy = ty * tile;
+      for (let py = y; py < y + h; py += tile) {
+        const sh = Math.min(tile, y + h - py);
+        for (let px = x; px < x + w; px += tile) {
+          const sw = Math.min(tile, x + w - px);
+          ctx.drawImage(record.image, sx, sy, sw, sh, px, py, sw, sh);
+        }
+      }
+      return true;
+    },
+
     // Single-image scenery. Ground-anchored like the characters, so props sit on the
     // world rather than floating over it.
     prop(ctx, file, { x, y, size, sway = 0, seconds = 0 }) {

@@ -203,6 +203,33 @@ are marked `hidden` so the generic wall fill does not paint a slab underneath th
 Every sprite path reports whether it drew. When a sheet is missing the runtime falls back to
 its procedural figures, so the game is never blocked on art.
 
+### Terrain
+Ground and paths tile from the uploaded 16px sets, described in `src/data/terrain.js`.
+
+Those sheets are autotile sets: mostly edge, corner and junction pieces meant to be assembled
+in Tiled. Rather than reimplement autotiling, the runtime uses each sheet's interior field
+tile, chosen by seam analysis — a tile qualifies when it is fully opaque and its right edge
+continues into its own left edge, and likewise top into bottom. Edges are handled by authored
+geometry instead, so every path rectangle is verified clear of the room's collision
+rectangles before it is authored.
+
+The tile sets are brighter and more saturated than Eidol, so a wash is painted over the tiled
+terrain only, never over props or characters. Its alpha is a single value in `terrain.js`; set
+it to 0 to see the sheets untouched.
+
+When a tile sheet is missing the room falls back to its flat authored colour and the
+hand-drawn roads, so the game still reads.
+
+### Enemy repopulation
+Ordinary enemies repopulate their room on every entry. Persistence is kept as an explicit
+per-enemy opt-in (`persistent: true` on the placement) so a boss or a story kill can still
+stay defeated, and the `defeatedEnemies` machinery in Save Schema V1 is unchanged. Saves that
+still carry old defeat flags no longer suppress spawns, because the flag is only consulted for
+enemies that opt in.
+
+Note that a player death inside `updateEnemies` or `updateProjectiles` repopulates those
+arrays mid-iteration, so both loops tolerate an index that has gone away.
+
 ### Audio
 Every voice is synthesised through Web Audio. VEILBOUND ships zero-build and
 file://-friendly, so there are no audio assets to fetch, and procedural synthesis keeps

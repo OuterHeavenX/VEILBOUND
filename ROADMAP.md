@@ -3,7 +3,7 @@
 **Document owner:** ORACLE — Game Director & Planning  
 **Repository:** `OuterHeavenX/VEILBOUND`  
 **Current development branch:** `feature/vertical-slice-foundation`  
-**Current playable version:** `v0.1.9-bestiary`  
+**Current playable version:** `v0.2.0-terrain`  
 **Roadmap status:** ACTIVE  
 **Last roadmap update:** 2026-08-30
 
@@ -115,7 +115,7 @@ Examples:
 - Resonance route revealed,
 - opened chest,
 - solved puzzle,
-- defeated enemy/boss,
+- defeated enemy/boss (opt-in per enemy; ordinary enemies repopulate on re-entry by owner decision),
 - opened shortcut,
 - activated mechanism,
 - completed quest stage.
@@ -152,7 +152,7 @@ A checkbox is marked complete only when the feature exists in the active branch.
 
 ---
 
-# 4. CURRENT STATE — v0.1.9-bestiary
+# 4. CURRENT STATE — v0.2.0-terrain
 
 ## Foundation
 
@@ -220,7 +220,8 @@ A checkbox is marked complete only when the feature exists in the active branch.
 - [x] Axiom ability list persistence.
 - [x] World flags.
 - [x] Stable defeated-enemy IDs.
-- [x] Defeated-enemy persistence.
+- [~] Defeated-enemy persistence. Machinery kept and still correct, but now opt-in per
+      enemy: ordinary enemies repopulate on room re-entry.
 - [x] Room-transition autosave.
 - [x] Autosave on page hide.
 - [x] Autosave when app/tab becomes hidden.
@@ -355,9 +356,18 @@ A checkbox is marked complete only when the feature exists in the active branch.
 - [x] Obstacle art placed over the collision rectangles that already existed, so visuals and
       collision agree without retuning accepted traversal.
 - [x] Interior obstacle slabs no longer painted underneath their scenery.
-- [ ] Ground tiling. The grass sheet is an autotile edge set and needs its Tiled data to slice.
-- [ ] Road tiles. Present in the upload, still an autotile job.
+- [x] Ground tiling from the uploaded grass set.
+- [x] Path and road tiling, including the cobbled road through Greyhaven.
+- [x] Track through both fields that bends around the landmark tree.
+- [ ] Autotiled edges. Interior field tiles only; transitions are handled by authored geometry.
+- [ ] Water, stairs and the remaining forest sheets.
 - [ ] Region ambience and environmental motion.
+
+## Enemy repopulation
+
+- [x] Ordinary enemies repopulate their room on every entry.
+- [x] Persistence kept as an explicit per-enemy opt-in, for bosses and story kills.
+- [x] Saves that still carry old defeat flags no longer suppress spawns.
 
 ## Portrait rendering correction
 
@@ -1296,12 +1306,12 @@ Vertical slice:
 
 # 7. CURRENT EXACT DEVELOPMENT ORDER
 
-This is the authoritative immediate sequence from `v0.1.9-bestiary`.
+This is the authoritative immediate sequence from `v0.2.0-terrain`.
 
-## NEXT 1 — owner-device acceptance v0.1.9
+## NEXT 1 — owner-device acceptance v0.2.0
 
-Acceptance has stacked across seven builds without a device pass. All of it is
-confirmed against `v0.1.9-bestiary`, on iPhone.
+Acceptance has stacked across eight builds without a device pass. All of it is
+confirmed against `v0.2.0-terrain`, on iPhone.
 
 Carried from v0.1.3:
 
@@ -1325,7 +1335,7 @@ Carried from v0.1.4:
 
 New in v0.1.5:
 
-- [ ] HUD displays `v0.1.9-bestiary` after refresh.
+- [ ] HUD displays `v0.2.0-terrain` after refresh.
 - [ ] interact prompt is readable and clear of the touch controls.
 - [ ] action button visibly changes between the Shardblade and the interact glyph.
 - [ ] tapping the action button beside an NPC talks instead of swinging.
@@ -1361,6 +1371,12 @@ New in v0.1.9:
 - [ ] the Sentry telegraph still reads over its sprite.
 - [ ] death animations do not make an enemy look alive after it is defeated.
 - [ ] the Hollow March fields hold their frame rate with scenery drawn.
+
+New in v0.2.0:
+
+- [ ] tiled ground and paths read well at phone scale and hold their frame rate.
+- [ ] the terrain wash sits the tile sets close enough to the Eidol palette, or wants tuning.
+- [ ] repopulating enemies feel like pressure rather than a chore on the walk east.
 
 ## NEXT 2 — second enemy archetype — IMPLEMENTED in v0.1.4
 

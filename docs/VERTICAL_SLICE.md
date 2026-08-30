@@ -3,7 +3,7 @@
 ## Current Implementation Status
 
 **Current playable branch:** `feature/sunken-archive-foundation`  
-**Current playable version:** `v0.3.2-cistern`  
+**Current playable version:** `v0.3.3-threshold`  
 **Last updated:** 2026-08-30
 
 The slice has moved from foundation work into the first playable dungeon. The existing title/menu, XP/JP/coin progression, Greyhaven, Hollow March, Axiom awakening, Resonance, combat, saves, sprites, and terrain remain the base for this branch.
@@ -11,7 +11,8 @@ The slice has moved from foundation work into the first playable dungeon. The ex
 ### Implemented foundation
 
 - [x] zero-build `index.html` launch
-- [x] title / New Game / Continue / Settings
+- [x] title plate featuring Kael, Lyra and Mira, with START / CONTINUE / SETTINGS
+- [x] landscape enforced by orientation lock where granted and a rotate gate everywhere else
 - [x] pause / Character menu with HP, XP, JP, coins, Shardblade level, protocols and journey state
 - [x] Greyhaven exterior, NPC interaction and Wayfarer's Rest save/rest point
 - [x] Hollow March Field 1 and Field 2
@@ -55,7 +56,7 @@ The slice has moved from foundation work into the first playable dungeon. The ex
 
 ### Still required for the complete slice
 
-- [ ] owner-device acceptance of `v0.3.2-cistern`
+- [ ] owner-device acceptance of `v0.3.3-threshold`
 - [ ] Tether acquisition
 - [ ] Tether traversal teaching
 - [ ] Tether object manipulation

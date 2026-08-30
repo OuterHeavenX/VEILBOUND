@@ -24,6 +24,16 @@ Visual anchors:
 
 Kael is not initially a chosen hero in his own understanding. He is a scavenger and explorer accustomed to entering dead ruins for salvage.
 
+## Lyra and Mira — named, not yet defined
+
+Lyra and Mira stand beside Kael on the title screen as of v0.3.3. Nothing else about them is
+canon: no role, no relationship to Kael, no place in the Greyhaven → Archivist route, and no
+pronouns. That is deliberate. They were named by the owner without a brief, and inventing a
+history for them here would quietly commit the story to it.
+
+Until the owner defines them, the title shows their names and nothing more, and no other
+document, dialogue or system may assume anything about them.
+
 ## The Axiom
 
 The Axiom is the ancient mechanical gauntlet carried by Kael. It has been mostly dormant for years.

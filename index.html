@@ -17,21 +17,40 @@
       <noscript>VEILBOUND requires JavaScript to run.</noscript>
     </section>
     <section id="title-screen" class="title-screen" hidden aria-label="VEILBOUND title">
-      <div class="title-mark" aria-hidden="true">◇</div>
-      <h1 class="title-word">VEILBOUND</h1>
-      <p class="title-tagline">THE VEIN IS WAKING</p>
-      <p id="title-notice" class="title-notice" hidden role="status"></p>
-      <div id="title-menu" class="title-menu">
-        <button id="title-continue" class="title-button" type="button" hidden><span class="title-button-label">CONTINUE</span><span id="title-continue-detail" class="title-button-detail"></span></button>
-        <button id="title-new" class="title-button" type="button"><span class="title-button-label">NEW GAME</span></button>
-        <button id="title-settings" class="title-button" type="button"><span class="title-button-label">SETTINGS</span></button>
+      <div class="title-veil" aria-hidden="true"></div>
+      <div class="title-stage">
+        <div class="title-brand">
+          <div class="title-mark" aria-hidden="true">◇</div>
+          <h1 class="title-word">VEILBOUND</h1>
+          <p class="title-tagline">THE VEIN IS WAKING</p>
+          <p id="title-notice" class="title-notice" hidden role="status"></p>
+          <div id="title-menu" class="title-menu">
+            <button id="title-continue" class="title-button" type="button" hidden><span class="title-button-label">CONTINUE</span><span id="title-continue-detail" class="title-button-detail"></span></button>
+            <button id="title-new" class="title-button" type="button"><span class="title-button-label">START</span><span class="title-button-detail">BEGIN A NEW JOURNEY</span></button>
+            <button id="title-settings" class="title-button" type="button"><span class="title-button-label">SETTINGS</span></button>
+          </div>
+          <div id="title-confirm" class="title-confirm" hidden>
+            <p id="title-confirm-text" class="title-confirm-text"></p>
+            <button id="title-confirm-yes" class="title-button title-button-danger" type="button"></button>
+            <button id="title-confirm-no" class="title-button" type="button">CANCEL</button>
+          </div>
+          <p id="title-hint" class="title-hint"></p>
+        </div>
+        <div id="title-cast" class="title-cast">
+          <figure class="title-cast-member" data-character="lyra">
+            <img class="title-cast-art" src="./assets/sprites/portrait_lyra.png" alt="Lyra" width="512" height="768" decoding="async" />
+            <figcaption class="title-cast-name">LYRA</figcaption>
+          </figure>
+          <figure class="title-cast-member title-cast-lead" data-character="kael">
+            <img class="title-cast-art" src="./assets/sprites/portrait_kael.png" alt="Kael" width="512" height="768" decoding="async" />
+            <figcaption class="title-cast-name">KAEL</figcaption>
+          </figure>
+          <figure class="title-cast-member" data-character="mira">
+            <img class="title-cast-art" src="./assets/sprites/portrait_mira.png" alt="Mira" width="512" height="768" decoding="async" />
+            <figcaption class="title-cast-name">MIRA</figcaption>
+          </figure>
+        </div>
       </div>
-      <div id="title-confirm" class="title-confirm" hidden>
-        <p id="title-confirm-text" class="title-confirm-text"></p>
-        <button id="title-confirm-yes" class="title-button title-button-danger" type="button"></button>
-        <button id="title-confirm-no" class="title-button" type="button">CANCEL</button>
-      </div>
-      <p id="title-hint" class="title-hint"></p>
       <p id="title-version" class="title-version"></p>
     </section>
     <section id="settings-screen" class="title-screen" hidden aria-label="Settings">
@@ -44,7 +63,7 @@
       </div>
     </section>
     <canvas id="game-canvas" width="1280" height="720" tabindex="0" aria-label="VEILBOUND game canvas"></canvas>
-    <div id="hud" class="hud" hidden><div><div class="hud-brand">VEILBOUND <span class="hud-version">v0.3.2-cistern</span></div><div id="hud-health" class="hud-health" aria-label="Health">◆ ◆ ◆ ◆ ◆ ◆</div><div id="hud-ability" class="hud-ability">AXIOM: DORMANT</div></div><div class="hud-right"><div id="hud-room">GREYHAVEN</div><div id="save-status" class="save-status">SAVE V1 READY</div></div></div>
+    <div id="hud" class="hud" hidden><div><div class="hud-brand">VEILBOUND <span class="hud-version">v0.3.3-threshold</span></div><div id="hud-health" class="hud-health" aria-label="Health">◆ ◆ ◆ ◆ ◆ ◆</div><div id="hud-ability" class="hud-ability">AXIOM: DORMANT</div></div><div class="hud-right"><div id="hud-room">GREYHAVEN</div><div id="save-status" class="save-status">SAVE V1 READY</div></div></div>
     <div id="interact-prompt" class="interact-prompt" hidden aria-live="polite"><span id="interact-prompt-verb" class="interact-prompt-verb">TALK</span><span id="interact-prompt-name" class="interact-prompt-name"></span></div>
     <pre id="debug-overlay" class="debug-overlay" hidden aria-hidden="true"></pre>
     <div id="dialogue" class="dialogue" hidden aria-live="polite"><div id="dialogue-speaker" class="dialogue-speaker"></div><div id="dialogue-text" class="dialogue-text"></div><div class="dialogue-hint">TAP / A / SPACE</div></div>
@@ -70,6 +89,18 @@
         </footer>
       </div>
     </div>
+    <section id="rotate-screen" class="rotate-screen" hidden aria-live="assertive" aria-label="Rotate your device">
+      <div class="rotate-glyph" aria-hidden="true">
+        <svg viewBox="0 0 120 84" role="presentation" focusable="false">
+          <rect class="rotate-phone" x="46" y="6" width="28" height="50" rx="4" />
+          <rect class="rotate-phone-screen" x="50" y="12" width="20" height="36" rx="2" />
+          <path class="rotate-arrow" d="M22 66 A 42 42 0 0 1 98 66" />
+          <path class="rotate-arrow-head" d="M22 78 L13 60 L31 60 Z" />
+        </svg>
+      </div>
+      <h2 class="rotate-title">ROTATE YOUR DEVICE</h2>
+      <p class="rotate-text">VEILBOUND is played in landscape.</p>
+    </section>
     <div id="fatal-error" class="fatal-error" hidden role="alert"><h2>VEILBOUND could not start</h2><p id="fatal-error-message"></p></div>
   </main>
   <!-- Classic scripts preserve true zero-build, file:// friendly startup. -->
@@ -82,6 +113,7 @@
   <script src="./src/core/Sprites.js"></script>
   <script src="./src/data/enemies.js"></script>
   <script src="./src/data/interactables.js"></script>
+  <script src="./src/ui/Orientation.js"></script>
   <script src="./src/ui/TitleScreen.js"></script>
   <script src="./src/ui/PauseMenu.js"></script>
   <script src="./src/core/Puzzles.js"></script>

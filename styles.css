@@ -624,58 +624,98 @@ button { font: inherit; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
-  padding: max(24px, env(safe-area-inset-top)) 22px max(24px, env(safe-area-inset-bottom));
-  overflow-y: auto;
+  padding: max(16px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right))
+           max(16px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+  overflow: hidden;
   text-align: center;
   background:
-    radial-gradient(ellipse at 50% 42%, rgba(127, 231, 225, 0.07), transparent 62%),
-    rgba(4, 7, 9, 0.9);
+    radial-gradient(ellipse at 68% 58%, rgba(127, 231, 225, 0.09), transparent 58%),
+    radial-gradient(ellipse at 22% 22%, rgba(64, 122, 138, 0.13), transparent 62%),
+    linear-gradient(180deg, #060b0e 0%, #04080a 46%, #020506 100%);
+}
+
+/* Slow drifting light over the whole plate, so the screen is never dead still. */
+.title-veil {
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(127, 231, 225, 0.07), transparent 42%),
+    radial-gradient(circle at 74% 66%, rgba(181, 140, 240, 0.05), transparent 44%);
+  animation: title-drift 26s ease-in-out infinite alternate;
+}
+
+@keyframes title-drift {
+  from { transform: translate3d(-1.5%, -1%, 0) scale(1); }
+  to   { transform: translate3d(2%, 1.5%, 0) scale(1.06); }
+}
+
+.title-stage {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(230px, 0.9fr) minmax(0, 1.25fr);
+  align-items: center;
+  gap: clamp(14px, 3vw, 46px);
+  width: min(1180px, 100%);
+  max-height: 100%;
+}
+
+.title-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: left;
+  min-width: 0;
 }
 
 .title-mark {
+  align-self: flex-start;
   color: var(--axiom);
-  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-size: clamp(1.1rem, 2.6vw, 1.7rem);
   animation: pulse 2.6s ease-in-out infinite;
 }
 
 .title-word {
   margin: 0.1rem 0 0;
-  font-size: clamp(1.9rem, 8vw, 3.4rem);
+  font-size: clamp(1.6rem, 5.4vw, 3.1rem);
   font-weight: 400;
-  letter-spacing: clamp(0.22em, 1.4vw, 0.4em);
-  text-indent: clamp(0.22em, 1.4vw, 0.4em);
-  text-shadow: 0 0 26px rgba(127, 231, 225, 0.18);
+  letter-spacing: clamp(0.14em, 0.9vw, 0.28em);
+  text-shadow: 0 0 30px rgba(127, 231, 225, 0.22);
+  white-space: nowrap;
 }
 
 .title-word-small { font-size: clamp(1.1rem, 4.4vw, 1.6rem); }
 
 .title-tagline {
-  margin: 0 0 1.1rem;
+  margin: 0.35rem 0 0;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid rgba(127, 231, 225, 0.16);
   color: var(--muted);
-  font-size: clamp(0.58rem, 2vw, 0.72rem);
-  letter-spacing: 0.36em;
-  text-indent: 0.36em;
+  font-size: clamp(0.5rem, 1.5vw, 0.68rem);
+  letter-spacing: 0.32em;
 }
 
 .title-notice {
   max-width: 34rem;
-  margin: 0 0 1rem;
-  padding: 9px 13px;
+  margin: 0.9rem 0 0;
+  padding: 8px 12px;
   border: 1px solid rgba(217, 111, 111, 0.4);
   background: rgba(30, 12, 14, 0.6);
   color: #e9c6c6;
-  font-size: clamp(0.6rem, 2vw, 0.72rem);
+  font-size: clamp(0.55rem, 1.6vw, 0.7rem);
   line-height: 1.6;
   letter-spacing: 0.06em;
+  text-align: left;
 }
 
 .title-menu, .title-confirm {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 10px;
-  width: min(320px, 82vw);
+  gap: clamp(6px, 1.2vh, 10px);
+  width: min(340px, 100%);
+  margin-top: clamp(0.8rem, 2.4vh, 1.5rem);
 }
 
 .title-confirm-text {
@@ -683,56 +723,248 @@ button { font: inherit; }
   color: var(--muted);
   font-size: clamp(0.6rem, 2vw, 0.72rem);
   line-height: 1.6;
+  text-align: left;
 }
 
 .title-button {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 13px 16px;
-  border: 1px solid rgba(127, 231, 225, 0.34);
-  border-radius: 3px;
-  background: rgba(8, 14, 17, 0.86);
+  gap: 3px;
+  padding: clamp(9px, 1.7vh, 14px) 16px;
+  border: 1px solid rgba(127, 231, 225, 0.28);
+  border-left-width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgba(14, 30, 33, 0.92), rgba(8, 14, 17, 0.72));
   color: var(--ink);
-  font-size: clamp(0.68rem, 2.2vw, 0.8rem);
-  letter-spacing: 0.2em;
-  text-align: center;
+  font-size: clamp(0.62rem, 1.9vw, 0.78rem);
+  letter-spacing: 0.22em;
+  text-align: left;
   cursor: pointer;
-  transition: border-color 120ms ease, background 120ms ease;
+  transition: border-color 140ms ease, background 140ms ease, transform 140ms ease;
 }
 
 .title-button:hover, .title-button:focus-visible {
   border-color: var(--axiom);
-  background: rgba(15, 30, 32, 0.94);
+  background: linear-gradient(90deg, rgba(22, 48, 51, 0.96), rgba(10, 20, 23, 0.8));
+  transform: translateX(3px);
   outline: none;
 }
 
 .title-button-detail {
   color: var(--muted);
-  font-size: 0.74em;
-  letter-spacing: 0.12em;
+  font-size: 0.7em;
+  letter-spacing: 0.14em;
 }
 
 .title-button-danger { border-color: rgba(217, 111, 111, 0.45); }
 .title-button-danger:hover, .title-button-danger:focus-visible {
   border-color: var(--danger);
-  background: rgba(34, 14, 16, 0.94);
+  background: linear-gradient(90deg, rgba(46, 18, 21, 0.96), rgba(20, 10, 12, 0.8));
 }
 
 .title-hint {
-  margin: 1.4rem 0 0;
+  margin: clamp(0.7rem, 2.2vh, 1.3rem) 0 0;
   color: var(--muted);
-  font-size: clamp(0.52rem, 1.8vw, 0.64rem);
+  font-size: clamp(0.46rem, 1.4vw, 0.6rem);
   letter-spacing: 0.16em;
-  opacity: 0.85;
+  text-align: left;
+  opacity: 0.8;
+}
+
+/* The cast lineup. Kael centred and larger; the other two set back and a touch dimmer, so
+   the eye lands on the character the player actually controls. */
+.title-cast {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(2px, 1.4vw, 26px);
+  min-width: 0;
+}
+
+/* Flex basis 0 rather than intrinsic width: the lineup then always fits its column and the
+   figures scale together, instead of one wide pose pushing the others off the plate. */
+.title-cast-member {
+  --glow: rgba(127, 231, 225, 0.5);
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  min-width: 0;
+  max-width: 190px;
+  opacity: 0.82;
+}
+
+.title-cast-member[data-character="lyra"] { --glow: rgba(181, 140, 240, 0.5); }
+.title-cast-member[data-character="mira"] { --glow: rgba(240, 180, 106, 0.5); }
+
+/* Kael is wider and brighter, but stands on the same line as the other two: lifting him as
+   well scattered the three name plates and read as a mistake rather than a hierarchy. */
+.title-cast-lead {
+  opacity: 1;
+  z-index: 1;
+  flex-grow: 1.3;
+  max-width: 248px;
+}
+
+/* Pool of light each figure stands in, sized off the art so it tracks the responsive scale. */
+.title-cast-member::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 1.6em;
+  width: 128%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, var(--glow), transparent 62%);
+  opacity: 0.32;
+  pointer-events: none;
+}
+
+.title-cast-art {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: min(44vh, 356px);
+  object-fit: contain;
+  object-position: bottom center;
+  filter: drop-shadow(0 0 18px var(--glow)) drop-shadow(0 12px 16px rgba(0, 0, 0, 0.55));
+  animation: cast-float 6.5s ease-in-out infinite alternate;
+}
+
+.title-cast-lead .title-cast-art { max-height: min(56vh, 438px); }
+.title-cast-member[data-character="lyra"] .title-cast-art { animation-delay: -2.2s; }
+.title-cast-member[data-character="mira"] .title-cast-art { animation-delay: -4.4s; }
+
+.title-cast-name {
+  position: relative;
+  width: 100%;
+  margin-top: 0.6em;
+  padding-top: 0.55em;
+  border-top: 1px solid var(--glow);
+  color: var(--ink);
+  font-size: clamp(0.42rem, 1.3vw, 0.62rem);
+  letter-spacing: 0.34em;
+  text-indent: 0.34em;
+  white-space: nowrap;
+}
+
+.title-cast-member.is-missing { display: none; }
+
+@keyframes cast-float {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-9px); }
+}
+
+/* Short landscape phones have no room for a two-column stage with full-height figures. */
+@media (max-height: 430px) {
+  .title-cast-member { max-width: 128px; }
+  .title-cast-lead { max-width: 166px; }
+  .title-cast-art { max-height: 50vh; }
+  .title-cast-lead .title-cast-art { max-height: 62vh; }
+}
+
+/* Portrait windows that are not held by the rotate gate (a desktop window resized tall).
+   The stage stacks rather than crushing either half. */
+@media (max-aspect-ratio: 9 / 10) {
+  .title-stage { grid-template-columns: 1fr; gap: clamp(10px, 3vh, 26px); }
+  .title-brand { align-items: center; text-align: center; }
+  .title-mark { align-self: center; }
+  .title-menu, .title-confirm { align-self: center; }
+  .title-hint, .title-notice, .title-confirm-text { text-align: center; }
+  .title-button { text-align: center; align-items: center; }
+  .title-cast { order: -1; }
+  .title-cast-art { max-height: 26vh; }
+  .title-cast-lead .title-cast-art { max-height: 32vh; }
 }
 
 .title-version {
-  margin: 0.35rem 0 0;
+  position: absolute;
+  right: max(14px, env(safe-area-inset-right));
+  bottom: max(10px, env(safe-area-inset-bottom));
+  margin: 0;
   color: var(--muted);
-  font-size: 0.58rem;
+  font-size: 0.56rem;
   letter-spacing: 0.18em;
-  opacity: 0.6;
+  opacity: 0.55;
+}
+
+/* The rotate gate. Above everything, including the HUD and the pause menu, because it is
+   the one state where nothing underneath is playable. */
+.rotate-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  padding: 24px;
+  text-align: center;
+  background:
+    radial-gradient(ellipse at 50% 44%, rgba(127, 231, 225, 0.08), transparent 60%),
+    #04080a;
+}
+
+.rotate-glyph svg {
+  width: clamp(132px, 42vw, 196px);
+  height: auto;
+  overflow: visible;
+}
+
+.rotate-phone {
+  fill: none;
+  stroke: var(--axiom);
+  stroke-width: 2.5;
+  opacity: 0.9;
+  transform-origin: 60px 31px;
+  animation: rotate-hint 3.4s ease-in-out infinite;
+}
+
+.rotate-phone-screen {
+  fill: rgba(127, 231, 225, 0.16);
+  stroke: none;
+  transform-origin: 60px 31px;
+  animation: rotate-hint 3.4s ease-in-out infinite;
+}
+
+.rotate-arrow {
+  fill: none;
+  stroke: rgba(127, 231, 225, 0.45);
+  stroke-width: 2;
+  stroke-dasharray: 3 6;
+  stroke-linecap: round;
+}
+
+.rotate-arrow-head { fill: rgba(127, 231, 225, 0.45); }
+
+@keyframes rotate-hint {
+  0%, 30% { transform: rotate(0deg); }
+  60%, 100% { transform: rotate(-90deg); }
+}
+
+.rotate-title {
+  margin: 0;
+  font-size: clamp(0.85rem, 5vw, 1.15rem);
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  color: var(--ink);
+}
+
+.rotate-text {
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(0.6rem, 3.4vw, 0.74rem);
+  letter-spacing: 0.16em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title-veil, .title-cast-art, .rotate-phone, .rotate-phone-screen { animation: none; }
 }
 
 .interact-prompt {

@@ -20,7 +20,7 @@ Current runtime: **v0.3.0-archive**
 
 The browser game must remain launchable from static hosting without npm, a bundler or a local development server. Development-only tools may use dependencies as long as committed browser-ready output keeps the game itself zero-build.
 
-Current launch chain includes SaveManager, Audio, Sprites, Puzzles, sprite/data registries, interaction/title/pause UI, Progression, and `src/main.js`.
+Current launch chain includes SaveManager, Audio, Sprites, Puzzles, sprite/data registries, orientation/interaction/title/pause UI, Progression, and `src/main.js`.
 
 Startup failure must surface visibly rather than leaving a blank canvas. Mobile safe areas and responsive canvas sizing are required.
 
@@ -35,12 +35,33 @@ Already separated:
 - `src/core/Sprites.js`
 - `src/core/Progression.js`
 - `src/core/Puzzles.js`
+- `src/ui/Orientation.js`
 - `src/ui/TitleScreen.js`
 - `src/ui/PauseMenu.js`
 - data registries for enemies, sprites, terrain, props and interactables
 
 Dungeon puzzle/mechanism handling was the last extraction, in v0.3.2. Next priority: room/encounter
 authoring, which is still the largest remaining block of `src/main.js`.
+
+## Landscape contract
+
+The world is authored at 960x540, so a phone held upright has nowhere to put it. Two
+mechanisms, because neither is sufficient alone:
+
+- `screen.orientation.lock('landscape')` is the real lock, attempted quietly on the first
+  user gesture. Android Chrome grants it only to a fullscreen document; iOS Safari does not
+  implement it at all. It is never depended upon, and a refusal is the normal case.
+- A blocking overlay (`#rotate-screen`) whenever the viewport is portrait. This is what
+  actually holds on iOS, and it covers the moment before a granted lock takes effect.
+
+Only devices that can rotate are held: touch capability *and* no fine pointer. A desktop
+window that happens to be tall has a mouse, and telling someone with a mouse to rotate their
+monitor is nonsense.
+
+While the gate is up the simulation does not advance, held input is cleared, a running game
+autosaves, and audio suspends — the same treatment as backgrounding the tab. The gate uses
+its own flag rather than the pause-menu flag, so rotating with the menu open returns to the
+menu rather than to play.
 
 ## SaveManager
 
@@ -225,6 +246,12 @@ Abilities are persistent player capabilities. Resonance is implemented as a shor
 The next major ability is **Tether**. Its implementation must support traversal, object/machinery manipulation and combat use from the same core targeting rules, with touch and controller considered from the first pass.
 
 ## Sprite architecture
+
+Title portraits are a separate offline pass, `tools/prerender-portraits.mjs`: a title figure
+needs a near-eye-level perspective camera and rim lighting, not a 96px top-down gameplay cell,
+so it is its own render rather than a bigger cell in the same one. The portraits are plain
+`<img>` elements in the title markup, and a portrait that fails to load hides its own figure
+rather than leaving a broken box in the lineup.
 
 Generated 8-direction character sheets and authored enemy sheets both flow through `src/core/Sprites.js`. Missing art must fall back safely rather than block game startup.
 

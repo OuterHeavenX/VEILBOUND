@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '0.3.2-cistern';
+  const VERSION = '0.3.3-threshold';
   const canvas = document.getElementById('game-canvas');
   const boot = document.getElementById('boot-screen');
   const status = document.getElementById('boot-status');
@@ -35,6 +35,7 @@
   const Sprites = window.Veilbound && window.Veilbound.Sprites;
   const PauseMenu = window.Veilbound && window.Veilbound.PauseMenu;
   const Puzzles = window.Veilbound && window.Veilbound.Puzzles;
+  const Orientation = window.Veilbound && window.Veilbound.Orientation;
   const EnemySprites = window.Veilbound && window.Veilbound.EnemySprites;
   const Props = (window.Veilbound && window.Veilbound.Props) || {};
   const Terrain = (window.Veilbound && window.Veilbound.Terrain) || {};
@@ -154,7 +155,7 @@
   let deviceSettings = SaveManager.loadSettings();
   let running=false;
   let saveStatusTimer=0, pendingAwakening=0, dialogueSequence=null, dialogueIndex=-1, dialogueOnComplete=null;
-  let interactTarget=null, promptedTargetId=null, paused=false;
+  let interactTarget=null, promptedTargetId=null, paused=false, orientationBlocked=false;
   let debugEnabled=false, debugTextTimer=0, frameCursor=0;
   const frameTimes=new Array(DEBUG_FRAME_SAMPLES).fill(16.7);
   let gamepadAttackWasDown=false, gamepadResonanceWasDown=false, screenFlash=0, resonanceTimer=0, resonanceCooldown=0, resonanceRadius=0;
@@ -347,6 +348,7 @@
     const kick=()=>{
       removeEventListener('pointerdown',kick,true);removeEventListener('keydown',kick,true);
       Audio.unlock();
+      if(Orientation)Orientation.requestLock();
       setTimeout(()=>{if(!running)Audio.playTitleAmbience();},220);
     };
     addEventListener('pointerdown',kick,true);
@@ -376,13 +378,14 @@
     setDebugMode(debugRequestedByUrl()||Boolean(deviceSettings.debugOverlay),false);
     setupKeyboard();
     setupTouch();
+    if(Orientation)Orientation.init({onChange(blocked){orientationBlocked=blocked;if(blocked){input.keys.clear();input.touchX=0;input.touchY=0;Audio.suspend();if(running)saveGame('AUTOSAVED');}else Audio.resume();}});
     PauseMenu.init();
     Sprites.preload();
     Audio.configure(deviceSettings);
     armAudio();
     setTimeout(()=>{if(boot)boot.hidden=true;presentTitle();},350);
     let previous=performance.now();
-    const frame=t=>{resizeCanvas();const elapsed=t-previous;const dt=Math.min(elapsed/1000,.05);previous=t;sampleFrameTime(elapsed);if(running&&!paused)update(dt);drawWorld(ctx);requestAnimationFrame(frame);};
+    const frame=t=>{resizeCanvas();const elapsed=t-previous;const dt=Math.min(elapsed/1000,.05);previous=t;sampleFrameTime(elapsed);if(running&&!paused&&!orientationBlocked)update(dt);drawWorld(ctx);requestAnimationFrame(frame);};
     addEventListener('resize',resizeCanvas,{passive:true});
     addEventListener('pagehide',()=>{if(running)saveGame('AUTOSAVED');});
     document.addEventListener('visibilitychange',()=>{const hidden=document.visibilityState==='hidden';if(hidden){Audio.suspend();if(running)saveGame('AUTOSAVED');}else Audio.resume();});

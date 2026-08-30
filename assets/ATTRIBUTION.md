@@ -49,5 +49,9 @@ release gate.
 
 ## Generated, not third-party
 
-- `assets/sprites/` is produced by `tools/prerender-characters.mjs` from the KayKit models.
-  It inherits whatever terms apply to the source pack above.
+- `assets/sprites/` is produced by `tools/prerender-characters.mjs` (gameplay sheets) and
+  `tools/prerender-portraits.mjs` (the three title portraits) from the KayKit models. It
+  inherits whatever terms apply to the source pack above.
+- The title portraits are placeholder casting from the six-model pack, so two of them reuse
+  models already cast as Greyhaven NPCs. Lighting and pose separate them; final art will not
+  have to.

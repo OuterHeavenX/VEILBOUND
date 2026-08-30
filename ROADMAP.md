@@ -3,7 +3,7 @@
 **Document owner:** ORACLE — Game Director & Planning  
 **Repository:** `OuterHeavenX/VEILBOUND`  
 **Current development branch:** `feature/sunken-archive-foundation`  
-**Current playable version:** `v0.3.2-cistern`  
+**Current playable version:** `v0.3.3-threshold`  
 **Roadmap status:** ACTIVE  
 **Last roadmap update:** 2026-08-30
 
@@ -54,12 +54,13 @@ One codebase must remain first-class on phone, tablet, desktop, keyboard, touch 
 
 ---
 
-## 3. Current playable state — v0.3.2-cistern
+## 3. Current playable state — v0.3.3-threshold
 
 ### Foundation / presentation
 - [x] zero-build Canvas 2D runtime
 - [x] responsive authored 960×540 world
-- [x] title / Continue / New Game / Settings
+- [x] title plate with Kael, Lyra and Mira, and START / CONTINUE / SETTINGS
+- [x] landscape enforced: orientation lock where granted, rotate gate everywhere else
 - [x] safe save inspection and resume
 - [x] touch, keyboard and controller movement
 - [x] development diagnostics
@@ -351,9 +352,10 @@ Still held until justified:
 
 # 10. Immediate production order
 
-1. Test `v0.3.2-cistern` on iPhone using the checklist in `docs/SUNKEN_ARCHIVE.md`, plus:
+1. Test `v0.3.3-threshold` on iPhone using the checklist in `docs/SUNKEN_ARCHIVE.md`, plus:
    the world sits centred with even letterboxing; the stick appears under the thumb
-   anywhere on the left; each region sounds distinct and music sits under the cues.
+   anywhere on the left; each region sounds distinct and music sits under the cues; the
+   rotate gate appears upright and hands the game back on turning.
 2. Fix any collision/readability/save regressions found in the three Archive opening rooms.
 3. Create the Tether acquisition chamber.
 4. Implement and teach Tether across traversal/object/combat use.

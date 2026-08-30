@@ -6,6 +6,69 @@ Use this file together with `ROADMAP.md`, `docs/VERTICAL_SLICE.md`, `docs/CANON.
 
 ---
 
+## 2026-08-30 — v0.3.3 The threshold: landscape lock and a cast on the plate
+
+### The game now insists on landscape
+
+Two mechanisms, because neither works everywhere. The real `screen.orientation.lock` is
+attempted quietly on the first user gesture; Android Chrome grants it to a fullscreen
+document, and iOS Safari has no such API at all. Underneath it sits a blocking overlay for
+any portrait viewport, which is what actually holds on iPhone and also covers the moment
+before a granted lock takes effect. Neither is announced to the player when it fails.
+
+Only devices that can rotate are held — touch capability and no fine pointer. A tall desktop
+window has a mouse, and telling someone with a mouse to rotate their monitor is nonsense.
+
+While the gate is up the simulation does not advance, held input is cleared, a running game
+autosaves and audio suspends: the same treatment as backgrounding the tab. It uses its own
+flag rather than the pause-menu flag, so rotating with the menu open comes back to the menu.
+
+### A start screen with Kael, Lyra and Mira
+
+The title is now a two-column plate: wordmark, tagline and menu on the left, the three
+characters lit and standing on one line on the right. Kael is wider and brighter; the other
+two are set back and slightly dimmer, so the eye lands on the character the player controls.
+Each carries a signature rim colour — cyan, violet, amber — which is what keeps three figures
+cut from the same six-model pack reading as three different people. The menu offers START,
+CONTINUE (with the room and health it resumes to, shown only when a save exists) and
+SETTINGS.
+
+Portraits are rendered offline by a new `tools/prerender-portraits.mjs`. A title figure needs
+a near-eye-level perspective camera and rim light, not a 96px top-down gameplay cell, so it is
+its own pass rather than a bigger cell in the existing one. A portrait that fails to load
+hides its own figure rather than leaving a broken box in the lineup.
+
+### Lyra and Mira are named, not defined
+
+Neither name existed anywhere in the repository before this milestone. They are on the title
+because the owner asked for them there; nothing else about them is canon — no role, no
+relationship to Kael, no pronouns. `docs/CANON.md` records that explicitly rather than letting
+an invented backstory settle in by default.
+
+### Bug found while building
+
+- The orientation module named its overlay element `screen`, shadowing the global `screen`
+  the lock call needs. Caught before it ran; `window.screen` is now addressed explicitly.
+
+### Verification
+- A new `orientation` suite: a portrait phone is gated and its taps are intercepted, rotating
+  clears the gate and restores the title, a tall desktop window is never gated, and a running
+  game neither advances nor loses its position across the gate.
+- A new `titlecast` suite: all three portraits decode and have real size, Kael is the largest,
+  the three share one baseline, none overlap, and START/CONTINUE/SETTINGS behave with and
+  without a save.
+- Every existing suite passes. The three portrait-mode phone cases were rewritten rather than
+  deleted: in portrait they now assert the gate, which is the new correct behaviour, and their
+  landscape cases are unchanged. `title-phone` was also calling an `enterGame` helper it never
+  defined; that call is gone.
+
+### Owner-device acceptance — PENDING
+- [ ] Turning the phone upright during play shows the gate and gives the game back on return.
+- [ ] The lock holds on Android; the overlay is the whole story on iPhone.
+- [ ] The three characters read clearly at phone scale, and the names are legible.
+- [ ] START / CONTINUE / SETTINGS are all reachable one-handed in landscape.
+
+
 ## 2026-08-30 — v0.3.2 The Cistern wing
 
 Three new Sunken Archive rooms, and the puzzle module the design doc had been asking for.

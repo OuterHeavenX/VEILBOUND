@@ -3,9 +3,9 @@
 **Document owner:** ORACLE — Game Director & Planning  
 **Repository:** `OuterHeavenX/VEILBOUND`  
 **Current development branch:** `feature/vertical-slice-foundation`  
-**Current playable version:** `v0.1.3-resonance`  
+**Current playable version:** `v0.1.5-greyhaven`  
 **Roadmap status:** ACTIVE  
-**Last roadmap update:** 2026-08-29
+**Last roadmap update:** 2026-08-30
 
 ---
 
@@ -152,7 +152,7 @@ A checkbox is marked complete only when the feature exists in the active branch.
 
 ---
 
-# 4. CURRENT STATE — v0.1.3-resonance
+# 4. CURRENT STATE — v0.1.5-greyhaven
 
 ## Foundation
 
@@ -196,7 +196,20 @@ A checkbox is marked complete only when the feature exists in the active branch.
 - [x] Invulnerability frames.
 - [x] Bounded impact particles.
 - [x] First melee enemy behavior.
-- [~] Sentry prototype exists but does not yet satisfy final ranged/area-control enemy acceptance.
+
+## Ranged combat — Vein Sentry
+
+- [x] Data-driven enemy registry.
+- [x] Observe → Position → Telegraph → Fire → Recover state machine.
+- [x] Amber charge ring and dashed aim-line telegraph.
+- [x] Projectiles with lifetime, wall collision, and player collision.
+- [x] Projectile damage, i-frames, and knockback.
+- [x] Projectiles cleared on room transition and player recovery.
+- [x] Resonance interrupts the Telegraph window.
+- [x] Visible Disrupted state.
+- [x] Shardblade stays the damage tool; Resonance disrupts rather than damaging.
+- [x] Authored mixed encounter in Hollow March Field 2.
+- [ ] Owner-device acceptance of the Sentry encounter.
 
 ## Persistence
 
@@ -234,7 +247,50 @@ A checkbox is marked complete only when the feature exists in the active branch.
 - [x] Hollow March Field 2 buried Vein route discovery.
 - [x] Forgotten Relic Chamber core-memory response.
 - [x] Resonance remains selective instead of a global detective-vision overlay.
+- [x] Greyhaven lift-station node, so the starting town rewards a returning player.
 - [ ] Owner-device acceptance of touch Resonance and persistence.
+
+## Development diagnostics
+
+- [x] FPS, average frame time, and worst frame time in the sample window.
+- [x] Room id and entry id.
+- [x] Player coordinates and facing.
+- [x] Health, invulnerability, attack, and cooldown timers.
+- [x] Resonance availability, cooldown, and live pulse radius.
+- [x] Entity counts for enemies, projectiles, and particles.
+- [x] Current interactable target.
+- [x] Per-enemy id, health, state with state timer, and distance.
+- [x] Active world flags.
+- [x] Collision, exit, hurtbox, hitbox, reach, and Sentry range shapes.
+- [x] Development-mode toggle: `F3` / `` ` `` on keyboard, `?debug` for touch devices.
+- [x] Keyboard toggle persisted per device in `settings.debugOverlay`.
+- [x] Overlay off by default, with neither text refresh nor shape pass while disabled.
+- [x] Overlay reads the same constants the simulation reads, so drawn boxes cannot drift.
+
+## Interaction layer
+
+- [x] Data-driven interactable registry keyed by room id.
+- [x] Stable authored interactable ids.
+- [x] Nearest-target resolution within authored reach.
+- [x] Contextual on-screen interact prompt.
+- [x] Contextual action control: interact when a target is in reach, Shardblade otherwise.
+- [x] Interact glyph kept distinct from the Resonance control.
+- [x] Ordered dialogue variants gated on `flag` / `notFlag` / `ability`.
+- [x] Post-dialogue effects for world flags and rest.
+- [x] Solid interactable collision bodies.
+- [x] Save Schema V1 unchanged; no migration required.
+- [ ] Owner-device acceptance of touch interaction.
+
+## Greyhaven
+
+- [x] Six authored exterior landmarks with collision and world-space labels.
+- [x] Five NPCs with distinct palettes, marks, and voices.
+- [x] World-state-reactive dialogue for every NPC.
+- [x] First save/rest point at the Wayfarer's Rest hearth.
+- [x] Dormant Old Lift Station authored as the backtracking hook.
+- [x] Shardblade repair offer as the future upgrade/service hook.
+- [x] Concrete authored reason to leave town.
+- [ ] Owner-device acceptance of `v0.1.5-greyhaven`.
 
 ## Portrait rendering correction
 
@@ -389,12 +445,12 @@ Exteriors only. No landmark has a walkable interior yet, and none is required by
 ## 1.4 Hollow March Field 2
 
 - [~] Traversal/collision prototype.
-- [~] second enemy prototype.
+- [x] second enemy authored. (Vein Sentry)
 - [x] route to Forgotten Relic Chamber.
 - [x] authored hidden Resonance node.
 - [x] persistent buried Vein route reveal.
-- [ ] fully authored ranged/area-control behavior.
-- [ ] readable telegraph.
+- [x] fully authored ranged/area-control behavior.
+- [x] readable telegraph.
 - [ ] visible future Tether anchor.
 - [ ] optional lore object.
 - [ ] actual Sunken Archive overworld entrance route.
@@ -474,13 +530,13 @@ Before full Sunken Archive production:
 
 - [ ] title/New Game/Continue flow works.
 - [ ] save reload is owner-device accepted.
-- [ ] Greyhaven basic NPC interaction exists.
-- [ ] opening motivation is clear.
-- [ ] melee enemy accepted.
-- [ ] ranged/area-control enemy accepted.
-- [ ] awakening is persistent.
-- [ ] Resonance is playable and understood.
-- [ ] Resonance reveals the Archive direction.
+- [x] Greyhaven basic NPC interaction exists.
+- [~] opening motivation is clear. Authored through ISEN; reads as clear on acceptance only.
+- [ ] melee enemy accepted. Implemented; awaiting owner-device acceptance.
+- [ ] ranged/area-control enemy accepted. Implemented; awaiting owner-device acceptance.
+- [x] awakening is persistent.
+- [~] Resonance is playable and understood. Playable; comprehension is an acceptance judgement.
+- [~] Resonance reveals the Archive direction. Field 2 route clue and the chamber `ACCESS PATH: SUNKEN ARCHIVE` line are authored; there is no Archive to reach yet.
 - [ ] iPhone Phase 1 acceptance.
 - [ ] iPad Phase 1 acceptance.
 - [ ] desktop acceptance.
@@ -822,7 +878,7 @@ ALTERED GREYHAVEN / OVERWORLD
 - [x] touch movement demonstrated.
 - [x] Forgotten Relic Chamber reached.
 - [~] combat/save build demonstrated; full behavior still needs explicit confirmation.
-- [ ] portrait letterbox fix confirmation on v0.1.3.
+- [ ] portrait letterbox fix confirmation on the current build.
 - [ ] Resonance touch action.
 - [ ] save/reload persistence.
 - [ ] dialogue.
@@ -1060,7 +1116,7 @@ Immediate:
 - [x] melee combat foundation.
 - [x] Resonance v1.
 - [x] portrait flash clipping.
-- [ ] second enemy/projectile or area-control foundation.
+- [x] second enemy/projectile or area-control foundation.
 - [x] NPC interaction cleanup.
 - [x] debug overlay.
 - [ ] event bus.
@@ -1082,9 +1138,9 @@ Immediate:
 
 - [ ] Kael gameplay sprite spec.
 - [ ] Shardblade authored attacks.
-- [ ] Greyhaven authored pass.
+- [~] Greyhaven authored pass. Exterior authored as six landmarks; final art fidelity outstanding.
 - [ ] Hollow March authored pass.
-- [ ] first enemies.
+- [~] first enemies. Husk and Vein Sentry read at gameplay scale; both are placeholder art.
 - [~] Resonance pulse language prototype exists.
 - [ ] Resonance final visual language.
 
@@ -1118,9 +1174,9 @@ Vertical slice:
 
 Immediate:
 
-- [ ] opening motivation.
-- [ ] Greyhaven NPC identities.
-- [ ] dialogue voices.
+- [x] opening motivation.
+- [x] Greyhaven NPC identities. (MARETH, TOLL, ISEN, BRAY, WREN)
+- [x] dialogue voices. Shipped in dialogue; not yet codified in the Story Bible.
 - [x] awakening beat.
 - [ ] private Story Bible.
 
@@ -1172,11 +1228,14 @@ Vertical slice:
 
 # 7. CURRENT EXACT DEVELOPMENT ORDER
 
-This is the authoritative immediate sequence from `v0.1.3-resonance`.
+This is the authoritative immediate sequence from `v0.1.5-greyhaven`.
 
-## NEXT 1 — owner-device acceptance v0.1.3
+## NEXT 1 — owner-device acceptance v0.1.5
 
-On iPhone:
+Acceptance has stacked across three builds without a device pass. All of it is
+confirmed against `v0.1.5-greyhaven`, on iPhone.
+
+Carried from v0.1.3:
 
 - [ ] confirm cyan portrait letterbox contamination is gone.
 - [ ] confirm Shardblade still works.
@@ -1187,23 +1246,43 @@ On iPhone:
 - [ ] confirm chamber/position/health state survives refresh as expected.
 - [ ] confirm awakening does not replay after persisted completion.
 
-## NEXT 2 — second enemy archetype
+Carried from v0.1.4:
 
-- [ ] ranged or area-control behavior.
-- [ ] readable windup/telegraph.
-- [ ] projectile/hazard technical primitive if selected.
-- [ ] hit response.
-- [ ] persistent defeat.
-- [ ] touch-screen readability.
+- [ ] Vein Sentry visibly cycles into an amber telegraph before firing.
+- [ ] projectile is readable and dodgeable in landscape.
+- [ ] projectile contact costs one health diamond and knocks back, without repeat damage.
+- [ ] Resonance during the telegraph cancels the shot and visibly disrupts the Sentry.
+- [ ] disrupted Sentry can be closed on and finished with the Shardblade.
+- [ ] defeated Sentry stays defeated across transition and refresh.
 
-## NEXT 3 — Greyhaven interaction layer
+New in v0.1.5:
 
-- [ ] interaction action/targeting.
-- [ ] NPC dialogue primitive.
-- [ ] first named NPCs.
-- [ ] first save/rest point.
-- [ ] opening motivation.
-- [ ] post-Axiom reaction flag/dialogue.
+- [ ] HUD displays `v0.1.5-greyhaven` after refresh.
+- [ ] interact prompt is readable and clear of the touch controls.
+- [ ] action button visibly changes between the Shardblade and the interact glyph.
+- [ ] tapping the action button beside an NPC talks instead of swinging.
+- [ ] resting at the hearth refills health and reports a save.
+- [ ] returning to Greyhaven after the awakening shows the changed dialogue.
+- [ ] landmark labels stay legible at phone scale in landscape and portrait.
+- [ ] `?debug` shows the diagnostics overlay without breaking touch controls.
+
+## NEXT 2 — second enemy archetype — IMPLEMENTED in v0.1.4
+
+- [x] ranged or area-control behavior.
+- [x] readable windup/telegraph.
+- [x] projectile/hazard technical primitive if selected.
+- [x] hit response.
+- [x] persistent defeat.
+- [~] touch-screen readability. Authored for it; confirmed under NEXT 1.
+
+## NEXT 3 — Greyhaven interaction layer — IMPLEMENTED in v0.1.5
+
+- [x] interaction action/targeting.
+- [x] NPC dialogue primitive.
+- [x] first named NPCs.
+- [x] first save/rest point.
+- [x] opening motivation.
+- [x] post-Axiom reaction flag/dialogue.
 
 ## NEXT 4 — Sunken Archive entrance
 

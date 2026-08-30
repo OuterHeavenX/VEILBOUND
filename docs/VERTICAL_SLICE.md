@@ -33,8 +33,8 @@ Implemented and awaiting owner-device acceptance:
 
 Still required before Phase 1 exits:
 
-- [ ] owner-device acceptance of `v0.1.3-resonance`
-- [ ] second ranged/area-control enemy fully authored and accepted
+- [ ] owner-device acceptance of `v0.1.5-greyhaven`, carrying the unconfirmed v0.1.3 and v0.1.4 items
+- [~] second ranged/area-control enemy fully authored; acceptance outstanding
 - [x] Greyhaven NPC/dialogue interaction layer
 - [x] first save/rest point
 - [ ] Sunken Archive entrance

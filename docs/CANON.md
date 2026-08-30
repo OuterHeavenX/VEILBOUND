@@ -99,6 +99,12 @@ Kael's primary weapon is a damaged relic weapon called the **Shardblade**. Its c
 
 The weapon should visibly evolve as relic components are recovered.
 
+## Visual register
+
+VEILBOUND is **painted**, not pixel art — high-resolution painted plates and figures, as in
+the title key art, the Greyhaven plate and the Hollow March fields. Owner decision, recorded
+as `ROADMAP.md` 2.14. Any earlier note or production prompt specifying pixel art is superseded.
+
 ## Eidol
 
 Eidol is a melancholy post-collapse world where contemporary settlements coexist with remnants of infrastructure they only partially understand.

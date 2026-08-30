@@ -2,9 +2,9 @@
 
 **Document owner:** ORACLE — Game Director & Planning  
 **Repository:** `OuterHeavenX/VEILBOUND`  
-**Integration branch:** `main` — carries the full slice as of `v0.4.0-prologue`  
+**Integration branch:** `main` — carries the full slice as of `v0.4.1-prologue`  
 **Current development branch:** `claude/todo-implementation-td5zeq`  
-**Current playable version:** `v0.4.0-prologue`  
+**Current playable version:** `v0.4.1-prologue`  
 **Roadmap status:** ACTIVE  
 **Last roadmap update:** 2026-08-30
 
@@ -59,11 +59,13 @@ that is already cited; add new rules at the end.
 - **2.10** Third-party art currently in the repository remains placeholder/development material until licensing and final-art direction are resolved.
 - **2.11** No major full-game expansion until the complete vertical slice is stable and accepted.
 - **2.12** VEILBOUND's shipped art, audio and UI must be an original identity rather than another game's visual language. (`AGENTS.md` design pillar 9.)
+- **2.14** VEILBOUND's visual register is **painted**, not pixel art. Owner decision, v0.4.1. Placeholder
+  procedural rooms and any production prompt that says otherwise are superseded by it.
 - **2.13** Documentation states what is true of the current build. A claim that has stopped being true is a defect, not stale prose.
 
 ---
 
-## 3. Current playable state — v0.4.0-prologue
+## 3. Current playable state — v0.4.1-prologue
 
 ### Foundation / presentation
 - [x] zero-build Canvas 2D runtime
@@ -163,9 +165,9 @@ hardware.
 | `v0.3.3-threshold` | landscape gate, key-art title | `docs/PROGRESS.md` § v0.3.3 |
 | `v0.3.4-greyhaven` | painted Greyhaven town plate | `docs/PROGRESS.md` § v0.3.4 |
 | `v0.3.6-march` | painted Hollow March fields, collision authored to them | `docs/PROGRESS.md` § v0.3.5-6 |
-| `v0.4.0-prologue` | the six-scene opening, and the cutscene sequencer | `docs/OPENING.md` |
+| `v0.4.1-prologue` | the six-scene opening, the cutscene sequencer, painted direction settled | `docs/OPENING.md` |
 
-One device pass on `v0.4.0-prologue` covers all seven, since each release carries the ones
+One device pass on `v0.4.1-prologue` covers all seven, since each release carries the ones
 before it. That pass is the single largest open item in this roadmap.
 
 ---
@@ -384,7 +386,7 @@ Still held until justified:
 
 # 10. Immediate production order
 
-1. Test `v0.4.0-prologue` on iPhone using the checklist in `docs/SUNKEN_ARCHIVE.md`, plus:
+1. Test `v0.4.1-prologue` on iPhone using the checklist in `docs/SUNKEN_ARCHIVE.md`, plus:
    the world sits centred with even letterboxing; the stick appears under the thumb
    anywhere on the left; each region sounds distinct and music sits under the cues; the
    rotate gate appears upright and hands the game back on turning.

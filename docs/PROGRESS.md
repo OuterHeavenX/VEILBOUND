@@ -6,6 +6,53 @@ Use this file together with `ROADMAP.md`, `docs/VERTICAL_SLICE.md`, `docs/CANON.
 
 ---
 
+## 2026-08-30 — v0.4.1 Painted, and the screen comes back
+
+Two owner corrections.
+
+### The screen stayed black after the intro
+
+Real bug, and mine. The sequencer was only ticked while a scene was running: the runtime asked
+`Cutscene.active()` before calling `update()`, and `update()` returned early with no script.
+So when the last scene called `finish()` and blanked its effect targets, nothing ever moved
+the current state toward them. The veil sat at 1 and the player was left walking an invisible
+forest path.
+
+Three fixes, because one would have been the narrow one:
+
+- The sequencer now eases every frame, whether or not a scene owns the screen, and the runtime
+  ticks it until it reports `settled()`. A leftover effect can no longer strand the view.
+- The ease snaps its tail. An exponential ease never reaches zero, and a veil resting at 0.004
+  is still a veil.
+- `play()` no longer resets the current effect state, only the targets. Chaining the memory
+  straight into the void had been blinking the world into view for a few frames between them.
+
+And in the data, the void now lifts deliberately onto the forest path rather than ending on
+full black and hoping — which is what exposed the engine bug in the first place.
+
+`prologue` now measures the mean luminance of the canvas after the intro and fails if the
+screen is dark, which is the assertion that would have caught this.
+
+### VEILBOUND is painted
+
+The owner settled the direction conflict raised in the previous entry: **painted, not pixel
+art.** Recorded as `ROADMAP.md` 2.14, in `docs/CANON.md` under a new Visual register section,
+and in `AGENTS.md`, whose WRAITH rule had said only "avoid generic fantasy pixel art" and now
+states the register outright.
+
+`docs/OPENING.md` keeps the blueprint's beat prompts verbatim as staging direction — shot,
+framing, subject, mood — with a note that every "16-bit", "SNES" and "pixel" in them is
+superseded. It also records what this settles beyond the opening: the procedural rooms with no
+plate yet are placeholders for painted plates, not for pixel tilesets.
+
+### Verification
+- Every suite passes, including the new luminance check.
+
+### Owner-device acceptance — PENDING
+- [ ] The intro hands the screen back cleanly on device.
+- [ ] The lift onto the forest path reads as a fade, not a cut.
+
+
 ## 2026-08-30 — v0.4.0 The opening
 
 The owner supplied the complete opening as a six-scene production blueprint. All of it is in,

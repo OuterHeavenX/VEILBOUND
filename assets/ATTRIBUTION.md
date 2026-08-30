@@ -47,11 +47,22 @@ release gate.
 
 **Unresolved:** origin and licence unknown. These are not wired into the game.
 
+## Title key art
+
+- In-repo: `assets/title/keyart.jpg` — Kael, Lyra and Mira above a ruined Eidol under an
+  eclipse. Supplied by the owner in v0.3.3 and wired in as the title plate.
+- Committed as JPEG at quality 0.90 (315 KB) rather than the original 2.9 MB PNG, because it
+  loads on the title screen of a mobile-first game. The source PNG is the owner's.
+
+**Unresolved:** origin and licence not recorded. Establish where this image came from, and on
+what terms, before the repository or the game is public. It is the only third-party-origin
+art the player actually sees at launch, so it is the sharpest version of the question the
+rest of this file asks.
+
 ## Generated, not third-party
 
-- `assets/sprites/` is produced by `tools/prerender-characters.mjs` (gameplay sheets) and
-  `tools/prerender-portraits.mjs` (the three title portraits) from the KayKit models. It
-  inherits whatever terms apply to the source pack above.
-- The title portraits are placeholder casting from the six-model pack, so two of them reuse
-  models already cast as Greyhaven NPCs. Lighting and pose separate them; final art will not
-  have to.
+- `assets/sprites/` is produced by `tools/prerender-characters.mjs` from the KayKit models.
+  It inherits whatever terms apply to the source pack above.
+- The v0.3.3 prerendered title portraits and their `tools/prerender-portraits.mjs` were
+  removed when the key art replaced them. Both are in git history if that pass is wanted
+  again.

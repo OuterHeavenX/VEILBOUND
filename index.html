@@ -16,40 +16,25 @@
       <p id="boot-status">Awakening the Vein…</p>
       <noscript>VEILBOUND requires JavaScript to run.</noscript>
     </section>
-    <section id="title-screen" class="title-screen" hidden aria-label="VEILBOUND title">
-      <div class="title-veil" aria-hidden="true"></div>
-      <div class="title-stage">
-        <div class="title-brand">
-          <div class="title-mark" aria-hidden="true">◇</div>
-          <h1 class="title-word">VEILBOUND</h1>
-          <p class="title-tagline">THE VEIN IS WAKING</p>
-          <p id="title-notice" class="title-notice" hidden role="status"></p>
-          <div id="title-menu" class="title-menu">
-            <button id="title-continue" class="title-button" type="button" hidden><span class="title-button-label">CONTINUE</span><span id="title-continue-detail" class="title-button-detail"></span></button>
-            <button id="title-new" class="title-button" type="button"><span class="title-button-label">START</span><span class="title-button-detail">BEGIN A NEW JOURNEY</span></button>
-            <button id="title-settings" class="title-button" type="button"><span class="title-button-label">SETTINGS</span></button>
-          </div>
-          <div id="title-confirm" class="title-confirm" hidden>
-            <p id="title-confirm-text" class="title-confirm-text"></p>
-            <button id="title-confirm-yes" class="title-button title-button-danger" type="button"></button>
-            <button id="title-confirm-no" class="title-button" type="button">CANCEL</button>
-          </div>
-          <p id="title-hint" class="title-hint"></p>
+    <section id="title-screen" class="title-screen title-screen-art" hidden aria-label="VEILBOUND title">
+      <img id="title-art" class="title-art" src="./assets/title/keyart.jpg" alt="" aria-hidden="true" decoding="async" />
+      <div class="title-scrim" aria-hidden="true"></div>
+      <div class="title-panel">
+        <div class="title-mark" aria-hidden="true">◇</div>
+        <h1 class="title-word">VEILBOUND</h1>
+        <p class="title-tagline">THE VEIN IS WAKING</p>
+        <p id="title-notice" class="title-notice" hidden role="status"></p>
+        <div id="title-menu" class="title-menu">
+          <button id="title-continue" class="title-button" type="button" hidden><span class="title-button-label">CONTINUE</span><span id="title-continue-detail" class="title-button-detail"></span></button>
+          <button id="title-new" class="title-button" type="button"><span class="title-button-label">START</span><span class="title-button-detail">BEGIN A NEW JOURNEY</span></button>
+          <button id="title-settings" class="title-button" type="button"><span class="title-button-label">SETTINGS</span></button>
         </div>
-        <div id="title-cast" class="title-cast">
-          <figure class="title-cast-member" data-character="lyra">
-            <img class="title-cast-art" src="./assets/sprites/portrait_lyra.png" alt="Lyra" width="512" height="768" decoding="async" />
-            <figcaption class="title-cast-name">LYRA</figcaption>
-          </figure>
-          <figure class="title-cast-member title-cast-lead" data-character="kael">
-            <img class="title-cast-art" src="./assets/sprites/portrait_kael.png" alt="Kael" width="512" height="768" decoding="async" />
-            <figcaption class="title-cast-name">KAEL</figcaption>
-          </figure>
-          <figure class="title-cast-member" data-character="mira">
-            <img class="title-cast-art" src="./assets/sprites/portrait_mira.png" alt="Mira" width="512" height="768" decoding="async" />
-            <figcaption class="title-cast-name">MIRA</figcaption>
-          </figure>
+        <div id="title-confirm" class="title-confirm" hidden>
+          <p id="title-confirm-text" class="title-confirm-text"></p>
+          <button id="title-confirm-yes" class="title-button title-button-danger" type="button"></button>
+          <button id="title-confirm-no" class="title-button" type="button">CANCEL</button>
         </div>
+        <p id="title-hint" class="title-hint"></p>
       </div>
       <p id="title-version" class="title-version"></p>
     </section>

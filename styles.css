@@ -629,48 +629,57 @@ button { font: inherit; }
   overflow: hidden;
   text-align: center;
   background:
-    radial-gradient(ellipse at 68% 58%, rgba(127, 231, 225, 0.09), transparent 58%),
-    radial-gradient(ellipse at 22% 22%, rgba(64, 122, 138, 0.13), transparent 62%),
-    linear-gradient(180deg, #060b0e 0%, #04080a 46%, #020506 100%);
+    radial-gradient(ellipse at 50% 42%, rgba(127, 231, 225, 0.07), transparent 62%),
+    linear-gradient(180deg, #060b0e 0%, #04080a 50%, #020506 100%);
 }
 
-/* Slow drifting light over the whole plate, so the screen is never dead still. */
-.title-veil {
+/* The title plate is the key art with the menu set into the empty right third of the
+   painting. Everything is layered over the art rather than beside it, so the composition
+   survives any viewport the letterboxed world does. */
+.title-screen-art {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.title-art {
   position: absolute;
-  inset: -20%;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Biased up and to the left. The painting is 16:9; anything narrower crops horizontally,
+     and the three figures sit left of centre while the right third is empty ruins the menu
+     covers anyway, so the crop should take its loss from the right and from the bare rock
+     along the bottom. */
+  object-position: 30% 38%;
+  pointer-events: none;
+}
+
+/* A failed image leaves the base gradient rather than a broken box. */
+.title-art.is-missing { display: none; }
+
+.title-scrim {
+  position: absolute;
+  inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 30% 30%, rgba(127, 231, 225, 0.07), transparent 42%),
-    radial-gradient(circle at 74% 66%, rgba(181, 140, 240, 0.05), transparent 44%);
-  animation: title-drift 26s ease-in-out infinite alternate;
+    linear-gradient(270deg, rgba(3, 6, 8, 0.88) 0%, rgba(3, 6, 8, 0.72) 22%, rgba(3, 6, 8, 0.33) 46%, transparent 66%),
+    linear-gradient(0deg, rgba(3, 6, 8, 0.7) 0%, transparent 34%);
 }
 
-@keyframes title-drift {
-  from { transform: translate3d(-1.5%, -1%, 0) scale(1); }
-  to   { transform: translate3d(2%, 1.5%, 0) scale(1.06); }
-}
-
-.title-stage {
+.title-panel {
   position: relative;
   z-index: 1;
-  display: grid;
-  grid-template-columns: minmax(230px, 0.9fr) minmax(0, 1.25fr);
-  align-items: center;
-  gap: clamp(14px, 3vw, 46px);
-  width: min(1180px, 100%);
-  max-height: 100%;
-}
-
-.title-brand {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  text-align: left;
-  min-width: 0;
+  align-items: flex-end;
+  width: min(360px, 46%);
+  max-height: 100%;
+  text-align: right;
 }
 
 .title-mark {
-  align-self: flex-start;
   color: var(--axiom);
   font-size: clamp(1.1rem, 2.6vw, 1.7rem);
   animation: pulse 2.6s ease-in-out infinite;
@@ -678,10 +687,10 @@ button { font: inherit; }
 
 .title-word {
   margin: 0.1rem 0 0;
-  font-size: clamp(1.6rem, 5.4vw, 3.1rem);
+  font-size: clamp(1.4rem, 4.4vw, 2.6rem);
   font-weight: 400;
-  letter-spacing: clamp(0.14em, 0.9vw, 0.28em);
-  text-shadow: 0 0 30px rgba(127, 231, 225, 0.22);
+  letter-spacing: clamp(0.1em, 0.7vw, 0.2em);
+  text-shadow: 0 0 32px rgba(127, 231, 225, 0.28), 0 2px 14px rgba(0, 0, 0, 0.9);
   white-space: nowrap;
 }
 
@@ -689,24 +698,26 @@ button { font: inherit; }
 
 .title-tagline {
   margin: 0.35rem 0 0;
-  padding-bottom: 0.85rem;
-  border-bottom: 1px solid rgba(127, 231, 225, 0.16);
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(127, 231, 225, 0.2);
   color: var(--muted);
-  font-size: clamp(0.5rem, 1.5vw, 0.68rem);
-  letter-spacing: 0.32em;
+  font-size: clamp(0.48rem, 1.4vw, 0.66rem);
+  letter-spacing: 0.3em;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
 }
+
+.title-panel .title-tagline { align-self: stretch; }
 
 .title-notice {
   max-width: 34rem;
-  margin: 0.9rem 0 0;
+  margin: 0.85rem 0 0;
   padding: 8px 12px;
   border: 1px solid rgba(217, 111, 111, 0.4);
-  background: rgba(30, 12, 14, 0.6);
+  background: rgba(30, 12, 14, 0.72);
   color: #e9c6c6;
   font-size: clamp(0.55rem, 1.6vw, 0.7rem);
   line-height: 1.6;
   letter-spacing: 0.06em;
-  text-align: left;
 }
 
 .title-menu, .title-confirm {
@@ -715,7 +726,7 @@ button { font: inherit; }
   align-items: stretch;
   gap: clamp(6px, 1.2vh, 10px);
   width: min(340px, 100%);
-  margin-top: clamp(0.8rem, 2.4vh, 1.5rem);
+  margin-top: clamp(0.8rem, 2.4vh, 1.4rem);
 }
 
 .title-confirm-text {
@@ -723,7 +734,6 @@ button { font: inherit; }
   color: var(--muted);
   font-size: clamp(0.6rem, 2vw, 0.72rem);
   line-height: 1.6;
-  text-align: left;
 }
 
 .title-button {
@@ -735,7 +745,7 @@ button { font: inherit; }
   border: 1px solid rgba(127, 231, 225, 0.28);
   border-left-width: 2px;
   border-radius: 2px;
-  background: linear-gradient(90deg, rgba(14, 30, 33, 0.92), rgba(8, 14, 17, 0.72));
+  background: linear-gradient(90deg, rgba(14, 30, 33, 0.88), rgba(8, 14, 17, 0.7));
   color: var(--ink);
   font-size: clamp(0.62rem, 1.9vw, 0.78rem);
   letter-spacing: 0.22em;
@@ -746,9 +756,24 @@ button { font: inherit; }
 
 .title-button:hover, .title-button:focus-visible {
   border-color: var(--axiom);
-  background: linear-gradient(90deg, rgba(22, 48, 51, 0.96), rgba(10, 20, 23, 0.8));
+  background: linear-gradient(90deg, rgba(22, 48, 51, 0.94), rgba(10, 20, 23, 0.8));
   transform: translateX(3px);
   outline: none;
+}
+
+/* Set into the right edge of the plate, so the accent and the motion mirror that edge. */
+.title-panel .title-button {
+  align-items: flex-end;
+  border-left-width: 1px;
+  border-right-width: 2px;
+  background: linear-gradient(270deg, rgba(14, 30, 33, 0.9), rgba(6, 12, 15, 0.66));
+  text-align: right;
+  backdrop-filter: blur(2px);
+}
+
+.title-panel .title-button:hover, .title-panel .title-button:focus-visible {
+  background: linear-gradient(270deg, rgba(24, 52, 55, 0.96), rgba(8, 18, 21, 0.78));
+  transform: translateX(-3px);
 }
 
 .title-button-detail {
@@ -764,132 +789,43 @@ button { font: inherit; }
 }
 
 .title-hint {
-  margin: clamp(0.7rem, 2.2vh, 1.3rem) 0 0;
+  margin: clamp(0.7rem, 2.2vh, 1.2rem) 0 0;
   color: var(--muted);
-  font-size: clamp(0.46rem, 1.4vw, 0.6rem);
+  font-size: clamp(0.44rem, 1.3vw, 0.58rem);
   letter-spacing: 0.16em;
-  text-align: left;
-  opacity: 0.8;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+  opacity: 0.85;
 }
 
-/* The cast lineup. Kael centred and larger; the other two set back and a touch dimmer, so
-   the eye lands on the character the player actually controls. */
-.title-cast {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: clamp(2px, 1.4vw, 26px);
-  min-width: 0;
-}
-
-/* Flex basis 0 rather than intrinsic width: the lineup then always fits its column and the
-   figures scale together, instead of one wide pose pushing the others off the plate. */
-.title-cast-member {
-  --glow: rgba(127, 231, 225, 0.5);
-  position: relative;
-  display: flex;
-  flex: 1 1 0;
-  flex-direction: column;
-  align-items: center;
-  margin: 0;
-  min-width: 0;
-  max-width: 190px;
-  opacity: 0.82;
-}
-
-.title-cast-member[data-character="lyra"] { --glow: rgba(181, 140, 240, 0.5); }
-.title-cast-member[data-character="mira"] { --glow: rgba(240, 180, 106, 0.5); }
-
-/* Kael is wider and brighter, but stands on the same line as the other two: lifting him as
-   well scattered the three name plates and read as a mistake rather than a hierarchy. */
-.title-cast-lead {
-  opacity: 1;
-  z-index: 1;
-  flex-grow: 1.3;
-  max-width: 248px;
-}
-
-/* Pool of light each figure stands in, sized off the art so it tracks the responsive scale. */
-.title-cast-member::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  bottom: 1.6em;
-  width: 128%;
-  aspect-ratio: 1;
-  transform: translateX(-50%);
-  background: radial-gradient(circle, var(--glow), transparent 62%);
-  opacity: 0.32;
-  pointer-events: none;
-}
-
-.title-cast-art {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: auto;
-  max-height: min(44vh, 356px);
-  object-fit: contain;
-  object-position: bottom center;
-  filter: drop-shadow(0 0 18px var(--glow)) drop-shadow(0 12px 16px rgba(0, 0, 0, 0.55));
-  animation: cast-float 6.5s ease-in-out infinite alternate;
-}
-
-.title-cast-lead .title-cast-art { max-height: min(56vh, 438px); }
-.title-cast-member[data-character="lyra"] .title-cast-art { animation-delay: -2.2s; }
-.title-cast-member[data-character="mira"] .title-cast-art { animation-delay: -4.4s; }
-
-.title-cast-name {
-  position: relative;
-  width: 100%;
-  margin-top: 0.6em;
-  padding-top: 0.55em;
-  border-top: 1px solid var(--glow);
-  color: var(--ink);
-  font-size: clamp(0.42rem, 1.3vw, 0.62rem);
-  letter-spacing: 0.34em;
-  text-indent: 0.34em;
-  white-space: nowrap;
-}
-
-.title-cast-member.is-missing { display: none; }
-
-@keyframes cast-float {
-  from { transform: translateY(0); }
-  to   { transform: translateY(-9px); }
-}
-
-/* Short landscape phones have no room for a two-column stage with full-height figures. */
-@media (max-height: 430px) {
-  .title-cast-member { max-width: 128px; }
-  .title-cast-lead { max-width: 166px; }
-  .title-cast-art { max-height: 50vh; }
-  .title-cast-lead .title-cast-art { max-height: 62vh; }
-}
-
-/* Portrait windows that are not held by the rotate gate (a desktop window resized tall).
-   The stage stacks rather than crushing either half. */
-@media (max-aspect-ratio: 9 / 10) {
-  .title-stage { grid-template-columns: 1fr; gap: clamp(10px, 3vh, 26px); }
-  .title-brand { align-items: center; text-align: center; }
-  .title-mark { align-self: center; }
-  .title-menu, .title-confirm { align-self: center; }
-  .title-hint, .title-notice, .title-confirm-text { text-align: center; }
-  .title-button { text-align: center; align-items: center; }
-  .title-cast { order: -1; }
-  .title-cast-art { max-height: 26vh; }
-  .title-cast-lead .title-cast-art { max-height: 32vh; }
-}
-
+/* Bottom left, opposite the menu, so it never crowds a button. */
 .title-version {
   position: absolute;
-  right: max(14px, env(safe-area-inset-right));
+  left: max(14px, env(safe-area-inset-left));
   bottom: max(10px, env(safe-area-inset-bottom));
+  z-index: 1;
   margin: 0;
   color: var(--muted);
   font-size: 0.56rem;
   letter-spacing: 0.18em;
-  opacity: 0.55;
+  opacity: 0.5;
+}
+
+@media (max-height: 430px) {
+  .title-panel { width: min(320px, 50%); }
+}
+
+/* Portrait windows that the rotate gate does not hold — a desktop window resized tall. The
+   painting is 16:9, so at this shape the menu goes over the middle instead of the edge. */
+@media (max-aspect-ratio: 9 / 10) {
+  .title-screen-art { justify-content: center; }
+  .title-panel { align-items: center; width: min(340px, 88%); text-align: center; }
+  .title-panel .title-button { align-items: center; text-align: center; border-right-width: 1px; }
+  .title-scrim { background: linear-gradient(0deg, rgba(3, 6, 8, 0.92) 18%, rgba(3, 6, 8, 0.62) 52%, rgba(3, 6, 8, 0.35) 100%); }
+  .title-art { object-position: 50% 30%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title-mark, .rotate-phone, .rotate-phone-screen { animation: none; }
 }
 
 /* The rotate gate. Above everything, including the HUD and the pause menu, because it is
@@ -961,10 +897,6 @@ button { font: inherit; }
   color: var(--muted);
   font-size: clamp(0.6rem, 3.4vw, 0.74rem);
   letter-spacing: 0.16em;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .title-veil, .title-cast-art, .rotate-phone, .rotate-phone-screen { animation: none; }
 }
 
 .interact-prompt {

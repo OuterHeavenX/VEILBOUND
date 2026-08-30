@@ -11,7 +11,7 @@ The slice has moved from foundation work into the first playable dungeon. The ex
 ### Implemented foundation
 
 - [x] zero-build `index.html` launch
-- [x] title plate featuring Kael, Lyra and Mira, with START / CONTINUE / SETTINGS
+- [x] title key art featuring Kael, Lyra and Mira, with START / CONTINUE / SETTINGS
 - [x] landscape enforced by orientation lock where granted and a rotate gate everywhere else
 - [x] pause / Character menu with HP, XP, JP, coins, Shardblade level, protocols and journey state
 - [x] Greyhaven exterior, NPC interaction and Wayfarer's Rest save/rest point

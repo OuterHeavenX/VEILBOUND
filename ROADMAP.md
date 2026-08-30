@@ -59,7 +59,7 @@ One codebase must remain first-class on phone, tablet, desktop, keyboard, touch 
 ### Foundation / presentation
 - [x] zero-build Canvas 2D runtime
 - [x] responsive authored 960×540 world
-- [x] title plate with Kael, Lyra and Mira, and START / CONTINUE / SETTINGS
+- [x] title key art with Kael, Lyra and Mira, and START / CONTINUE / SETTINGS
 - [x] landscape enforced: orientation lock where granted, rotate gate everywhere else
 - [x] safe save inspection and resume
 - [x] touch, keyboard and controller movement

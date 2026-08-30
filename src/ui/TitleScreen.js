@@ -141,11 +141,12 @@
       addEventListener('gamepadconnected', () => { padConnected = true; refresh(); });
       addEventListener('gamepaddisconnected', () => { padConnected = false; refresh(); });
 
-      // A portrait that fails to load would otherwise leave a broken-image box in the
-      // lineup. Hiding that one figure keeps the other two composed.
-      for (const art of document.querySelectorAll('.title-cast-art')) {
-        if (art.complete && art.naturalWidth === 0) art.closest('.title-cast-member').classList.add('is-missing');
-        art.addEventListener('error', () => art.closest('.title-cast-member').classList.add('is-missing'));
+      // Key art that fails to load would leave a broken-image box across the whole plate.
+      // Hiding it falls back to the gradient the section already paints.
+      const art = el('title-art');
+      if (art) {
+        if (art.complete && art.naturalWidth === 0) art.classList.add('is-missing');
+        art.addEventListener('error', () => art.classList.add('is-missing'));
       }
 
       versionLabel.textContent = `v${version}`;

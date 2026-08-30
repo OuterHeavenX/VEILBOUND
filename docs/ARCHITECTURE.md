@@ -247,11 +247,12 @@ The next major ability is **Tether**. Its implementation must support traversal,
 
 ## Sprite architecture
 
-Title portraits are a separate offline pass, `tools/prerender-portraits.mjs`: a title figure
-needs a near-eye-level perspective camera and rim lighting, not a 96px top-down gameplay cell,
-so it is its own render rather than a bigger cell in the same one. The portraits are plain
-`<img>` elements in the title markup, and a portrait that fails to load hides its own figure
-rather than leaving a broken box in the lineup.
+The title screen does not use this pipeline at all. It is a single piece of authored key art
+(`assets/title/keyart.jpg`) drawn as a plain `<img>` with `object-fit: cover`, with the menu
+layered into the empty right third of the painting over a scrim. The painting is 16:9, so
+anything narrower crops horizontally; `object-position` biases the crop up and to the left,
+because the three figures sit left of centre and the right third is ruins the menu covers
+anyway. Art that fails to load hides itself and falls back to the section's gradient.
 
 Generated 8-direction character sheets and authored enemy sheets both flow through `src/core/Sprites.js`. Missing art must fall back safely rather than block game startup.
 

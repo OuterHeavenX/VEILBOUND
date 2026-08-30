@@ -23,27 +23,29 @@ While the gate is up the simulation does not advance, held input is cleared, a r
 autosaves and audio suspends: the same treatment as backgrounding the tab. It uses its own
 flag rather than the pause-menu flag, so rotating with the menu open comes back to the menu.
 
-### A start screen with Kael, Lyra and Mira
+### A start screen built on the owner's key art
 
-The title is now a two-column plate: wordmark, tagline and menu on the left, the three
-characters lit and standing on one line on the right. Kael is wider and brighter; the other
-two are set back and slightly dimmer, so the eye lands on the character the player controls.
-Each carries a signature rim colour — cyan, violet, amber — which is what keeps three figures
-cut from the same six-model pack reading as three different people. The menu offers START,
-CONTINUE (with the room and health it resumes to, shown only when a save exists) and
-SETTINGS.
+The title is the supplied painting — Kael hooded and masked between Lyra and Mira, above a
+ruined Eidol under an eclipse — with the menu set into the empty right third over a scrim, as
+asked. START, CONTINUE (naming the room and health it resumes to, shown only when a save
+exists) and SETTINGS, right-aligned with the accent and the hover motion mirroring that edge.
 
-Portraits are rendered offline by a new `tools/prerender-portraits.mjs`. A title figure needs
-a near-eye-level perspective camera and rim light, not a 96px top-down gameplay cell, so it is
-its own pass rather than a bigger cell in the existing one. A portrait that fails to load
-hides its own figure rather than leaving a broken box in the lineup.
+The painting is 16:9. Anything narrower crops horizontally, so `object-position` biases the
+crop up and to the left: the three figures sit left of centre, and the right third is ruins
+the menu covers anyway. Without that bias a 4:3 tablet cut Lyra in half at the left edge.
+Committed as a 315 KB JPEG rather than the original 2.9 MB PNG, because it is the first thing
+a phone downloads.
 
-### Lyra and Mira are named, not defined
+This pass first shipped three offline-rendered character portraits in a lineup; the key art
+replaced them the same day. The portraits and `tools/prerender-portraits.mjs` were removed
+rather than left as dead assets, and are in git history if that approach is wanted again.
 
-Neither name existed anywhere in the repository before this milestone. They are on the title
-because the owner asked for them there; nothing else about them is canon — no role, no
-relationship to Kael, no pronouns. `docs/CANON.md` records that explicitly rather than letting
-an invented backstory settle in by default.
+### Lyra and Mira are named and gendered, not defined
+
+Neither name existed anywhere in the repository before this milestone. Both are women; Kael is
+a man, as `docs/CANON.md` already had him. Nothing else about them is canon — no role, no
+relationship to Kael, no dialogue — and CANON records that explicitly rather than letting an
+invented backstory settle in by default.
 
 ### Bug found while building
 
@@ -54,9 +56,9 @@ an invented backstory settle in by default.
 - A new `orientation` suite: a portrait phone is gated and its taps are intercepted, rotating
   clears the gate and restores the title, a tall desktop window is never gated, and a running
   game neither advances nor loses its position across the gate.
-- A new `titlecast` suite: all three portraits decode and have real size, Kael is the largest,
-  the three share one baseline, none overlap, and START/CONTINUE/SETTINGS behave with and
-  without a save.
+- A new `titlecast` suite: the key art decodes, covers the plate, and every visible button
+  lands in the right half without clipping the edge; START/CONTINUE/SETTINGS behave with and
+  without a save; Settings still opens and returns.
 - Every existing suite passes. The three portrait-mode phone cases were rewritten rather than
   deleted: in portrait they now assert the gate, which is the new correct behaviour, and their
   landscape cases are unchanged. `title-phone` was also calling an `enterGame` helper it never
@@ -65,7 +67,8 @@ an invented backstory settle in by default.
 ### Owner-device acceptance — PENDING
 - [ ] Turning the phone upright during play shows the gate and gives the game back on return.
 - [ ] The lock holds on Android; the overlay is the whole story on iPhone.
-- [ ] The three characters read clearly at phone scale, and the names are legible.
+- [ ] The key art crops well on a real phone, with all three figures kept.
+- [ ] The menu stays legible against the painting in daylight.
 - [ ] START / CONTINUE / SETTINGS are all reachable one-handed in landscape.
 
 

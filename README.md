@@ -14,12 +14,13 @@ from static hosting or straight off the filesystem, and that is a non-negotiable
 
 Landscape only: the world is authored at 960x540, so a phone held upright is asked to turn.
 
-## Current state — `v0.3.6-march`
+## Current state — `v0.4.0-prologue`
 
 Playable end to end from the title through Greyhaven, the Hollow March and the first six
 rooms of the Sunken Archive:
 
 - title key art, START / CONTINUE / SETTINGS, and safe save inspection
+- a six-scene opening prologue, played through a data-driven cutscene sequencer
 - Greyhaven with five reactive NPCs and the Wayfarer's Rest save point
 - Shardblade melee, the March Husk and the ranged Vein Sentry
 - the Axiom awakening and Resonance

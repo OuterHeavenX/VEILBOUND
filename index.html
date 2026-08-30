@@ -51,7 +51,7 @@
       </div>
     </section>
     <canvas id="game-canvas" width="1280" height="720" tabindex="0" aria-label="VEILBOUND game canvas"></canvas>
-    <div id="hud" class="hud" hidden><div><div class="hud-brand">VEILBOUND <span class="hud-version">v0.3.6-march</span></div><div id="hud-health" class="hud-health" aria-label="Health">◆ ◆ ◆ ◆ ◆ ◆</div><div id="hud-ability" class="hud-ability">AXIOM: DORMANT</div></div><div class="hud-right"><div id="hud-room">GREYHAVEN</div><div id="save-status" class="save-status">SAVE V1 READY</div></div></div>
+    <div id="hud" class="hud" hidden><div><div class="hud-brand">VEILBOUND <span class="hud-version">v0.4.0-prologue</span></div><div id="hud-health" class="hud-health" aria-label="Health">◆ ◆ ◆ ◆ ◆ ◆</div><div id="hud-ability" class="hud-ability">AXIOM: DORMANT</div></div><div class="hud-right"><div id="hud-room">GREYHAVEN</div><div id="save-status" class="save-status">SAVE V1 READY</div></div></div>
     <div id="interact-prompt" class="interact-prompt" hidden aria-live="polite"><span id="interact-prompt-verb" class="interact-prompt-verb">TALK</span><span id="interact-prompt-name" class="interact-prompt-name"></span></div>
     <pre id="debug-overlay" class="debug-overlay" hidden aria-hidden="true"></pre>
     <div id="dialogue" class="dialogue" hidden aria-live="polite"><div id="dialogue-speaker" class="dialogue-speaker"></div><div id="dialogue-text" class="dialogue-text"></div><div class="dialogue-hint">TAP / A / SPACE</div></div>
@@ -89,6 +89,14 @@
       <h2 class="rotate-title">ROTATE YOUR DEVICE</h2>
       <p class="rotate-text">VEILBOUND is played in landscape.</p>
     </section>
+    <div id="title-card" class="title-card" hidden aria-hidden="true">
+      <div class="title-card-mark">◇</div>
+      <div class="title-card-word">VEILBOUND</div>
+    </div>
+    <div id="objective-banner" class="objective-banner" hidden role="status">
+      <span class="objective-label">OBJECTIVE UPDATED</span>
+      <span id="objective-text" class="objective-text"></span>
+    </div>
     <div id="fatal-error" class="fatal-error" hidden role="alert"><h2>VEILBOUND could not start</h2><p id="fatal-error-message"></p></div>
   </main>
   <!-- Classic scripts preserve true zero-build, file:// friendly startup. -->
@@ -98,14 +106,17 @@
   <script src="./src/data/enemySprites.js"></script>
   <script src="./src/data/terrain.js"></script>
   <script src="./src/data/roomArt.js"></script>
+  <script src="./src/data/prologue.js"></script>
   <script src="./src/data/props.js"></script>
   <script src="./src/core/Sprites.js"></script>
   <script src="./src/core/RoomArt.js"></script>
   <script src="./src/data/enemies.js"></script>
   <script src="./src/data/interactables.js"></script>
   <script src="./src/ui/Orientation.js"></script>
+  <script src="./src/ui/TitleCard.js"></script>
   <script src="./src/ui/TitleScreen.js"></script>
   <script src="./src/ui/PauseMenu.js"></script>
+  <script src="./src/core/Cutscene.js"></script>
   <script src="./src/core/Puzzles.js"></script>
   <script src="./src/core/Progression.js"></script>
   <script src="./src/main.js"></script>

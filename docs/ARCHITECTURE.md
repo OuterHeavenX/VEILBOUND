@@ -1,7 +1,7 @@
 # VEILBOUND — Technical Architecture Foundation
 
 Owner: **FORGE**  
-Current runtime: **v0.3.6-march**
+Current runtime: **v0.4.0-prologue**
 
 ## Core principles
 
@@ -36,6 +36,7 @@ Already separated:
 - `src/core/Progression.js`
 - `src/core/Puzzles.js`
 - `src/core/RoomArt.js`
+- `src/core/Cutscene.js`
 - `src/ui/Orientation.js`
 - `src/ui/TitleScreen.js`
 - `src/ui/PauseMenu.js`
@@ -348,6 +349,22 @@ Diagnostics remain off by default and should not add per-frame work while disabl
 ## Cutscene contract
 
 Major cinematic sequences should support input lock, camera focus, actor movement/facing, animation, dialogue, sound/music cues, world events, persistent flags, boss start and fade/shake operations. Retry behavior must be shortened/skippable where repetition would waste the player's time.
+
+`src/core/Cutscene.js` implements the part of that contract the runtime can honour today:
+input lock, dialogue, cue playback, flag writes, callbacks, and a screen-effect layer of
+veil, letterbox, shake, colour inversion, glitch blocks, static, flash, vein lines and the
+broken-circle glyph. Scenes are authored as data (`src/data/prologue.js`) rather than
+hand-rolled in the runtime the way the Axiom awakening was.
+
+Not yet supported, and named here rather than implied: camera focus and movement, actor
+movement, facing and animation, and prop animation. Anything a scene needs from those is
+currently staged with effects instead, and `docs/OPENING.md` records each substitution.
+
+A scene is played through `playScene(scene, { once })`. The `once` flag is a Save V1 world
+flag, so a scene the player has seen never replays — including after reloading mid-scene.
+While a scene runs the HUD and touch controls are hidden, the world does not simulate, and
+movement, attack, Resonance, interaction and room transitions are all held. Diagnostics keep
+running, because a cutscene is otherwise the one thing in the game that cannot be debugged.
 
 ## Production gate
 

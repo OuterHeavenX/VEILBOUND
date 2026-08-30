@@ -112,6 +112,32 @@
       return { x: (Math.random() * 2 - 1) * s, y: (Math.random() * 2 - 1) * s };
     },
 
+    // Fast-forward the rest of the current scene. Every remaining beat's flag writes and
+    // callbacks still run, so skipping and watching leave the world identical; only the
+    // dialogue and the waits are dropped. The last beat's effects become the target so the
+    // screen lands where the scene meant to leave it.
+    skip() {
+      if (!script) return false;
+      for (let i = index; i < script.length; i++) {
+        const beat = script[i];
+        if (!beat) continue;
+        if (beat.flag && host.setFlag) host.setFlag(beat.flag[0], beat.flag[1]);
+        if (beat.then) beat.then();
+        if (beat.fx) {
+          for (const [key, value] of Object.entries(beat.fx)) {
+            if (key !== 'shake' && key !== 'flash') target[key] = value;
+          }
+        }
+      }
+      if (host.endDialogue) host.endDialogue();
+      waitingOnDialogue = false;
+      now.shake = 0; now.flash = 0;
+      const landing = { ...target };
+      finish();
+      target = landing;
+      return true;
+    },
+
     state() { return now; },
 
     // True once nothing is left painted over the world. The host keeps ticking the sequencer

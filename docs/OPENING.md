@@ -1,7 +1,7 @@
 # VEILBOUND — The Opening
 
 Owners: **SCRIBE / SPECTER / ECHO / WRAITH**
-Status: **IMPLEMENTED — v0.4.1-prologue**
+Status: **IMPLEMENTED — v0.4.2-prologue**
 
 The opening was supplied by the owner as a six-scene production blueprint. Every line of
 dialogue in `src/data/prologue.js` is reproduced from it word for word, and no line has been
@@ -152,6 +152,15 @@ veins under the floorboards. *Audio:* third toll blending into a deep bass roar 
 **Elara** is Kael's mother and the source of the memory; **Caldris** and **Serac** removed it;
 **Mira** is now defined, which she was not before. Kael's amnesia, the broken-circle symbol and
 the bell as a summons are all new and all load-bearing.
+
+## Playing it
+
+- **Advance:** tap, `A`, or `Space`. Each line holds for 420 ms before it can be dismissed.
+- **Skip:** hold the action control — anywhere on screen on touch, since the buttons are
+  hidden during a scene — for 0.9 s. A progress bar fills in the corner. Skipping records the
+  scene exactly as watching it would.
+- **Interrupted:** closing the tab part-way through resumes from the scene you had not
+  reached, rather than losing the rest.
 
 ## Still to build
 

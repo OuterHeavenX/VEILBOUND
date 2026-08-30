@@ -1052,3 +1052,39 @@ button { font: inherit; }
   .title-card.is-lit .title-card-mark,
   .title-card.is-lit .title-card-word { animation: none; opacity: 1; }
 }
+
+/* Hold-to-skip. It only appears once a hold has started, so it never advertises itself
+   over a first read of a scene. */
+.skip-prompt {
+  position: absolute;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(14px, env(safe-area-inset-bottom));
+  z-index: 9;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  pointer-events: none;
+}
+
+.skip-label {
+  color: var(--muted);
+  font-size: clamp(0.44rem, 1.4vw, 0.56rem);
+  letter-spacing: 0.28em;
+  text-indent: 0.28em;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.95);
+}
+
+.skip-track {
+  display: block;
+  width: clamp(72px, 12vw, 108px);
+  height: 2px;
+  background: rgba(127, 231, 225, 0.22);
+}
+
+.skip-fill {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--axiom);
+}

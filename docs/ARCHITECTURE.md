@@ -180,6 +180,29 @@ retargeting. There is no attack clip in the pack, so the Shardblade swing borrow
 Casting is placeholder, recorded in the tool's `CAST` table: Kael is `Rogue_Hooded`, and the
 five Greyhaven NPCs take the remaining five models. See `assets/ATTRIBUTION.md`.
 
+### Authored sprite sheets and scenery
+Two sheet layouts coexist, both drawn through `src/core/Sprites.js`:
+
+- **Generated**, from `tools/prerender-characters.mjs`: 8 direction rows, one sheet per clip,
+  described by `src/data/characterSprites.js`.
+- **Authored**, shipped in the upload: 64px cells, four direction rows in the order south,
+  north, west, east, one row-major sheet per clip, described by `src/data/enemySprites.js`.
+  With only four rows, a facing vector picks the dominant axis rather than the nearest of
+  eight.
+
+Enemy clips are chosen from what the enemy is actually doing, so the sheet follows the
+existing state machine rather than duplicating it. A defeated enemy plays its death clip
+before leaving the field; defeat is recorded the moment health reaches zero, so persistence
+never depends on the animation finishing.
+
+Scenery lives in `src/data/props.js` as ground-anchored single images. Anything that reads as
+an obstacle is placed over a collision rectangle that already exists in the room, so the art
+and the collision agree without retuning traversal that is already accepted; those rectangles
+are marked `hidden` so the generic wall fill does not paint a slab underneath the art.
+
+Every sprite path reports whether it drew. When a sheet is missing the runtime falls back to
+its procedural figures, so the game is never blocked on art.
+
 ### Audio
 Every voice is synthesised through Web Audio. VEILBOUND ships zero-build and
 file://-friendly, so there are no audio assets to fetch, and procedural synthesis keeps

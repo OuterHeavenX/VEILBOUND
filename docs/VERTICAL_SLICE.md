@@ -3,7 +3,7 @@
 ## Current Implementation Status
 
 **Current playable branch:** `feature/vertical-slice-foundation`  
-**Current playable version:** `v0.1.8-characters`  
+**Current playable version:** `v0.1.9-bestiary`  
 **Last updated:** 2026-08-29
 
 Implemented and awaiting owner-device acceptance:
@@ -36,10 +36,12 @@ Implemented and awaiting owner-device acceptance:
 - [x] procedural audio system with no assets and no build step
 - [x] title ambience: Vein drone, wind, and the Greyhaven bell
 - [x] character sprites for Kael and all five Greyhaven NPCs, prerendered from the uploaded models
+- [x] enemy sprites for the March Husk and Vein Sentry, with death animations
+- [x] authored Hollow March scenery from the forest set
 
 Still required before Phase 1 exits:
 
-- [ ] owner-device acceptance of `v0.1.8-characters`, carrying the unconfirmed v0.1.3 through v0.1.7 items
+- [ ] owner-device acceptance of `v0.1.9-bestiary`, carrying the unconfirmed v0.1.3 through v0.1.8 items
 - [~] second ranged/area-control enemy fully authored; acceptance outstanding
 - [x] Greyhaven NPC/dialogue interaction layer
 - [x] first save/rest point

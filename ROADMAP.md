@@ -3,7 +3,7 @@
 **Document owner:** ORACLE — Game Director & Planning  
 **Repository:** `OuterHeavenX/VEILBOUND`  
 **Current development branch:** `feature/vertical-slice-foundation`  
-**Current playable version:** `v0.1.8-characters`  
+**Current playable version:** `v0.1.9-bestiary`  
 **Roadmap status:** ACTIVE  
 **Last roadmap update:** 2026-08-30
 
@@ -152,7 +152,7 @@ A checkbox is marked complete only when the feature exists in the active branch.
 
 ---
 
-# 4. CURRENT STATE — v0.1.8-characters
+# 4. CURRENT STATE — v0.1.9-bestiary
 
 ## Foundation
 
@@ -343,9 +343,21 @@ A checkbox is marked complete only when the feature exists in the active branch.
 - [x] Feet-anchored placement measured from the generated sheets.
 - [x] Procedural fallback when a sheet is missing, so a fresh clone stays playable.
 - [ ] Attack clip. The pack has none; the swing borrows `Use_Item`.
-- [ ] Enemy sprites. Husk and Vein Sentry are still procedural.
+- [x] Enemy sprites for the Husk and the Vein Sentry, with idle, walk, attack, hurt and death.
+- [x] Death animation before a defeated enemy leaves the field.
+- [x] Authored Hollow March scenery drawn from the forest set.
 - [ ] Original character art replacing the placeholder cast.
 - [ ] Asset licence confirmation before any public release.
+
+## Hollow March scenery
+
+- [x] Authored props for Field 1 and Field 2 from the forest set.
+- [x] Obstacle art placed over the collision rectangles that already existed, so visuals and
+      collision agree without retuning accepted traversal.
+- [x] Interior obstacle slabs no longer painted underneath their scenery.
+- [ ] Ground tiling. The grass sheet is an autotile edge set and needs its Tiled data to slice.
+- [ ] Road tiles. Present in the upload, still an autotile job.
+- [ ] Region ambience and environmental motion.
 
 ## Portrait rendering correction
 
@@ -491,7 +503,7 @@ Exteriors only. No landmark has a walkable interior yet, and none is required by
 
 - [~] Traversal/collision prototype.
 - [x] first melee enemy.
-- [ ] stronger landmark guiding eastward progression.
+- [x] stronger landmark guiding eastward progression.
 - [ ] optional side route.
 - [ ] first collectible/chest.
 - [ ] environmental motion.
@@ -507,7 +519,7 @@ Exteriors only. No landmark has a walkable interior yet, and none is required by
 - [x] fully authored ranged/area-control behavior.
 - [x] readable telegraph.
 - [ ] visible future Tether anchor.
-- [ ] optional lore object.
+- [~] optional lore object. Ruins are placed as scenery; none is inspectable yet.
 - [ ] actual Sunken Archive overworld entrance route.
 
 ## 1.5 Shardblade combat
@@ -525,7 +537,7 @@ Owners: FORGE + WRAITH + ECHO
 - [ ] authored weapon trail.
 - [ ] impact audio.
 - [ ] enemy-hit vs environment-hit distinction.
-- [ ] stronger death/defeat presentation.
+- [x] stronger death/defeat presentation.
 - [ ] controller acceptance.
 
 ## 1.6 Forgotten Relic Chamber
@@ -1194,8 +1206,8 @@ Immediate:
 - [~] Kael gameplay sprite spec. Drawn from prerendered placeholder sheets; no authored spec yet.
 - [ ] Shardblade authored attacks.
 - [~] Greyhaven authored pass. Exterior authored as six landmarks; final art fidelity outstanding.
-- [ ] Hollow March authored pass.
-- [~] first enemies. Husk and Vein Sentry read at gameplay scale; both still procedural.
+- [~] Hollow March authored pass. Scenery authored; ground and roads still untiled.
+- [~] first enemies. Both now draw from authored sheets; the casting is placeholder.
 - [~] Resonance pulse language prototype exists.
 - [ ] Resonance final visual language.
 
@@ -1284,12 +1296,12 @@ Vertical slice:
 
 # 7. CURRENT EXACT DEVELOPMENT ORDER
 
-This is the authoritative immediate sequence from `v0.1.8-characters`.
+This is the authoritative immediate sequence from `v0.1.9-bestiary`.
 
-## NEXT 1 — owner-device acceptance v0.1.8
+## NEXT 1 — owner-device acceptance v0.1.9
 
-Acceptance has stacked across six builds without a device pass. All of it is
-confirmed against `v0.1.8-characters`, on iPhone.
+Acceptance has stacked across seven builds without a device pass. All of it is
+confirmed against `v0.1.9-bestiary`, on iPhone.
 
 Carried from v0.1.3:
 
@@ -1313,7 +1325,7 @@ Carried from v0.1.4:
 
 New in v0.1.5:
 
-- [ ] HUD displays `v0.1.8-characters` after refresh.
+- [ ] HUD displays `v0.1.9-bestiary` after refresh.
 - [ ] interact prompt is readable and clear of the touch controls.
 - [ ] action button visibly changes between the Shardblade and the interact glyph.
 - [ ] tapping the action button beside an NPC talks instead of swinging.
@@ -1342,6 +1354,13 @@ New in v0.1.8:
 - [ ] character sprites are readable at phone scale and do not blur into the ground.
 - [ ] Kael's facing reads correctly in all eight directions while moving.
 - [ ] sprite sheets do not cost noticeable frame time on device.
+
+New in v0.1.9:
+
+- [ ] enemies read clearly against the new scenery at phone scale.
+- [ ] the Sentry telegraph still reads over its sprite.
+- [ ] death animations do not make an enemy look alive after it is defeated.
+- [ ] the Hollow March fields hold their frame rate with scenery drawn.
 
 ## NEXT 2 — second enemy archetype — IMPLEMENTED in v0.1.4
 

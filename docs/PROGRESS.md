@@ -364,8 +364,81 @@ architecture document.
 
 ---
 
+## 2026-08-30 — v0.1.9 Bestiary and scenery
+
+Second asset upload, and unlike the first it is 2D throughout, so the Canvas 2D runtime can
+draw it directly with no prerendering step.
+
+### What arrived
+- `assets/characters/enemies/goblin` and `.../slime`: full animation sets, 64px cells, four
+  direction rows in the order south, north, west, east.
+- `assets/places/forest`: individual prop images plus autotile sheets for ground and water.
+- `assets/path_road`: cobblestone road autotile sheets.
+- `assets/menu_buttons`: a complete UI kit.
+- Licence files this time, all CraftPix.
+
+### FORGE — authored sheet support
+- Extended `src/core/Sprites.js` to draw authored grid sheets alongside the generated
+  8-direction ones. With four rows, a facing vector picks the dominant axis rather than the
+  nearest of eight.
+- Added `src/data/enemySprites.js`. Frame counts are the measured sheet width over the cell,
+  not guesses.
+- Enemies gained a facing and a clip clock. The clip is chosen from what the enemy is
+  actually doing, so the sheet follows the existing state machine rather than duplicating it.
+
+### FORGE — death animations
+- A defeated enemy now plays its death clip before leaving the field, instead of vanishing.
+- Defeat is still recorded the moment health reaches zero, so persistence never depends on
+  the animation finishing. A dying enemy stops acting and stops colliding immediately.
+
+### WRAITH — Hollow March scenery
+- Added `src/data/props.js`: authored scenery for both fields from the forest set.
+- Anything that reads as an obstacle sits on a collision rectangle that already existed, so
+  art and collision agree without retuning traversal that is already accepted.
+- Those rectangles are marked `hidden`, because the generic wall fill was painting a grey
+  slab under the scenery. Found in the first screenshot pass.
+
+### Placeholder status
+- The goblin fits the Husk's melee-pursuit role. Nothing in the upload resembles a Vein
+  machine, so the slime stands in for the Sentry. The authored telegraph ring and aim line
+  still draw over it, because those carry the readability the encounter is tuned around.
+- Road tiles and the menu UI are present but unwired. The grass sheet is an autotile edge set
+  and needs its Tiled data to slice, so ground tiling is not done.
+
+### Licensing — needs a decision before the repository is public
+- The upload carries CraftPix licence files. Those terms generally allow using the art inside
+  a game while restricting redistribution of the asset files themselves, and a public
+  repository distributes the files to anyone who clones it.
+- That is a different question from whether the game may ship with them, and it is not
+  answered here. The `.psd` and `.aseprite` sources raise it more sharply than the PNGs.
+- Recorded in `assets/ATTRIBUTION.md`.
+
+### Verification
+- Both enemies confirmed drawing from sheets in Field 2, with the Sentry telegraph reading
+  over its sprite.
+- Direction rows confirmed by extracting each row at 3x: south, north, west, east.
+- Combat regression: both husks still take damage, die, and stay defeated across a reload,
+  with the death animation in place.
+- Scenery checked in both fields; the slab-under-art bug fixed and re-checked.
+- The sprite-missing fallback still holds: with every sheet served as 404 the game boots,
+  plays and moves.
+- Full v0.1.4 through v0.1.8 regression passes. No console or page errors.
+
+### Corrected while here
+- `docs/COMBAT.md`'s acceptance gate was entirely unchecked although v0.1.4 implemented eight
+  of its nine items. Marked accordingly; the device item stays open.
+
+### Owner-device acceptance — PENDING
+- [ ] HUD displays `v0.1.9-bestiary` after refresh.
+- [ ] Enemies read clearly against the new scenery at phone scale.
+- [ ] The Sentry telegraph still reads over its sprite.
+- [ ] Death animations do not make an enemy look alive after it is defeated.
+- [ ] The Hollow March fields hold their frame rate with scenery drawn.
+
+---
+
 ## Current immediate production order
-1. Complete v0.1.8 iPhone acceptance, including the deferred v0.1.3 through v0.1.7 items.
+1. Complete v0.1.9 iPhone acceptance, including the deferred v0.1.3 through v0.1.8 items.
 2. Build Sunken Archive entrance revealed through Resonance progression.
 3. Build reusable switch, persistent door, and push/manipulation primitives.
 4. Build Tether acquisition and teaching sequence.

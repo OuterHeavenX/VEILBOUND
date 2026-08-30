@@ -1,7 +1,7 @@
 # VEILBOUND — Technical Architecture Foundation
 
 Owner: **FORGE**  
-Current runtime: **v0.3.4-greyhaven**
+Current runtime: **v0.3.5-march**
 
 ## Core principles
 
@@ -255,9 +255,10 @@ The next major ability is **Tether**. Its implementation must support traversal,
 
 A room may declare an authored background plate in `src/data/roomArt.js`. When
 `src/core/RoomArt.js` has that image decoded it paints the whole plate and the runtime skips
-three procedural passes for that room: the flat ground fill, the terrain tiler, and the
-`details` overlay. It also skips filling the room's wall rects, because in a painted room the
-buildings *are* the art and drawing collision blocks over them hides the painting.
+every procedural pass that would draw over it: the flat ground fill, the terrain tiler, the
+`details` overlay, the decorative props, and the fill of the room's own wall rects. In a
+painted room the scenery and the buildings *are* the art, so drawing any of that on top only
+hides the painting — and the props are a different art style besides.
 
 Collision is untouched by any of this. Walls, exits, mechanisms, props, interactables and
 figures all still draw and simulate exactly as before, so a plate is presentation only.
@@ -265,6 +266,12 @@ figures all still draw and simulate exactly as before, so a plate is presentatio
 The fallback is the default rather than the exception: `draw()` returns false for a room with
 no plate, and for a plate still loading or failed, and every one of those cases keeps the
 procedural art it had before. A missing background can never take a room out of play.
+
+Collision is authored to what the plate paints, not the other way round. The Hollow March
+fields previously carried arbitrary invisible obstacle boxes; those are now the trees, the
+pine's trunk, the Vein crystal shrine and the boulders that the paintings actually show. A
+tree blocks at its trunk rather than its canopy, because a canopy-sized box blocks open
+ground the painting shows as walkable.
 
 `fit: 'stretch'` maps the image onto the full 960x540 world. Greyhaven's plate is 1844x853
 (2.16) against the world's 1.78, so it squashes about 18% horizontally. That is deliberate:

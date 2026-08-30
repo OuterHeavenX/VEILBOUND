@@ -24,5 +24,23 @@
         x: 506, y: 96, radius: 92, colour: '127, 231, 225',
       }),
     }),
+
+    // The two Hollow March plates. Which painting goes to which field is an authoring
+    // choice, not a structural one: both paint their road through the west and east exit
+    // bands, so the pair can be swapped by exchanging these two `file` values.
+    //
+    // As assigned: the roads-and-walls field is continuous with the Greyhaven plate — same
+    // stonework, same boundary walls, same fences — so it reads as the field immediately
+    // outside town. The rainswept one carries the Vein crystal shrine, which is what
+    // `march.field2.veinMarker` reads, and CANON has the March begin peaceful and grow
+    // unsettling as Vein activity returns.
+    hollowMarch1: Object.freeze({
+      file: 'assets/maps/fields/field-1-roads.jpg',
+      fit: 'stretch',
+    }),
+    hollowMarch2: Object.freeze({
+      file: 'assets/maps/fields/field-2-vein.jpg',
+      fit: 'stretch',
+    }),
   });
 })();

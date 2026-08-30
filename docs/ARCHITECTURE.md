@@ -203,7 +203,35 @@ The current third-party packs are placeholders and remain subject to the licensi
 
 ## Audio architecture
 
-Web Audio is created only after a user gesture. Current title ambience is procedural. Audio suspends while hidden and fades rather than hard-cutting. Future area ambience and combat/Axiom sound should preserve these lifecycle rules.
+Web Audio is created only after a user gesture, all of it synthesised, and it suspends while
+hidden and fades rather than hard-cutting.
+
+Every region has its own bed in `REGIONS`, differing in root, colour, wind and whether a bell
+sounds, so locations are recognisable by ear. `setRegion()` crossfades between them and is a
+no-op when the region has not changed. In-game beds carry a `level` under the title's, so
+music sits beneath play rather than competing with it.
+
+One-shot cues live in `CUES` and run through their own bus with its own analyser. The bed's
+wind moves more than a cue adds, so a cue cannot be measured on the master tap; `sfxLevel()`
+exists so cue output is observable in diagnostics and in tests rather than assumed.
+
+The bed and the bell are built against whatever context they are handed, so the same
+synthesis serves live playback and `render(seconds, rate, region)`, an offline audition.
+
+## Viewport
+
+`#app` is `position: fixed; inset: 0`, and the canvas backing store is sized from the canvas's
+own measured box rather than `innerWidth`/`innerHeight`. Those can disagree on mobile, where
+`100vh` exceeds `100svh` and the element ends up taller than the window; the browser then
+rescales the backing store to fit the element, and the world draws off-centre and clipped.
+Measuring the element makes that mismatch impossible.
+
+## Touch
+
+The movement stick is summoned wherever the left half of the screen is touched and follows the
+drag from there, rather than living in a fixed corner, so the thumb never has to find it. Its
+origin is clamped inside the viewport so a touch near an edge still has room to push in every
+direction. The right half stays with the action buttons.
 
 ## Title / pause lifecycle
 

@@ -3,7 +3,7 @@
 **Document owner:** ORACLE — Game Director & Planning  
 **Repository:** `OuterHeavenX/VEILBOUND`  
 **Current development branch:** `feature/sunken-archive-foundation`  
-**Current playable version:** `v0.3.0-archive`  
+**Current playable version:** `v0.3.1-sound`  
 **Roadmap status:** ACTIVE  
 **Last roadmap update:** 2026-08-30
 
@@ -54,7 +54,7 @@ One codebase must remain first-class on phone, tablet, desktop, keyboard, touch 
 
 ---
 
-## 3. Current playable state — v0.3.0-archive
+## 3. Current playable state — v0.3.1-sound
 
 ### Foundation / presentation
 - [x] zero-build Canvas 2D runtime
@@ -63,7 +63,9 @@ One codebase must remain first-class on phone, tablet, desktop, keyboard, touch 
 - [x] safe save inspection and resume
 - [x] touch, keyboard and controller movement
 - [x] development diagnostics
-- [x] procedural title ambience
+- [x] procedural audio: per-region beds and gameplay cues
+- [x] viewport measured from the canvas box, so the world stays centred
+- [x] movement stick summoned wherever the left of the screen is touched
 - [x] character/enemy sprite pipeline with fallbacks
 
 ### Greyhaven / overworld
@@ -161,7 +163,7 @@ Remaining Phase 1 work is refinement/acceptance rather than another foundational
 - [ ] iPad acceptance
 - [ ] desktop acceptance
 - [ ] controller acceptance
-- [ ] region ambience and authored combat/Axiom sound
+- [x] region ambience and authored combat/Axiom sound
 - [ ] optional Hollow March collectible/side route
 
 Do not block Sunken Archive production on cosmetic Phase 1 polish unless a regression appears.
@@ -339,7 +341,9 @@ Still held until justified:
 
 # 10. Immediate production order
 
-1. Test `v0.3.0-archive` on iPhone using the checklist in `docs/SUNKEN_ARCHIVE.md`.
+1. Test `v0.3.1-sound` on iPhone using the checklist in `docs/SUNKEN_ARCHIVE.md`, plus:
+   the world sits centred with even letterboxing; the stick appears under the thumb
+   anywhere on the left; each region sounds distinct and music sits under the cues.
 2. Fix any collision/readability/save regressions found in the three Archive opening rooms.
 3. Build push/manipulation block v1.
 4. Build water/energy-routing state and first shortcut loop.

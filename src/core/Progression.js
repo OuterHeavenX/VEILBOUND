@@ -92,6 +92,7 @@
         data().player.coins += drop.value;
         drops.splice(i, 1);
         toast(`+${drop.value} COIN`);
+        if (window.Veilbound.Audio) window.Veilbound.Audio.sfx('coin');
         if (saveGame) saveGame('COIN COLLECTED');
       }
     }

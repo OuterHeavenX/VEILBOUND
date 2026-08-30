@@ -6,6 +6,57 @@ Use this file together with `ROADMAP.md`, `docs/VERTICAL_SLICE.md`, `docs/CANON.
 
 ---
 
+## 2026-08-30 — v0.3.1 Sound, centring and a summoned stick
+
+Three owner reports off a device screenshot.
+
+### The world drew off-centre and clipped
+- `resizeCanvas` sized the canvas backing store from `innerWidth`/`innerHeight`, but the
+  element was laid out by CSS from `#app`, which mixed `100vw`, `100svh` and
+  `min-height: 100vh`. On mobile `100vh` exceeds `100svh`, so the element ended up taller
+  than the window, the browser rescaled the backing store to fit it, and the world landed
+  off-centre with the bottom cut off.
+- `#app` is now `position: fixed; inset: 0`, which always matches the visual viewport, and
+  the backing store is sized from the canvas's own measured box. Verified across four window
+  shapes and, more usefully, by forcing the element to disagree with the window: the backing
+  store follows the element, which under the old code it did not.
+
+### The stick is summoned where the thumb lands
+- Touching anywhere in the left half places the stick there and drags from that origin. The
+  origin is clamped inside the viewport so a touch near an edge still has room to push in
+  every direction. The right half still belongs to the action buttons.
+
+### Sound
+- Each region has its own bed, differing in root, colour, wind and whether a bell sounds:
+  Greyhaven warm and low with its bell tower answering, the Hollow March mostly wind, the
+  relic chamber tight and metallic, the Archive deepest with water in the wind band.
+  `setRegion()` crossfades and follows the room, including on death.
+- In-game beds sit at roughly 0.6 of the title's level, so music stays under play.
+- Twelve gameplay cues: swing, hit, enemy down, hurt, resonance, coin, dialogue blip,
+  interact, discovery, rest, and menu open/close. All synthesised, no assets.
+- Cues run on their own bus with its own analyser. The bed's wind moves more than a cue adds,
+  so cue output cannot be measured on the master tap; the first attempt at testing this
+  produced meaningless results until the cue bus got its own tap.
+
+### Bug found while testing
+- `BELL_PARTIALS` was deleted along with the old single-region constants, so every bell
+  strike would have thrown. Bells only fire 7-26s apart, so no short test reached one; the
+  offline region render did. Restored, and confirmed by a 30s run with no page errors.
+
+### Verification
+- All twelve cues measured individually on the cue bus; every one produces sound.
+- Region beds confirmed crossfading title → march → greyhaven as Kael moves.
+- The AUDIO setting still silences beds and cues.
+- Every regression suite passes. One stale assertion was updated rather than deleted:
+  starting play used to fade to silence, and now crossfades into the region bed.
+
+### Owner-device acceptance — PENDING
+- [ ] The world sits centred with even letterboxing, in both orientations.
+- [ ] The stick appears under the thumb anywhere on the left, and never fights the buttons.
+- [ ] Each region sounds distinct, and music sits under the cues rather than over them.
+- [ ] Audio survives backgrounding and returning.
+
+
 ## 2026-08-29 — v0.1.0 Foundation
 - Initialized the repository and studio documentation.
 - Established the zero-build `index.html` launch contract.

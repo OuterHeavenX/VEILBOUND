@@ -2,6 +2,7 @@
 
 **Document owner:** ORACLE — Game Director & Planning  
 **Repository:** `OuterHeavenX/VEILBOUND`  
+**Integration branch:** `main` — carries the full slice as of `v0.3.3-threshold`  
 **Current development branch:** `claude/todo-implementation-td5zeq`  
 **Current playable version:** `v0.3.3-threshold`  
 **Roadmap status:** ACTIVE  

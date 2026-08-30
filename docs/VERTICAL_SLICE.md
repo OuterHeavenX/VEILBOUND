@@ -2,7 +2,7 @@
 
 ## Current Implementation Status
 
-**Current playable branch:** `claude/todo-implementation-td5zeq`  
+**Current playable branch:** `claude/todo-implementation-td5zeq`, merged to `main`  
 **Current playable version:** `v0.3.3-threshold`  
 **Last updated:** 2026-08-30
 

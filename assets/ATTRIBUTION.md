@@ -69,12 +69,15 @@ rest of this file asks.
   kept as reference. Neither is loaded: the awake one has NPCs painted into it that would
   fight the game's own NPC sprites, and the three plates are independent generations whose
   lighting does not match, so they cannot be composited.
-- `march-field.png` and the seven `buildings/*.png` elevations are unused so far. See
-  `docs/PROGRESS.md` § v0.3.4 for why the march plate is not wired to either Hollow March
-  field yet.
+- `fields/field-1-roads.png` and `fields/field-2-vein.png` are the two Hollow March fields,
+  each with a JPEG beside it for the runtime. Which painting is which field is an authoring
+  choice recorded in `src/data/roomArt.js`; both paint their road through the same exit bands,
+  so the pair can be swapped.
+- The seven `buildings/*.png` elevations are unused: they are front-facing sprites of
+  structures already baked into the town plate, so they are material for a future room.
 
-**Unresolved:** origin and licence not recorded, as with the title key art. These are now the
-second body of owner-supplied art the player sees directly.
+**Unresolved:** origin and licence not recorded, as with the title key art. With the town and
+both Hollow March fields now painted, this is most of what the player looks at.
 
 ## Generated, not third-party
 

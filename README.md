@@ -14,7 +14,7 @@ from static hosting or straight off the filesystem, and that is a non-negotiable
 
 Landscape only: the world is authored at 960x540, so a phone held upright is asked to turn.
 
-## Current state — `v0.3.4-greyhaven`
+## Current state — `v0.3.5-march`
 
 Playable end to end from the title through Greyhaven, the Hollow March and the first six
 rooms of the Sunken Archive:

@@ -6,6 +6,62 @@ Use this file together with `ROADMAP.md`, `docs/VERTICAL_SLICE.md`, `docs/CANON.
 
 ---
 
+## 2026-08-30 — v0.3.5 The Hollow March is painted
+
+Correction to the previous entry: two of the eleven uploads were Hollow March fields, not a
+town base layer and a spare. I read the roads-and-walls plate as Greyhaven with its buildings
+stripped out, because it shares the town's stonework. It is a field.
+
+### Which painting is which field
+
+Both plates run their road through the west and east exit bands the fields already had, so
+either assignment works structurally and the choice is an authoring one. As assigned:
+
+- **Field 1 — the crossroads.** Continuous with the Greyhaven plate: same stonework, same
+  boundary walls, same fences. It reads as the field immediately outside town.
+- **Field 2 — the rainswept one.** It carries the Vein crystal shrine, which is exactly what
+  `march.field2.veinMarker` reads, and CANON has the March begin peaceful and grow unsettling
+  as Vein activity returns.
+
+Swapping them is exchanging two `file` values in `src/data/roomArt.js`, and the module says so.
+
+### Collision now follows the paintings
+
+Both fields previously carried arbitrary invisible obstacle boxes — three each, in places
+nothing was ever drawn. Those are gone. What blocks now is what the paintings show: four
+corner trees in Field 1; the pine's trunk, the Vein shrine, and two boulders in Field 2.
+
+`march.field2.veinMarker` moved from empty grass at (555,260) onto the painted shrine at
+(712,356), and its radius went from 34 to 86 — the shrine is solid now, so the pulse has to
+reach it from outside its own collision box. The Archive descent still opens where it did.
+
+### Bugs found while building
+
+- The props pass was still drawing the old CraftPix forest scenery over the paintings: bright
+  cartoon bushes and boulders in a different art style, on top of a painted field that has its
+  own. A painted room now skips its decorative props for the same reason it skips its terrain
+  and its wall fill.
+- The pine's collision box covered the whole canopy down to the base, which blocked open
+  ground the painting shows as walkable — including a spot the `all` suite has always seeded.
+  Save recovery correctly rescued the player to Greyhaven, which surfaced as an unrelated
+  sentry-readout failure two suites away. A tree blocks at its trunk, not its canopy.
+
+### Verification
+- The offline geometry audit now also checks every position the browser suites seed directly,
+  so re-authoring a field's obstacles can never again quietly strand one of them in a wall.
+- A new `fields2` suite walks the real route: Field 1 west to Greyhaven and back, east to
+  Field 2, Resonance at the painted shrine writing the route flag, the descent into the
+  Archive, and the shrine stopping Kael rather than being scenery.
+- Every existing suite passes. Two `roomart` assertions were updated rather than deleted:
+  they hardcoded a single plate and there are three.
+
+### Owner-device acceptance — PENDING
+- [ ] Both fields read at phone scale, and Kael reads against them.
+- [ ] The sunken road in Field 2 does not look like it should block movement.
+- [ ] The Vein shrine reads as the thing to use Resonance on.
+- [ ] Three ~430 KB plates do not stall room transitions on mobile data.
+
+
 ## 2026-08-30 — v0.3.4 Greyhaven is painted
 
 The owner supplied eleven map images "to try and replicate greyhaven". Three of them are

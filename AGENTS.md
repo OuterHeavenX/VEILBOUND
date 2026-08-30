@@ -38,7 +38,8 @@ Every feature must answer: **What does this contribute to the player's experienc
 - Strong readable silhouettes at gameplay scale.
 
 **Rules**
-- Avoid generic fantasy pixel art.
+- VEILBOUND is painted, not pixel art. Owner decision; see `ROADMAP.md` 2.14.
+- Avoid generic fantasy art of any register.
 - Every region must have a distinct material and silhouette language.
 - Kael's mask, cloak, Shardblade, and Axiom must read instantly at small scale.
 - Progression should be visible on the hero and equipment when practical.

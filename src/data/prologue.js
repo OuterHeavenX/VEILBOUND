@@ -71,6 +71,8 @@
         ] },
         { fx: { static: 0.2 }, wait: 0.8 },
         { fx: { black: 1, static: 0, letterbox: 1 }, wait: 1.0 },
+        // Rain on the path, and Kael walking it. The veil lifts rather than cutting.
+        { fx: { black: 0, letterbox: 0 }, cue: 'rest', wait: 1.4 },
       ]),
     }),
 

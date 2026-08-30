@@ -1,7 +1,7 @@
 # VEILBOUND — The Opening
 
 Owners: **SCRIBE / SPECTER / ECHO / WRAITH**
-Status: **IMPLEMENTED — v0.4.0-prologue**
+Status: **IMPLEMENTED — v0.4.1-prologue**
 
 The opening was supplied by the owner as a six-scene production blueprint. Every line of
 dialogue in `src/data/prologue.js` is reproduced from it word for word, and no line has been
@@ -10,18 +10,28 @@ added, cut or paraphrased.
 ## What the blueprint asked for, and what shipped
 
 The blueprint is written for a generated-video and generated-audio pipeline: each beat carries
-a *Visual Prompt (Pixel Video AI)* and an *Audio Prompt (Audio AI)*. VEILBOUND has neither. It
-is a zero-build Canvas 2D game whose audio is wholly synthesised at runtime and whose launch
-contract forbids a build step (`ROADMAP.md` 2.1–2.2).
+a *Visual Prompt* and an *Audio Prompt*. VEILBOUND has neither. It is a zero-build Canvas 2D
+game whose audio is wholly synthesised at runtime and whose launch contract forbids a build
+step (`ROADMAP.md` 2.1–2.2).
 
 So the beats are staged with the effects the engine actually has, and the prompts are kept
 below as the art and audio direction for whoever produces the final assets. Where a prompt
 asks for something the runtime cannot draw, the substitution is named.
 
-One direction conflict is worth resolving before final art: the blueprint specifies
-**16-bit SNES pixel art**, while the art the owner has supplied and the game now ships —
-the title key art, the Greyhaven plate, both Hollow March fields — is high-resolution painted
-work. The two do not sit together. ORACLE and WRAITH own picking one.
+## Art direction — SETTLED
+
+The blueprint's beat prompts specify **16-bit SNES pixel art**. The owner has since settled
+this the other way: **VEILBOUND is painted, not pixel art.**
+
+That decision is authoritative and applies to everything, not only the opening. The prompts
+below are kept verbatim as staging direction — shot, framing, subject, mood — but every
+"16-bit", "SNES" and "pixel" in them is superseded. When these beats are finally produced,
+they are produced in the same high-resolution painted register as the title key art, the
+Greyhaven plate and the two Hollow March fields.
+
+This also resolves what the runtime should aim at. The procedural rooms that have no plate
+yet — The Forest Path, the Hunter Hall, the Sunken Archive — are placeholders for painted
+plates, not for pixel tilesets.
 
 ## The scenes as implemented
 
@@ -43,7 +53,7 @@ cutscene contract asks for.
 
 ### Scene 1 — "Remember My Face"
 
-**Beat 1 — The Dark Room.** *Visual:* 16-bit SNES pixel art, cinematic letterbox, dark
+**Beat 1 — The Dark Room.** *Visual:* cinematic letterbox, dark
 pitch-black room, subtle soft rain particle effects overlays, deep shadows, dramatic rim
 lighting. *Audio:* soft rain falling, low female voice humming a haunting minor-key melody,
 quiet child breathing.

@@ -78,7 +78,6 @@
       script = scene.beats || scene;
       onDone = done;
       index = -1;
-      now = blank();
       target = blank();
       clock = 0;
       advance();
@@ -92,14 +91,16 @@
     // A scene in progress must survive the player pressing on: the dialogue system is what
     // paces it, so the sequencer only ticks time when nothing is being read.
     update(dt) {
-      if (!script) return;
       clock += dt;
       for (const key of ['black', 'letterbox', 'invert', 'glitch', 'static', 'veins', 'symbol']) {
-        now[key] += (target[key] - now[key]) * Math.min(1, dt * EASE);
+        const next = now[key] + (target[key] - now[key]) * Math.min(1, dt * EASE);
+        // Snap the tail: an exponential ease never quite reaches zero, and a veil sitting at
+        // 0.004 forever is still a veil.
+        now[key] = Math.abs(next - target[key]) < 0.004 ? target[key] : next;
       }
       now.shake = Math.max(0, now.shake - dt * 1.9);
       now.flash = Math.max(0, now.flash - dt * 2.6);
-      if (waitingOnDialogue) return;
+      if (!script || waitingOnDialogue) return;
       holding -= dt;
       if (holding <= 0) advance();
     },
@@ -112,6 +113,13 @@
     },
 
     state() { return now; },
+
+    // True once nothing is left painted over the world. The host keeps ticking the sequencer
+    // until this is true, even with no scene running.
+    settled() {
+      return !script && !now.black && !now.letterbox && !now.invert && !now.glitch &&
+        !now.static && !now.veins && !now.symbol && now.shake <= 0 && now.flash <= 0;
+    },
 
     // Drawn over the finished frame, in screen space rather than world space, so letterbox
     // and static are not scaled by the world transform.

@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '0.1.5-greyhaven';
+  const VERSION = '0.1.6-title';
   const canvas = document.getElementById('game-canvas');
   const boot = document.getElementById('boot-screen');
   const status = document.getElementById('boot-status');
@@ -28,9 +28,11 @@
   const SaveManager = window.Veilbound && window.Veilbound.SaveManager;
   const EnemyRegistry = window.Veilbound && window.Veilbound.EnemyRegistry;
   const Interactables = window.Veilbound && window.Veilbound.Interactables;
+  const TitleScreen = window.Veilbound && window.Veilbound.TitleScreen;
   if (!SaveManager) throw new Error('SaveManager failed to load.');
   if (!EnemyRegistry) throw new Error('Enemy registry failed to load.');
   if (!Interactables) throw new Error('Interaction registry failed to load.');
+  if (!TitleScreen) throw new Error('Title screen failed to load.');
 
   const WORLD = { width: 960, height: 540 };
   // Shared by the live combat checks and the debug overlay so drawn boxes
@@ -50,7 +52,10 @@
     awakeningRuin: { name:'FORGOTTEN RELIC CHAMBER', ground:'#11191a', details:'ruin', walls:[{x:0,y:0,w:960,h:38},{x:0,y:502,w:960,h:38},{x:0,y:0,w:38,h:205},{x:0,y:335,w:38,h:205},{x:922,y:0,w:38,h:540},{x:205,y:105,w:80,h:130},{x:205,y:305,w:80,h:130},{x:675,y:105,w:80,h:130},{x:675,y:305,w:80,h:130}], exits:[{x:0,y:205,w:40,h:130,room:'hollowMarch2',spawnX:895,spawnY:270,entry:'east'}], enemies:[], resonanceNodes:[{id:'ruin.core',x:480,y:270,radius:55,flag:'ruin.resonanceCoreRead',label:'AXIOM CORE SIGNATURE'}] },
   };
 
-  let saveData = SaveManager.load();
+  let saveInspection = SaveManager.inspect();
+  let saveData = saveInspection.status==='ready'?saveInspection.data:SaveManager.createDefault();
+  let deviceSettings = SaveManager.loadSettings();
+  let running=false;
   let saveStatusTimer=0, pendingAwakening=0, dialogueSequence=null, dialogueIndex=-1, dialogueOnComplete=null;
   let interactTarget=null, promptedTargetId=null;
   let debugEnabled=false, debugTextTimer=0, frameCursor=0;
@@ -111,7 +116,7 @@
   function sampleFrameTime(ms){if(!(ms>0)||ms>1000)return;frameTimes[frameCursor]=ms;frameCursor=(frameCursor+1)%DEBUG_FRAME_SAMPLES;}
   function frameStats(){let total=0,peak=0;for(let i=0;i<DEBUG_FRAME_SAMPLES;i++){const ms=frameTimes[i];total+=ms;if(ms>peak)peak=ms;}const avg=total/DEBUG_FRAME_SAMPLES;return{avg,peak,fps:avg>0?1000/avg:0};}
   function debugRequestedByUrl(){try{return new URLSearchParams(location.search).has('debug');}catch(error){return false;}}
-  function setDebugMode(on,persist=true){debugEnabled=Boolean(on);if(debugOverlay)debugOverlay.hidden=!debugEnabled;debugTextTimer=0;if(debugEnabled)refreshDebugText();if(persist){saveData.settings.debugOverlay=debugEnabled;saveGame(debugEnabled?'DIAGNOSTICS ON':'DIAGNOSTICS OFF');}}
+  function setDebugMode(on,persist=true){debugEnabled=Boolean(on);if(debugOverlay)debugOverlay.hidden=!debugEnabled;debugTextTimer=0;if(debugEnabled)refreshDebugText();if(persist){deviceSettings={...deviceSettings,debugOverlay:debugEnabled};SaveManager.saveSettings(deviceSettings);if(saveStatus)saveStatus.textContent=debugEnabled?'DIAGNOSTICS ON':'DIAGNOSTICS OFF';saveStatusTimer=1.5;}}
   function toggleDebug(){setDebugMode(!debugEnabled);}
   function debugTargetLabel(){if(dialogueSequence)return 'suppressed (dialogue active)';if(interactTarget)return `${interactTarget.id} [${interactTarget.prompt}] IN REACH`;let best=null,bestGap=Infinity;for(const it of roomInteractables(player.room)){const gap=Math.hypot(it.x-player.x,it.y-player.y)-(it.reach||46)-player.radius;if(gap<bestGap){bestGap=gap;best=it;}}if(!best)return 'none authored in room';return `${best.id} gap=${bestGap.toFixed(0)}`;}
   function debugNodeLabel(){let best=null,bestGap=Infinity;for(const n of rooms[player.room].resonanceNodes||[]){const gap=Math.hypot(n.x-player.x,n.y-player.y)-n.radius;if(gap<bestGap){bestGap=gap;best=n;}}if(!best)return 'none authored in room';return `${best.id} gap=${Math.max(0,bestGap).toFixed(0)} ${hasFlag(best.flag)?'READ':'unread'}`;}
@@ -254,8 +259,49 @@
   function drawParticles(ctx){for(const p of particles){ctx.globalAlpha=Math.max(0,p.life/p.maxLife);ctx.fillStyle=p.color;ctx.fillRect(p.x-2,p.y-2,4,4);}ctx.globalAlpha=1;}
   function drawKael(ctx){const bob=Math.sin(player.walkPhase)*1.4,fx=player.facingX,fy=player.facingY;ctx.save();ctx.translate(player.x,player.y+bob);if(player.invuln>0&&Math.floor(player.invuln*18)%2===0)ctx.globalAlpha=.42;ctx.fillStyle='rgba(0,0,0,.25)';ctx.beginPath();ctx.ellipse(0,14,16,7,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#15191a';ctx.beginPath();ctx.moveTo(-13,6);ctx.lineTo(-8,-16);ctx.lineTo(0,-23);ctx.lineTo(8,-16);ctx.lineTo(13,6);ctx.lineTo(7,16);ctx.lineTo(-7,16);ctx.closePath();ctx.fill();ctx.fillStyle='#d5d1c6';ctx.beginPath();ctx.ellipse(fx*2,-17+fy,8,7,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#202628';ctx.fillRect(-5+fx*3,-18+fy,10,3);ctx.strokeStyle='#7fe7e1';ctx.lineWidth=3;ctx.beginPath();ctx.arc(-11+fx*2,-1+fy*2,5,0,Math.PI*2);ctx.stroke();if(player.attackTimer>0){const angle=Math.atan2(fy,fx);ctx.strokeStyle='#d9f6ef';ctx.lineWidth=5;ctx.beginPath();ctx.arc(0,0,44,angle-.72,angle+.72);ctx.stroke();}else{ctx.strokeStyle='#b8b4aa';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(7,1);ctx.lineTo(18+fx*10,-8+fy*10);ctx.stroke();}ctx.restore();}
   function refreshHud(){if(hudRoom)hudRoom.textContent=rooms[player.room].name;if(hudHealth){let text='';for(let i=0;i<player.maxHealth;i++)text+=`${i<player.health?'◆':'◇'} `;hudHealth.textContent=text.trim();}const unlocked=hasAbility('resonance');if(hudAbility)hudAbility.textContent=unlocked?'AXIOM: RESONANCE ◇':'AXIOM: DORMANT';if(resonanceButton)resonanceButton.hidden=!unlocked;}
-  function setupKeyboard(){addEventListener('keydown',e=>{if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();if(!e.repeat&&['Space','KeyZ','KeyJ'].includes(e.code))actionPressed();if(!e.repeat&&['KeyE','KeyR','ShiftLeft','ShiftRight'].includes(e.code))resonancePressed();if(!e.repeat&&(e.code==='F3'||e.code==='Backquote')){e.preventDefault();toggleDebug();}input.keys.add(e.code);});addEventListener('keyup',e=>input.keys.delete(e.code));addEventListener('blur',()=>input.keys.clear());}
+  function setupKeyboard(){addEventListener('keydown',e=>{if(!running)return;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();if(!e.repeat&&['Space','KeyZ','KeyJ'].includes(e.code))actionPressed();if(!e.repeat&&['KeyE','KeyR','ShiftLeft','ShiftRight'].includes(e.code))resonancePressed();if(!e.repeat&&(e.code==='F3'||e.code==='Backquote')){e.preventDefault();toggleDebug();}input.keys.add(e.code);});addEventListener('keyup',e=>input.keys.delete(e.code));addEventListener('blur',()=>input.keys.clear());}
   function setupTouch(){if(!touchStick||!touchKnob)return;let pointerId=null;const max=38,updateStick=e=>{const r=touchStick.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let dx=e.clientX-cx,dy=e.clientY-cy,len=Math.hypot(dx,dy);if(len>max){dx=dx/len*max;dy=dy/len*max;}input.touchX=dx/max;input.touchY=dy/max;touchKnob.style.transform=`translate(${dx}px, ${dy}px)`;};touchStick.addEventListener('pointerdown',e=>{pointerId=e.pointerId;touchStick.setPointerCapture(pointerId);updateStick(e);});touchStick.addEventListener('pointermove',e=>{if(e.pointerId===pointerId)updateStick(e);});const release=e=>{if(pointerId!==null&&e.pointerId!==pointerId)return;pointerId=null;input.touchX=0;input.touchY=0;touchKnob.style.transform='translate(0, 0)';};touchStick.addEventListener('pointerup',release);touchStick.addEventListener('pointercancel',release);if(actionButton)actionButton.addEventListener('pointerdown',e=>{e.preventDefault();actionPressed();});if(resonanceButton)resonanceButton.addEventListener('pointerdown',e=>{e.preventDefault();resonancePressed();});if(dialogue)dialogue.addEventListener('pointerdown',e=>{e.preventDefault();if(dialogueSequence)advanceDialogue();});}
-  function start(){if(!canvas)throw new Error('Game canvas was not found.');const ctx=canvas.getContext('2d',{alpha:false});if(!ctx)throw new Error('Canvas 2D is unavailable in this browser.');document.documentElement.dataset.veilboundVersion=VERSION;if(status)status.textContent='Bound user confirmed.';restoreSave();setDebugMode(debugRequestedByUrl()||Boolean(saveData.settings.debugOverlay),false);setupKeyboard();setupTouch();setTimeout(()=>{if(boot)boot.hidden=true;if(hud)hud.hidden=false;if(touchControls)touchControls.hidden=false;canvas.focus({preventScroll:true});},350);let previous=performance.now();const frame=t=>{resizeCanvas();const elapsed=t-previous;const dt=Math.min(elapsed/1000,.05);previous=t;sampleFrameTime(elapsed);update(dt);drawWorld(ctx);requestAnimationFrame(frame);};addEventListener('resize',resizeCanvas,{passive:true});addEventListener('pagehide',()=>saveGame('AUTOSAVED'));document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveGame('AUTOSAVED');});requestAnimationFrame(frame);console.info(`[VEILBOUND] v${VERSION} booted. Save V${SaveManager.VERSION}.`);console.info('[VEILBOUND] Diagnostics: press F3 or ` , or append ?debug to the URL.');}
+  function describeSave(data){const room=rooms[data.player.roomId];const name=room?room.name:'UNCHARTED';return `${name}    ${data.player.health}/${data.player.maxHealth} \u25c6`;}
+  function beginPlay(mode){
+    if(mode==='new'){saveData=SaveManager.reset();saveInspection={status:'empty'};}
+    restoreSave();
+    running=true;
+    if(hud)hud.hidden=false;
+    if(touchControls)touchControls.hidden=false;
+    canvas.focus({preventScroll:true});
+    if(mode==='new')saveGame('JOURNEY BEGUN');
+  }
+  function presentTitle(){
+    TitleScreen.present({
+      version:VERSION,
+      inspection:saveInspection,
+      describeSave,
+      settings:deviceSettings,
+      onSettingsChange(next){deviceSettings=next;SaveManager.saveSettings(next);setDebugMode(Boolean(next.debugOverlay),false);},
+      onStart:beginPlay,
+    });
+  }
+  function start(){
+    if(!canvas)throw new Error('Game canvas was not found.');
+    const ctx=canvas.getContext('2d',{alpha:false});
+    if(!ctx)throw new Error('Canvas 2D is unavailable in this browser.');
+    document.documentElement.dataset.veilboundVersion=VERSION;
+    if(status)status.textContent='Bound user confirmed.';
+    // The world is restored before the title so the menu sits over a live still of it.
+    restoreSave();
+    setDebugMode(debugRequestedByUrl()||Boolean(deviceSettings.debugOverlay),false);
+    setupKeyboard();
+    setupTouch();
+    setTimeout(()=>{if(boot)boot.hidden=true;presentTitle();},350);
+    let previous=performance.now();
+    const frame=t=>{resizeCanvas();const elapsed=t-previous;const dt=Math.min(elapsed/1000,.05);previous=t;sampleFrameTime(elapsed);if(running)update(dt);drawWorld(ctx);requestAnimationFrame(frame);};
+    addEventListener('resize',resizeCanvas,{passive:true});
+    // Never autosave from the title: that would manufacture a save the player never started.
+    addEventListener('pagehide',()=>{if(running)saveGame('AUTOSAVED');});
+    document.addEventListener('visibilitychange',()=>{if(running&&document.visibilityState==='hidden')saveGame('AUTOSAVED');});
+    requestAnimationFrame(frame);
+    console.info(`[VEILBOUND] v${VERSION} booted. Save V${SaveManager.VERSION}. Stored save: ${saveInspection.status}.`);
+    console.info('[VEILBOUND] Diagnostics: press F3 or ` , or append ?debug to the URL.');
+  }
   try{start();}catch(error){fail(error);}
 })();

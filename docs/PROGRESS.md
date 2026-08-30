@@ -172,8 +172,69 @@ layer and the first save/rest point.
 
 ---
 
+## 2026-08-30 — v0.1.6 Title
+
+Pulled ahead of the Sunken Archive entrance. The Phase 1 exit gate requires the
+title/New Game/Continue flow before full Archive production, and the NEXT sequence
+never scheduled it. It also removes the need to clear browser storage by hand between
+acceptance runs, which the pending device pass depends on.
+
+### FORGE — title / boot lifecycle
+- Gameplay updates and gameplay input are suspended until the title hands over. The
+  runtime renders throughout, so the menu sits over a live still of the room the player
+  would resume into.
+- `CONTINUE` appears only for a resumable save, labelled with its room and health.
+- `NEW GAME` over an existing save requires explicit confirmation before replacing it.
+- `SETTINGS` is reachable before any save exists.
+- The control hint is chosen from the active input: gamepad, coarse pointer, or keyboard,
+  and updates when a controller connects.
+- Added `src/ui/TitleScreen.js`, matching the `ui/` boundary in the architecture contract.
+
+### FORGE — safe resume
+- Added `SaveManager.inspect()`, which reports stored state without modifying it:
+  `ready`, `empty`, `unreadable`, `incompatible`, or `unavailable`.
+- A save that cannot be resumed is now reported on the title and left on disk. Previously
+  `load()` silently replaced it with defaults, so a corrupt or older save was destroyed by
+  the next autosave without the player ever being told.
+- No autosave fires while the title is up. Without that guard, opening the game and closing
+  the tab would manufacture a save the player never started, and offer `CONTINUE` next time.
+
+### FORGE — settings persistence
+- Device-level preferences moved out of the save into `veilbound.settings.v1`. They belong
+  to the device rather than to a journey, so they survive erasing or replacing a save, and
+  can be changed before any save exists.
+- The diagnostics overlay toggle is the first such preference and is now settable without a
+  keyboard, which it could not be on a phone before.
+- Save Schema V1 is unchanged. The save's `settings` field stays reserved for per-journey
+  settings and is simply no longer written to.
+
+### Verification
+- Chromium at 960×560 and at iPhone landscape/portrait.
+- No save: no `CONTINUE`, and a hide event does not create one. `NEW GAME` starts at once.
+- Valid save: `CONTINUE` shows `HOLLOW MARCH — FIELD 2    4/6 ◆` and resumes that room and health.
+- `NEW GAME` over a save asks first; `CANCEL` leaves the save intact, `REPLACE` starts fresh.
+- Corrupt bytes and a `version: 0` save each raise their own notice, keep `CONTINUE` hidden,
+  and remain byte-for-byte on disk.
+- Settings: toggling diagnostics writes only `veilbound.settings.v1`, creates no save, and the
+  preference survives erasing the save. Erase asks first.
+- Arrow keys and Resonance do not reach the world while the title is up. Space activates the
+  focused menu button, which is intended menu behaviour and cannot destroy a save, because
+  `CONTINUE` holds focus whenever a save exists.
+- Gameplay regression after starting from the title: movement, interaction targeting, room
+  transitions, and attack all unchanged. No console or page errors.
+
+### Owner-device acceptance — PENDING
+- [ ] HUD displays `v0.1.6-title` after refresh.
+- [ ] Title screen fits and reads in both orientations.
+- [ ] `CONTINUE` resumes the correct room and health.
+- [ ] `NEW GAME` over an existing save asks before replacing it.
+- [ ] Settings toggle for the diagnostics overlay works without a keyboard.
+- [ ] Closing the tab on the title does not create a save.
+
+---
+
 ## Current immediate production order
-1. Complete v0.1.5 Greyhaven iPhone acceptance, including the deferred v0.1.4 Sentry items.
+1. Complete v0.1.6 iPhone acceptance, including the deferred v0.1.3, v0.1.4, and v0.1.5 items.
 2. Build Sunken Archive entrance revealed through Resonance progression.
 3. Build reusable switch, persistent door, and push/manipulation primitives.
 4. Build Tether acquisition and teaching sequence.

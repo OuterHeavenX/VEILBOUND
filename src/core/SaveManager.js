@@ -4,6 +4,9 @@
   window.Veilbound = window.Veilbound || {};
 
   const STORAGE_KEY = 'veilbound.save.v1';
+  // Device-level preferences deliberately live outside the save file: they belong to
+  // the device, not to a journey, and must survive erasing or replacing a save.
+  const SETTINGS_KEY = 'veilbound.settings.v1';
   const VERSION = 1;
 
   function defaultSave() {
@@ -65,11 +68,65 @@
     return data;
   }
 
+  function defaultSettings() {
+    return { debugOverlay: false };
+  }
+
   const SaveManager = {
     VERSION,
     STORAGE_KEY,
+    SETTINGS_KEY,
 
     createDefault: defaultSave,
+    createDefaultSettings: defaultSettings,
+
+    // Report what is in storage without touching it, so the title screen can offer a
+    // safe resume and never silently discards a save it could not read.
+    // status: 'ready' | 'empty' | 'unreadable' | 'incompatible' | 'unavailable'
+    inspect() {
+      let raw;
+      try {
+        raw = localStorage.getItem(STORAGE_KEY);
+      } catch (error) {
+        console.warn('[VEILBOUND] Save storage is unavailable.', error);
+        return { status: 'unavailable' };
+      }
+      if (!raw) return { status: 'empty' };
+      let parsed;
+      try {
+        parsed = JSON.parse(raw);
+      } catch (error) {
+        return { status: 'unreadable' };
+      }
+      if (!parsed || typeof parsed !== 'object') return { status: 'unreadable' };
+      if (parsed.version !== VERSION) return { status: 'incompatible', version: parsed.version };
+      return { status: 'ready', data: normalize(parsed) };
+    },
+
+    loadSettings() {
+      const base = defaultSettings();
+      try {
+        const raw = localStorage.getItem(SETTINGS_KEY);
+        if (!raw) return base;
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== 'object') return base;
+        return { ...base, ...parsed };
+      } catch (error) {
+        console.warn('[VEILBOUND] Settings load failed; using defaults.', error);
+        return base;
+      }
+    },
+
+    saveSettings(settings) {
+      const data = { ...defaultSettings(), ...(settings || {}) };
+      try {
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(data));
+        return true;
+      } catch (error) {
+        console.warn('[VEILBOUND] Settings write failed.', error);
+        return false;
+      }
+    },
 
     load() {
       try {

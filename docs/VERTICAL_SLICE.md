@@ -3,7 +3,7 @@
 ## Current Implementation Status
 
 **Current playable branch:** `feature/vertical-slice-foundation`  
-**Current playable version:** `v0.1.5-greyhaven`  
+**Current playable version:** `v0.1.6-title`  
 **Last updated:** 2026-08-29
 
 Implemented and awaiting owner-device acceptance:
@@ -30,10 +30,13 @@ Implemented and awaiting owner-device acceptance:
 - [x] interaction system with world-state-reactive NPC dialogue
 - [x] first save/rest point at the Wayfarer's Rest hearth
 - [x] dormant Old Lift Station as an authored backtracking hook
+- [x] title screen with New Game / Continue / Settings
+- [x] safe resume that never silently discards an unreadable save
+- [x] device-level settings persistence outside the save
 
 Still required before Phase 1 exits:
 
-- [ ] owner-device acceptance of `v0.1.5-greyhaven`, carrying the unconfirmed v0.1.3 and v0.1.4 items
+- [ ] owner-device acceptance of `v0.1.6-title`, carrying the unconfirmed v0.1.3, v0.1.4, and v0.1.5 items
 - [~] second ranged/area-control enemy fully authored; acceptance outstanding
 - [x] Greyhaven NPC/dialogue interaction layer
 - [x] first save/rest point

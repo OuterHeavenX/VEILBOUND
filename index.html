@@ -16,8 +16,34 @@
       <p id="boot-status">Awakening the Vein…</p>
       <noscript>VEILBOUND requires JavaScript to run.</noscript>
     </section>
+    <section id="title-screen" class="title-screen" hidden aria-label="VEILBOUND title">
+      <div class="title-mark" aria-hidden="true">◇</div>
+      <h1 class="title-word">VEILBOUND</h1>
+      <p class="title-tagline">THE VEIN IS WAKING</p>
+      <p id="title-notice" class="title-notice" hidden role="status"></p>
+      <div id="title-menu" class="title-menu">
+        <button id="title-continue" class="title-button" type="button" hidden><span class="title-button-label">CONTINUE</span><span id="title-continue-detail" class="title-button-detail"></span></button>
+        <button id="title-new" class="title-button" type="button"><span class="title-button-label">NEW GAME</span></button>
+        <button id="title-settings" class="title-button" type="button"><span class="title-button-label">SETTINGS</span></button>
+      </div>
+      <div id="title-confirm" class="title-confirm" hidden>
+        <p id="title-confirm-text" class="title-confirm-text"></p>
+        <button id="title-confirm-yes" class="title-button title-button-danger" type="button"></button>
+        <button id="title-confirm-no" class="title-button" type="button">CANCEL</button>
+      </div>
+      <p id="title-hint" class="title-hint"></p>
+      <p id="title-version" class="title-version"></p>
+    </section>
+    <section id="settings-screen" class="title-screen" hidden aria-label="Settings">
+      <h2 class="title-word title-word-small">SETTINGS</h2>
+      <div class="title-menu">
+        <button id="settings-diagnostics" class="title-button" type="button" aria-pressed="false"></button>
+        <button id="settings-erase" class="title-button title-button-danger" type="button" hidden>ERASE SAVED JOURNEY</button>
+        <button id="settings-back" class="title-button" type="button">BACK</button>
+      </div>
+    </section>
     <canvas id="game-canvas" width="1280" height="720" tabindex="0" aria-label="VEILBOUND game canvas"></canvas>
-    <div id="hud" class="hud" hidden><div><div class="hud-brand">VEILBOUND <span class="hud-version">v0.1.5-greyhaven</span></div><div id="hud-health" class="hud-health" aria-label="Health">◆ ◆ ◆ ◆ ◆ ◆</div><div id="hud-ability" class="hud-ability">AXIOM: DORMANT</div></div><div class="hud-right"><div id="hud-room">GREYHAVEN</div><div id="save-status" class="save-status">SAVE V1 READY</div></div></div>
+    <div id="hud" class="hud" hidden><div><div class="hud-brand">VEILBOUND <span class="hud-version">v0.1.6-title</span></div><div id="hud-health" class="hud-health" aria-label="Health">◆ ◆ ◆ ◆ ◆ ◆</div><div id="hud-ability" class="hud-ability">AXIOM: DORMANT</div></div><div class="hud-right"><div id="hud-room">GREYHAVEN</div><div id="save-status" class="save-status">SAVE V1 READY</div></div></div>
     <div id="interact-prompt" class="interact-prompt" hidden aria-live="polite"><span id="interact-prompt-verb" class="interact-prompt-verb">TALK</span><span id="interact-prompt-name" class="interact-prompt-name"></span></div>
     <pre id="debug-overlay" class="debug-overlay" hidden aria-hidden="true"></pre>
     <div id="dialogue" class="dialogue" hidden aria-live="polite"><div id="dialogue-speaker" class="dialogue-speaker"></div><div id="dialogue-text" class="dialogue-text"></div><div class="dialogue-hint">TAP / A / SPACE</div></div>
@@ -28,6 +54,7 @@
   <script src="./src/core/SaveManager.js"></script>
   <script src="./src/data/enemies.js"></script>
   <script src="./src/data/interactables.js"></script>
+  <script src="./src/ui/TitleScreen.js"></script>
   <script src="./src/main.js"></script>
 </body>
 </html>

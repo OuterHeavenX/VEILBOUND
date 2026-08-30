@@ -3,7 +3,7 @@
 **Document owner:** ORACLE — Game Director & Planning  
 **Repository:** `OuterHeavenX/VEILBOUND`  
 **Current development branch:** `feature/vertical-slice-foundation`  
-**Current playable version:** `v0.1.5-greyhaven`  
+**Current playable version:** `v0.1.6-title`  
 **Roadmap status:** ACTIVE  
 **Last roadmap update:** 2026-08-30
 
@@ -152,7 +152,7 @@ A checkbox is marked complete only when the feature exists in the active branch.
 
 ---
 
-# 4. CURRENT STATE — v0.1.5-greyhaven
+# 4. CURRENT STATE — v0.1.6-title
 
 ## Foundation
 
@@ -292,6 +292,32 @@ A checkbox is marked complete only when the feature exists in the active branch.
 - [x] Concrete authored reason to leave town.
 - [ ] Owner-device acceptance of `v0.1.5-greyhaven`.
 
+## Title / boot
+
+- [x] Title screen with wordmark, mark, tagline, and version.
+- [x] `CONTINUE`, shown only for a resumable save and labelled with its room and health.
+- [x] `NEW GAME`, with explicit confirmation before replacing an existing save.
+- [x] `SETTINGS`, reachable before any save exists.
+- [x] Device-appropriate control hint for gamepad, touch, and keyboard.
+- [x] Live still of the resumable room rendered behind the menu.
+- [x] Gameplay input and updates suspended until the title hands over.
+- [ ] Title ambience/music. No audio system exists yet.
+
+## Safe resume
+
+- [x] `SaveManager.inspect()` reports stored state without modifying it.
+- [x] Distinct handling for empty, unreadable, incompatible, and unavailable storage.
+- [x] A save that cannot be resumed is reported and left on disk, never silently discarded.
+- [x] No autosave while the title is up, so an unstarted journey is never manufactured.
+- [x] Erase requires explicit confirmation.
+
+## Settings
+
+- [x] Device-level preferences stored outside the save, under `veilbound.settings.v1`.
+- [x] Preferences survive erasing or replacing a save.
+- [x] Diagnostics overlay toggle, which is the only device-settable option so far.
+- [ ] In-game settings entry. Title-only for now.
+
 ## Portrait rendering correction
 
 The v0.1.2 iPhone test exposed cyan cinematic flash bleeding into portrait letterbox regions.
@@ -382,14 +408,14 @@ The player should launch VEILBOUND, understand Kael's immediate purpose, travel 
 
 Owners: SPECTER + WRAITH + ECHO + FORGE
 
-- [~] Boot identity.
+- [~] Boot identity. Mark, wordmark, tagline, and version present; cinematic treatment is SPECTER's.
 - [x] Version display.
-- [ ] Proper title screen.
-- [ ] New Game / Continue logic.
-- [ ] Settings entry.
-- [ ] device-appropriate control hint.
+- [x] Proper title screen.
+- [x] New Game / Continue logic.
+- [x] Settings entry.
+- [x] device-appropriate control hint.
 - [ ] title ambience/music.
-- [ ] safe resume flow.
+- [x] safe resume flow.
 
 ## 1.2 Greyhaven
 
@@ -528,7 +554,7 @@ Owners: FORGE + ARCHITECT + WRAITH + ECHO
 
 Before full Sunken Archive production:
 
-- [ ] title/New Game/Continue flow works.
+- [x] title/New Game/Continue flow works.
 - [ ] save reload is owner-device accepted.
 - [x] Greyhaven basic NPC interaction exists.
 - [~] opening motivation is clear. Authored through ISEN; reads as clear on acceptance only.
@@ -1128,7 +1154,7 @@ Before slice completion:
 - [ ] boss-phase framework.
 - [ ] deterministic checkpoint/retry.
 - [ ] cutscene viewed-state.
-- [ ] settings persistence.
+- [x] settings persistence. Device-level, stored outside the save.
 - [ ] save migrations.
 - [~] performance diagnostics.
 
@@ -1228,12 +1254,12 @@ Vertical slice:
 
 # 7. CURRENT EXACT DEVELOPMENT ORDER
 
-This is the authoritative immediate sequence from `v0.1.5-greyhaven`.
+This is the authoritative immediate sequence from `v0.1.6-title`.
 
-## NEXT 1 — owner-device acceptance v0.1.5
+## NEXT 1 — owner-device acceptance v0.1.6
 
-Acceptance has stacked across three builds without a device pass. All of it is
-confirmed against `v0.1.5-greyhaven`, on iPhone.
+Acceptance has stacked across four builds without a device pass. All of it is
+confirmed against `v0.1.6-title`, on iPhone.
 
 Carried from v0.1.3:
 
@@ -1257,7 +1283,7 @@ Carried from v0.1.4:
 
 New in v0.1.5:
 
-- [ ] HUD displays `v0.1.5-greyhaven` after refresh.
+- [ ] HUD displays `v0.1.6-title` after refresh.
 - [ ] interact prompt is readable and clear of the touch controls.
 - [ ] action button visibly changes between the Shardblade and the interact glyph.
 - [ ] tapping the action button beside an NPC talks instead of swinging.
@@ -1265,6 +1291,14 @@ New in v0.1.5:
 - [ ] returning to Greyhaven after the awakening shows the changed dialogue.
 - [ ] landmark labels stay legible at phone scale in landscape and portrait.
 - [ ] `?debug` shows the diagnostics overlay without breaking touch controls.
+
+New in v0.1.6:
+
+- [ ] title screen fits and reads in both orientations.
+- [ ] `CONTINUE` resumes the correct room and health.
+- [ ] `NEW GAME` over an existing save asks before replacing it.
+- [ ] settings toggle for the diagnostics overlay works without a keyboard.
+- [ ] closing the tab on the title does not create a save.
 
 ## NEXT 2 — second enemy archetype — IMPLEMENTED in v0.1.4
 
@@ -1283,6 +1317,19 @@ New in v0.1.5:
 - [x] first save/rest point.
 - [x] opening motivation.
 - [x] post-Axiom reaction flag/dialogue.
+
+## NEXT 3B — title / New Game / Continue — IMPLEMENTED in v0.1.6
+
+Pulled ahead of NEXT 4 because the Phase 1 exit gate requires it before full Sunken Archive
+production, and because a Continue/New Game flow is what makes the NEXT 1 device pass
+repeatable without clearing browser storage by hand.
+
+- [x] title screen.
+- [x] New Game / Continue logic.
+- [x] settings entry and device-level settings persistence.
+- [x] device-appropriate control hint.
+- [x] safe resume flow.
+- [ ] title ambience/music. Blocked on there being any audio system.
 
 ## NEXT 4 — Sunken Archive entrance
 

@@ -139,6 +139,36 @@ Owns persistent flags and room-level persistence. Examples:
 ### SaveManager
 Serializes versioned player/world state and validates loaded data. Save format must include a schema version from the beginning.
 
+`inspect()` reports what is in storage without touching it, so the title can offer a safe
+resume. It returns one of:
+
+- `ready` — a valid save, with the normalized data.
+- `empty` — nothing stored.
+- `unreadable` — stored bytes that will not parse.
+- `incompatible` — a save from a different schema version.
+- `unavailable` — storage itself is blocked or throwing.
+
+A save that cannot be resumed is never silently discarded. It stays on disk until the player
+explicitly replaces or erases it.
+
+Device-level preferences live outside the save, under `veilbound.settings.v1`, via
+`loadSettings()` / `saveSettings()`. They belong to the device rather than to a journey, so
+they must survive erasing or replacing a save, and must be settable before any save exists.
+The save's own `settings` field stays reserved for per-journey settings.
+
+### Title / boot
+Owns the entry point into play. Gameplay does not update until the title hands over, and the
+runtime never autosaves while the title is up — otherwise a player who never pressed anything
+would be given a save they did not start.
+
+- `CONTINUE` appears only for a `ready` save, labelled with its room and health.
+- `NEW GAME` over an existing save requires explicit confirmation.
+- `SETTINGS` is reachable before any save exists, because its preferences are device-level.
+- The control hint is chosen from the active input: gamepad, coarse pointer, or keyboard.
+
+The world is restored before the title is shown, so the menu sits over a live still of the
+room the player would resume into.
+
 ### CombatSystem
 Coordinates attacks, hit/hurt overlap, damage, knockback, invulnerability windows, and combat events. Visual/audio feedback should subscribe through events rather than being hard-coded into damage math.
 

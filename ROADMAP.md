@@ -3,7 +3,7 @@
 **Document owner:** ORACLE — Game Director & Planning  
 **Repository:** `OuterHeavenX/VEILBOUND`  
 **Current development branch:** `feature/vertical-slice-foundation`  
-**Current playable version:** `v0.2.0-terrain`  
+**Current playable version:** `v0.2.1-menu`  
 **Roadmap status:** ACTIVE  
 **Last roadmap update:** 2026-08-30
 
@@ -152,7 +152,7 @@ A checkbox is marked complete only when the feature exists in the active branch.
 
 ---
 
-# 4. CURRENT STATE — v0.2.0-terrain
+# 4. CURRENT STATE — v0.2.1-menu
 
 ## Foundation
 
@@ -318,7 +318,7 @@ A checkbox is marked complete only when the feature exists in the active branch.
 - [x] Preferences survive erasing or replacing a save.
 - [x] Diagnostics overlay toggle.
 - [x] Audio on/off toggle.
-- [ ] In-game settings entry. Title-only for now.
+- [~] In-game settings entry. The pause menu exists; settings are still title-only.
 
 ## Audio
 
@@ -368,6 +368,25 @@ A checkbox is marked complete only when the feature exists in the active branch.
 - [x] Ordinary enemies repopulate their room on every entry.
 - [x] Persistence kept as an explicit per-enemy opt-in, for bosses and story kills.
 - [x] Saves that still carry old defeat flags no longer suppress spawns.
+
+## Pause menu
+
+- [x] Character menu on `M` / `Tab` / `Escape` and a touch button.
+- [x] Pause suspends the simulation while the world stays visible behind the menu.
+- [x] Kael's own prerendered portrait, animated.
+- [x] Vitality, XP, JP, coins, Shardblade level, and held Axiom protocols.
+- [x] Journey list of authored milestones, with unearned ones shown only as a count.
+- [x] Amber glyphs from the uploaded icon sheet.
+- [x] Responsive down to a landscape phone.
+- [ ] Inventory and Equipment tabs. Present and marked SOON; neither system exists.
+- [ ] Settings from inside the menu. Title-only for now.
+
+## Progression counters
+
+- [x] XP, JP and coins in the save, awarded on enemy defeat.
+- [x] No migration needed; `normalize()` merges over defaults for saves written before them.
+- [ ] Anything that spends them. No levelling, shop, or repair yet.
+- [ ] A canonical name for JP. SCRIBE and ORACLE own that.
 
 ## Portrait rendering correction
 
@@ -1306,12 +1325,12 @@ Vertical slice:
 
 # 7. CURRENT EXACT DEVELOPMENT ORDER
 
-This is the authoritative immediate sequence from `v0.2.0-terrain`.
+This is the authoritative immediate sequence from `v0.2.1-menu`.
 
-## NEXT 1 — owner-device acceptance v0.2.0
+## NEXT 1 — owner-device acceptance v0.2.1
 
-Acceptance has stacked across eight builds without a device pass. All of it is
-confirmed against `v0.2.0-terrain`, on iPhone.
+Acceptance has stacked across nine builds without a device pass. All of it is
+confirmed against `v0.2.1-menu`, on iPhone.
 
 Carried from v0.1.3:
 
@@ -1335,7 +1354,7 @@ Carried from v0.1.4:
 
 New in v0.1.5:
 
-- [ ] HUD displays `v0.2.0-terrain` after refresh.
+- [ ] HUD displays `v0.2.1-menu` after refresh.
 - [ ] interact prompt is readable and clear of the touch controls.
 - [ ] action button visibly changes between the Shardblade and the interact glyph.
 - [ ] tapping the action button beside an NPC talks instead of swinging.
@@ -1377,6 +1396,12 @@ New in v0.2.0:
 - [ ] tiled ground and paths read well at phone scale and hold their frame rate.
 - [ ] the terrain wash sits the tile sets close enough to the Eidol palette, or wants tuning.
 - [ ] repopulating enemies feel like pressure rather than a chore on the walk east.
+
+New in v0.2.1:
+
+- [ ] the menu button is reachable without covering the view, in both orientations.
+- [ ] the menu reads at phone scale and scrolls where it must.
+- [ ] pausing and resuming does not drop input or leave the player moving.
 
 ## NEXT 2 — second enemy archetype — IMPLEMENTED in v0.1.4
 

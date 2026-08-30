@@ -20,6 +20,11 @@
         maxHealth: 6,
         shardbladeLevel: 1,
         abilities: [],
+        // Added after Save V1 shipped. normalize() merges over defaults, so saves written
+        // before these existed load with zeroes and need no migration.
+        xp: 0,
+        jp: 0,
+        coins: 0,
       },
       world: {
         flags: {},

@@ -496,8 +496,60 @@ v0.1.9, and make enemies come back when you leave a room and return.
 
 ---
 
+## 2026-08-30 — v0.2.1 Character menu
+
+Owner brought a menu mockup built elsewhere that had not worked out: torn spritesheet strips
+bleeding through the panels, a black blob where the portrait should be, and a mostly empty
+left column. Nothing of it was in the repository, so this is built fresh.
+
+### The menu
+- `src/ui/PauseMenu.js`. Opens on `M`, `Tab`, `Escape` or a touch button; closes on those, the
+  RESUME button, or a click outside the frame.
+- Pause suspends the simulation without stopping the frame, so the world stays visible behind
+  the menu instead of freezing to a blank. It is a separate flag from `running`, so saving and
+  the title handover are unaffected.
+- Layout follows the mockup's intent but fixes its problems. The empty left column is gone;
+  the header carries the tabs, and the three columns are portrait plus vitality, attainment
+  plus protocols, and the journey. It collapses to two columns, then one, and has a
+  short-viewport pass for landscape phones.
+- The black blob is replaced by Kael's own prerendered idle sheet, stepped frame by frame so
+  the portrait breathes. One `--cell` value drives its size and the animation distance.
+- Unearned journey milestones are shown only as a count, so the list stays tidy and does not
+  spoil its own labels.
+
+### On the menu kit
+- The uploaded kit's wooden panels are a bright fantasy palette and would fight the UI
+  language the title screen, HUD and dialogue already established, which is also what the
+  owner's own mockup was reaching for. They are not used.
+- What the kit does contribute is its icon sheet: rows 0-5 of `Icons.png` are amber
+  monochrome glyphs that sit naturally on a dark ground. They are addressed by cell through a
+  CSS custom property and used for vitality, XP, JP, coins, Shardblade, Axiom and region.
+
+### Progression counters
+- XP, JP and coins are real save state now, awarded on enemy defeat at the rates the mockup
+  showed: +2 XP, +1 JP, +1 coin, in one `DEFEAT_REWARD` constant.
+- Added after Save V1 shipped, but `normalize()` merges over defaults, so saves written before
+  they existed load with zeroes and need no migration.
+- Nothing spends them yet, and JP has no canonical name. Both are recorded as open.
+
+### Verification
+- All four open paths and all four close paths.
+- Pause proven, not assumed: neither the player nor the enemies move while the menu is up, and
+  movement resumes after closing.
+- A kill pays out and the menu shows the totals.
+- Landscape and portrait phone layouts fit and the touch button works in both.
+- Full v0.1.4 through v0.2.0 regression passes. No console or page errors.
+
+### Owner-device acceptance — PENDING
+- [ ] HUD displays `v0.2.1-menu` after refresh.
+- [ ] The menu button is reachable without covering the view, in both orientations.
+- [ ] The menu reads at phone scale and scrolls where it must.
+- [ ] Pausing and resuming does not drop input or leave the player moving.
+
+---
+
 ## Current immediate production order
-1. Complete v0.2.0 iPhone acceptance, including the deferred v0.1.3 through v0.1.9 items.
+1. Complete v0.2.1 iPhone acceptance, including the deferred v0.1.3 through v0.2.0 items.
 2. Build Sunken Archive entrance revealed through Resonance progression.
 3. Build reusable switch, persistent door, and push/manipulation primitives.
 4. Build Tether acquisition and teaching sequence.

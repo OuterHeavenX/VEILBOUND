@@ -3,7 +3,7 @@
 ## Current Implementation Status
 
 **Current playable branch:** `feature/vertical-slice-foundation`  
-**Current playable version:** `v0.2.0-terrain`  
+**Current playable version:** `v0.2.1-menu`  
 **Last updated:** 2026-08-29
 
 Implemented and awaiting owner-device acceptance:
@@ -40,10 +40,12 @@ Implemented and awaiting owner-device acceptance:
 - [x] authored Hollow March scenery from the forest set
 - [x] tiled ground and paths from the uploaded tile sets, including the Greyhaven road
 - [x] enemies repopulate their room on re-entry
+- [x] pause / character menu with vitality, attainment, protocols and journey
+- [x] XP, JP and coins awarded on enemy defeat
 
 Still required before Phase 1 exits:
 
-- [ ] owner-device acceptance of `v0.2.0-terrain`, carrying the unconfirmed v0.1.3 through v0.1.9 items
+- [ ] owner-device acceptance of `v0.2.1-menu`, carrying the unconfirmed v0.1.3 through v0.2.0 items
 - [~] second ranged/area-control enemy fully authored; acceptance outstanding
 - [x] Greyhaven NPC/dialogue interaction layer
 - [x] first save/rest point

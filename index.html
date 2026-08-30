@@ -44,11 +44,32 @@
       </div>
     </section>
     <canvas id="game-canvas" width="1280" height="720" tabindex="0" aria-label="VEILBOUND game canvas"></canvas>
-    <div id="hud" class="hud" hidden><div><div class="hud-brand">VEILBOUND <span class="hud-version">v0.2.0-terrain</span></div><div id="hud-health" class="hud-health" aria-label="Health">◆ ◆ ◆ ◆ ◆ ◆</div><div id="hud-ability" class="hud-ability">AXIOM: DORMANT</div></div><div class="hud-right"><div id="hud-room">GREYHAVEN</div><div id="save-status" class="save-status">SAVE V1 READY</div></div></div>
+    <div id="hud" class="hud" hidden><div><div class="hud-brand">VEILBOUND <span class="hud-version">v0.2.1-menu</span></div><div id="hud-health" class="hud-health" aria-label="Health">◆ ◆ ◆ ◆ ◆ ◆</div><div id="hud-ability" class="hud-ability">AXIOM: DORMANT</div></div><div class="hud-right"><div id="hud-room">GREYHAVEN</div><div id="save-status" class="save-status">SAVE V1 READY</div></div></div>
     <div id="interact-prompt" class="interact-prompt" hidden aria-live="polite"><span id="interact-prompt-verb" class="interact-prompt-verb">TALK</span><span id="interact-prompt-name" class="interact-prompt-name"></span></div>
     <pre id="debug-overlay" class="debug-overlay" hidden aria-hidden="true"></pre>
     <div id="dialogue" class="dialogue" hidden aria-live="polite"><div id="dialogue-speaker" class="dialogue-speaker"></div><div id="dialogue-text" class="dialogue-text"></div><div class="dialogue-hint">TAP / A / SPACE</div></div>
-    <div id="touch-controls" class="touch-controls" hidden aria-label="Touch controls"><div id="touch-stick" class="touch-stick" aria-hidden="true"><div id="touch-knob" class="touch-knob"></div></div><div class="touch-actions"><button id="resonance-button" class="resonance-button" type="button" aria-label="Use Axiom Resonance" hidden>◇</button><button id="action-button" class="action-button" type="button" aria-label="Attack with Shardblade">⚔</button></div></div>
+    <div id="touch-controls" class="touch-controls" hidden aria-label="Touch controls"><div id="touch-stick" class="touch-stick" aria-hidden="true"><div id="touch-knob" class="touch-knob"></div></div><div class="touch-actions"><button id="resonance-button" class="resonance-button" type="button" aria-label="Use Axiom Resonance" hidden>◇</button><button id="action-button" class="action-button" type="button" aria-label="Attack with Shardblade">⚔</button></div><div class="touch-menu"><button id="menu-button" class="menu-button" type="button" aria-label="Open character menu">☰</button></div></div>
+    <div id="pause-menu" class="pause-menu" hidden role="dialog" aria-modal="true" aria-label="Character menu">
+      <div class="menu-frame">
+        <header class="menu-header">
+          <div class="menu-brand"><span class="menu-mark" aria-hidden="true">◇</span>VEILBOUND</div>
+          <nav class="menu-tabs">
+            <button class="menu-tab is-active" type="button">STATUS</button>
+            <button class="menu-tab" type="button" data-locked="true">INVENTORY<em>SOON</em></button>
+            <button class="menu-tab" type="button" data-locked="true">EQUIPMENT<em>SOON</em></button>
+          </nav>
+          <div class="menu-header-right">
+            <span id="menu-region" class="menu-region-label"></span>
+            <button id="menu-close" class="menu-close" type="button" aria-label="Resume">RESUME</button>
+          </div>
+        </header>
+        <div id="menu-body" class="menu-body"></div>
+        <footer class="menu-footer">
+          <span>M / TAB / ESC TO RESUME</span>
+          <span class="menu-footer-rule">ENEMY DEFEAT &nbsp;//&nbsp; +2 XP &nbsp;·&nbsp; +1 JP &nbsp;·&nbsp; +1 COIN</span>
+        </footer>
+      </div>
+    </div>
     <div id="fatal-error" class="fatal-error" hidden role="alert"><h2>VEILBOUND could not start</h2><p id="fatal-error-message"></p></div>
   </main>
   <!-- Classic scripts preserve true zero-build, file:// friendly startup. -->
@@ -62,6 +83,7 @@
   <script src="./src/data/enemies.js"></script>
   <script src="./src/data/interactables.js"></script>
   <script src="./src/ui/TitleScreen.js"></script>
+  <script src="./src/ui/PauseMenu.js"></script>
   <script src="./src/main.js"></script>
 </body>
 </html>

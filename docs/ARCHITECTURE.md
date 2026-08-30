@@ -230,6 +230,30 @@ enemies that opt in.
 Note that a player death inside `updateEnemies` or `updateProjectiles` repopulates those
 arrays mid-iteration, so both loops tolerate an index that has gone away.
 
+### Pause menu
+`src/ui/PauseMenu.js`. Opens on `M`, `Tab`, `Escape`, or the touch button; closes on the same
+keys, the RESUME button, or a click outside the frame.
+
+Pause suspends the simulation without stopping the frame, so the world stays visible behind
+the menu rather than freezing to a blank. It is a separate flag from `running`, so saving and
+the title handover are unaffected.
+
+Everything the menu shows is real save state: vitality, XP, JP, coins, Shardblade level, held
+Axiom protocols, and the authored journey milestones. Unearned milestones are shown only as a
+count, so the list stays tidy and does not spoil its own labels.
+
+It is built in the UI language the title screen, HUD and dialogue already establish: near
+black, thin cyan and amber rules, monospace caps. The uploaded menu kit's wooden panels are a
+different palette family and would fight that, so what it contributes is its icon sheet —
+rows 0-5 of `Icons.png` are amber monochrome glyphs that sit naturally on a dark ground,
+addressed by cell through a CSS custom property. Kael's portrait is his own prerendered idle
+sheet, stepped frame by frame with a `steps()` animation off one `--cell` value.
+
+### Progression counters
+XP, JP and coins live in `player` and are awarded on enemy defeat. They were added after Save
+V1 shipped; `normalize()` merges over defaults, so saves written before they existed load with
+zeroes and need no migration. The reward values sit in one `DEFEAT_REWARD` constant.
+
 ### Audio
 Every voice is synthesised through Web Audio. VEILBOUND ships zero-build and
 file://-friendly, so there are no audio assets to fetch, and procedural synthesis keeps

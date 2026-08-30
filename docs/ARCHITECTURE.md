@@ -1,468 +1,239 @@
 # VEILBOUND — Technical Architecture Foundation
 
-Owner: **FORGE**
+Owner: **FORGE**  
+Current runtime: **v0.3.0-archive**
 
-This document defines the intended architecture before implementation expands.
-
-## Core Principles
+## Core principles
 
 - Modular systems over monolithic files.
-- Data-driven rooms, enemies, items, puzzles, and story events.
-- Device-independent input abstraction.
-- Explicit world-state persistence.
-- Deterministic room lifecycle where practical.
-- Strong debug visibility for collisions, room state, transitions, and performance.
-- Content code should not need to patch engine internals.
+- Data-driven rooms, enemies, items, puzzles and story events.
+- Device-independent action concepts across keyboard, touch and controller.
+- Explicit authored persistence for world state.
+- Stable room lifecycle and cleanup.
+- Strong development diagnostics.
+- Content should not need to patch unrelated engine internals.
+- The game remains zero-build/static-host friendly.
 
-## Zero-Setup Launch Contract
+## Zero-setup launch contract
 
-`index.html` is the canonical launch point for the project.
+`index.html` is the canonical launch point.
 
-Requirements:
-- Opening `index.html` directly must boot the game without a package install or build step.
-- Static hosting on GitHub Pages, Cloudflare Pages, or equivalent must work from the repository root.
-- The launch shell must not depend on a local dev server for basic startup.
-- The initial runtime uses classic browser scripts and Canvas 2D so `file://` startup remains viable while the modular engine is being established.
-- Any future dependency or module-system change must preserve an out-of-box launch path, either by committing browser-ready output or by maintaining a zero-build runtime entry.
-- Startup failures must present a visible user-facing error instead of leaving a blank screen.
-- Mobile safe areas and responsive canvas sizing are required from the first playable build.
+The browser game must remain launchable from static hosting without npm, a bundler or a local development server. Development-only tools may use dependencies as long as committed browser-ready output keeps the game itself zero-build.
 
-The current foundation boot files are:
-- `index.html`
-- `styles.css`
-- `src/main.js`
+Current launch chain includes SaveManager, Audio, sprite/data registries, interaction/title/pause UI, Progression, and `src/main.js`.
 
-## Proposed Source Layout
+Startup failure must surface visibly rather than leaving a blank canvas. Mobile safe areas and responsive canvas sizing are required.
 
-```text
-src/
-  core/
-    Game.js
-    GameLoop.js
-    Input.js
-    Audio.js
-    SaveManager.js
-    EventBus.js
+## Current runtime boundary
 
-  world/
-    World.js
-    Room.js
-    RoomManager.js
-    TileMap.js
-    Collision.js
-    WorldState.js
+The vertical-slice prototype is still concentrated in `src/main.js`, but new reusable systems should increasingly be extracted rather than allowing the file to become the permanent engine.
 
-  entities/
-    Entity.js
-    Player.js
-    NPC.js
-    Enemy.js
-    Boss.js
+Already separated:
 
-  combat/
-    CombatSystem.js
-    Hitbox.js
-    Hurtbox.js
-    Projectile.js
-    DamageSystem.js
+- `src/core/SaveManager.js`
+- `src/core/Audio.js`
+- `src/core/Sprites.js`
+- `src/core/Progression.js`
+- `src/ui/TitleScreen.js`
+- `src/ui/PauseMenu.js`
+- data registries for enemies, sprites, terrain, props and interactables
 
-  abilities/
-    AxiomSystem.js
-    Resonance.js
-    Tether.js
+Next extraction priority after the Sunken Archive opening is accepted: reusable dungeon puzzle/mechanism handling.
 
-  puzzles/
-    PuzzleSystem.js
-    Switch.js
-    PushBlock.js
-    Door.js
-    Anchor.js
+## SaveManager
 
-  items/
-    ItemRegistry.js
-    Inventory.js
-    Equipment.js
+Save V1 owns persistent journey state. `inspect()` reports a stored save without modifying it, allowing safe title-screen resume. Unreadable/incompatible saves are never silently replaced.
 
-  story/
-    DialogueSystem.js
-    CutsceneSystem.js
-    QuestSystem.js
+Device preferences live separately under `veilbound.settings.v1` and survive save replacement.
 
-  ui/
-    HUD.js
-    DialogueUI.js
-    MapScreen.js
-    InventoryScreen.js
-    TouchControls.js
-
-  data/
-    rooms/
-    enemies/
-    items/
-    quests/
-    cutscenes/
-```
-
-The module boundaries are the important contract. Any future library adoption must preserve the zero-setup launch contract above.
-
-## Runtime Ownership
-
-### Game
-Top-level lifecycle and service composition. It should not become a catch-all gameplay file.
-
-### GameLoop
-Owns update cadence and render scheduling. Gameplay systems receive time deltas through explicit update calls.
-
-### Input
-Normalizes keyboard, touch, and controller inputs into actions such as:
-- moveX / moveY
-- attack
-- interact
-- axiom
-- menu
-- map
-- cancel
-
-Gameplay systems should not directly query raw keyboard/touch/gamepad APIs.
-
-### RoomManager
-Loads room definitions, creates runtime entities, manages transitions, and tears down transient room state safely.
-
-### WorldState
-Owns persistent flags and room-level persistence. Examples:
-- opened chest
-- solved puzzle
-- defeated boss
-- opened shortcut
-- activated mechanism
-
-### SaveManager
-Serializes versioned player/world state and validates loaded data. Save format must include a schema version from the beginning.
-
-`inspect()` reports what is in storage without touching it, so the title can offer a safe
-resume. It returns one of:
-
-- `ready` — a valid save, with the normalized data.
-- `empty` — nothing stored.
-- `unreadable` — stored bytes that will not parse.
-- `incompatible` — a save from a different schema version.
-- `unavailable` — storage itself is blocked or throwing.
-
-A save that cannot be resumed is never silently discarded. It stays on disk until the player
-explicitly replaces or erases it.
-
-Device-level preferences live outside the save, under `veilbound.settings.v1`, via
-`loadSettings()` / `saveSettings()`. They belong to the device rather than to a journey, so
-they must survive erasing or replacing a save, and must be settable before any save exists.
-The save's own `settings` field stays reserved for per-journey settings.
-
-### Character sprites
-The uploaded characters are 3D glTF models, and the runtime is Canvas 2D. Rather than
-replace the renderer, `tools/prerender-characters.mjs` renders each model once, offline,
-into 8-direction sprite sheets that the 2D runtime draws like any image.
-
-- The tool is dev-only. It needs `npm install` inside `tools/`; the game itself still has
-  no dependencies, no build step, and launches from `file://`.
-- Sheets load as plain `<img>`, and the manifest is generated as `src/data/characterSprites.js`
-  rather than JSON, because `fetch()` is blocked on `file://`.
-- Direction index 0 faces the camera and turns clockwise, so a facing vector maps onto a
-  sheet row directly through `atan2(facingX, facingY)`.
-- Sprites are anchored on the feet, measured from the generated sheets, so they stand on the
-  same ground line the procedural figures used.
-- Every draw reports whether it succeeded. When a sheet is missing or still loading the
-  runtime falls back to its procedural figures, so a fresh clone is playable before anyone
-  runs the prerenderer.
-
-The KayKit models carry no clips of their own; the clips live in the shared-rig files under
-`Animations/`, keyed by node name, so a clip bound to a character's skeleton plays without
-retargeting. There is no attack clip in the pack, so the Shardblade swing borrows `Use_Item`.
-
-Casting is placeholder, recorded in the tool's `CAST` table: Kael is `Rogue_Hooded`, and the
-five Greyhaven NPCs take the remaining five models. See `assets/ATTRIBUTION.md`.
-
-### Authored sprite sheets and scenery
-Two sheet layouts coexist, both drawn through `src/core/Sprites.js`:
-
-- **Generated**, from `tools/prerender-characters.mjs`: 8 direction rows, one sheet per clip,
-  described by `src/data/characterSprites.js`.
-- **Authored**, shipped in the upload: 64px cells, four direction rows in the order south,
-  north, west, east, one row-major sheet per clip, described by `src/data/enemySprites.js`.
-  With only four rows, a facing vector picks the dominant axis rather than the nearest of
-  eight.
-
-Enemy clips are chosen from what the enemy is actually doing, so the sheet follows the
-existing state machine rather than duplicating it. A defeated enemy plays its death clip
-before leaving the field; defeat is recorded the moment health reaches zero, so persistence
-never depends on the animation finishing.
-
-Scenery lives in `src/data/props.js` as ground-anchored single images. Anything that reads as
-an obstacle is placed over a collision rectangle that already exists in the room, so the art
-and the collision agree without retuning traversal that is already accepted; those rectangles
-are marked `hidden` so the generic wall fill does not paint a slab underneath the art.
-
-Every sprite path reports whether it drew. When a sheet is missing the runtime falls back to
-its procedural figures, so the game is never blocked on art.
-
-### Terrain
-Ground and paths tile from the uploaded 16px sets, described in `src/data/terrain.js`.
-
-Those sheets are autotile sets: mostly edge, corner and junction pieces meant to be assembled
-in Tiled. Rather than reimplement autotiling, the runtime uses each sheet's interior field
-tile, chosen by seam analysis — a tile qualifies when it is fully opaque and its right edge
-continues into its own left edge, and likewise top into bottom. Edges are handled by authored
-geometry instead, so every path rectangle is verified clear of the room's collision
-rectangles before it is authored.
-
-The tile sets are brighter and more saturated than Eidol, so a wash is painted over the tiled
-terrain only, never over props or characters. Its alpha is a single value in `terrain.js`; set
-it to 0 to see the sheets untouched.
-
-When a tile sheet is missing the room falls back to its flat authored colour and the
-hand-drawn roads, so the game still reads.
-
-### Enemy repopulation
-Ordinary enemies repopulate their room on every entry. Persistence is kept as an explicit
-per-enemy opt-in (`persistent: true` on the placement) so a boss or a story kill can still
-stay defeated, and the `defeatedEnemies` machinery in Save Schema V1 is unchanged. Saves that
-still carry old defeat flags no longer suppress spawns, because the flag is only consulted for
-enemies that opt in.
-
-Note that a player death inside `updateEnemies` or `updateProjectiles` repopulates those
-arrays mid-iteration, so both loops tolerate an index that has gone away.
-
-### Pause menu
-`src/ui/PauseMenu.js`. Opens on `M`, `Tab`, `Escape`, or the touch button; closes on the same
-keys, the RESUME button, or a click outside the frame.
-
-Pause suspends the simulation without stopping the frame, so the world stays visible behind
-the menu rather than freezing to a blank. It is a separate flag from `running`, so saving and
-the title handover are unaffected.
-
-Everything the menu shows is real save state: vitality, XP, JP, coins, Shardblade level, held
-Axiom protocols, and the authored journey milestones. Unearned milestones are shown only as a
-count, so the list stays tidy and does not spoil its own labels.
-
-It is built in the UI language the title screen, HUD and dialogue already establish: near
-black, thin cyan and amber rules, monospace caps. The uploaded menu kit's wooden panels are a
-different palette family and would fight that, so what it contributes is its icon sheet —
-rows 0-5 of `Icons.png` are amber monochrome glyphs that sit naturally on a dark ground,
-addressed by cell through a CSS custom property. Kael's portrait is his own prerendered idle
-sheet, stepped frame by frame with a `steps()` animation off one `--cell` value.
-
-### Progression
-`src/core/Progression.js` owns the rules in `docs/PROGRESSION.md`: the reward values, coin
-world-drops and their pickup, reward toasts, and the controller's menu button. It holds no
-reference to the menu, so presentation can change without touching the contract. XP and JP
-land the moment an enemy enters its death state; the coin is a physical drop that must be
-walked over, is room-local, and is cleared on transitions and on recovery.
-
-### Progression counters
-XP, JP and coins live in `player` and are awarded on enemy defeat. They were added after Save
-V1 shipped; `normalize()` merges over defaults, so saves written before they existed load with
-zeroes and need no migration. The reward values sit in one `DEFEAT_REWARD` constant.
-
-### Audio
-Every voice is synthesised through Web Audio. VEILBOUND ships zero-build and
-file://-friendly, so there are no audio assets to fetch, and procedural synthesis keeps
-the sound original by construction.
-
-- Browsers refuse audio before a user gesture. Nothing is created until `unlock()` is
-  called from a real interaction; that is a platform rule, not a bug, and a player who
-  never interacts with the title correctly hears nothing.
-- The bed and the bell are built against whatever context they are handed, so the same
-  synthesis serves live playback and `render()`, an offline audition of the mix.
-- A pass-through analyser sits after the master gain, so the real output level is
-  observable in the diagnostics overlay and in tests rather than assumed.
-- Transitions fade rather than cut, per ECHO's pillars.
-- The context is suspended while the tab is hidden.
-- Mixes are checked against a lowpassed phone speaker, not just full range. A bed that is
-  all sub-100 Hz is inaudible on the device this project targets first.
-
-### Title / boot
-Owns the entry point into play. Gameplay does not update until the title hands over, and the
-runtime never autosaves while the title is up — otherwise a player who never pressed anything
-would be given a save they did not start.
-
-- `CONTINUE` appears only for a `ready` save, labelled with its room and health.
-- `NEW GAME` over an existing save requires explicit confirmation.
-- `SETTINGS` is reachable before any save exists, because its preferences are device-level.
-- Title ambience gives way to play with a fade, and never starts if the gesture that
-  unlocked audio was itself the one starting the game.
-- The control hint is chosen from the active input: gamepad, coarse pointer, or keyboard.
-
-The world is restored before the title is shown, so the menu sits over a live still of the
-room the player would resume into.
-
-### CombatSystem
-Coordinates attacks, hit/hurt overlap, damage, knockback, invulnerability windows, and combat events. Visual/audio feedback should subscribe through events rather than being hard-coded into damage math.
-
-### AxiomSystem
-Owns acquired abilities and common Axiom rules. Individual abilities implement their own targeting/execution contracts.
-
-### CutsceneSystem
-Runs data/script-driven cinematic sequences while preserving clear control over player input, camera, dialogue, animation, sound/music cues, and skip behavior.
-
-### InteractionSystem
-
-Resolves the player's current interactable target and plays its authored response.
-
-- Interaction content is data, not code: `src/data/interactables.js` maps a room id to an
-  ordered list of interactables, each with a stable authored id.
-- Kinds: `npc`, `object`, `rest`. `solid: true` gives an entry a body the player collides with.
-- Targeting picks the nearest entry within `reach`, and is suppressed while dialogue is open
-  or the player is down. The action control resolves to `interact` when a target is in reach
-  and falls back to `attack` otherwise, so touch keeps a single action button.
-- `lines` is an ordered variant list. The first variant whose `when` clause passes is the one
-  that plays, so world-state reactions are authored above the defaults. Clauses read
-  `flag`, `notFlag`, and `ability`.
-- Effects run when the dialogue closes: `set` writes world flags, `rest` restores health and
-  saves. Every interactable may also declare a `metFlag` for first-meeting variants.
-
-Dialogue that reacts to world state is the mechanism behind canon's requirement that Greyhaven
-changes over the course of the game.
-
-## Data-Driven Room Contract
-
-A room definition should be capable of describing at minimum:
-- id
-- display name
-- environment/theme
-- collision/tile data reference
-- exits and entry points
-- enemy placements
-- interactables
-- puzzle objects
-- persistent object ids
-- music/ambience key
-- scripted triggers
-
-Conceptual example:
+Current additive player progression fields include:
 
 ```js
-{
-  id: 'sunken-archive-03',
-  exits: {
-    north: { room: 'sunken-archive-04', entry: 'south' },
-    south: { room: 'sunken-archive-02', entry: 'north' }
-  },
-  enemies: [
-    { type: 'archive-sentry', x: 8, y: 5 }
-  ],
-  puzzles: [
-    { type: 'tether-anchor', id: 'anchor-a', x: 6, y: 3 }
-  ]
+player: {
+  xp: 0,
+  jp: 0,
+  coins: 0
 }
 ```
 
-## Persistent IDs
+Older Save V1 files normalize over defaults rather than requiring a breaking migration.
 
-Any object whose state survives room reloads must have a stable authored id. Runtime array index is never an acceptable persistent identity.
+## World-state persistence
+
+Any state that matters after leaving a room uses a stable authored ID/flag.
 
 Examples:
-- `greyhaven.chest.workshop_alley`
-- `archive.puzzle.water_ring_01`
-- `archive.shortcut.west_gate`
-- `boss.archivist.defeated`
 
-## Save Schema V1 — Initial Contract
+- `story.axiomAwakened`
+- `march.field2.resonanceRouteRevealed`
+- `archive.entered`
+- `archive.vestibule.sealOpen`
+- `archive.rotunda.resonanceRead`
+- future `boss.archivist.defeated`
 
-Conceptual shape:
+Runtime array indexes are never persistent identities.
+
+Ordinary enemies repopulate on room entry. Bosses/story kills may opt into persistent defeat using authored IDs.
+
+## Room contract
+
+A room may currently define:
 
 ```js
 {
-  version: 1,
-  player: {
-    roomId: 'greyhaven',
-    entryId: 'spawn',
-    health: 6,
-    maxHealth: 6,
-    shardbladeLevel: 1,
-    abilities: ['resonance'],
-    inventory: []
-  },
-  world: {
-    flags: {}
-  },
-  settings: {}
+  name,
+  ground,
+  details,
+  walls: [],
+  exits: [],
+  enemies: [],
+  resonanceNodes: [],
+  switches: [],
+  doors: []
 }
 ```
 
-Migration functions should be introduced before any breaking save changes are shipped publicly.
+An exit may include:
 
-## Combat Feel Requirements
+```js
+{
+  room,
+  spawnX,
+  spawnY,
+  entry,
+  requiresFlag
+}
+```
 
-Even simple attacks should support presentation hooks for:
-- hit pause
-- impact particles
-- target flash
-- camera impulse/shake
+`requiresFlag` is authoritative for both rendering the available exit and permitting transition. This prevents a visually closed route from remaining transition-active.
+
+Transient combat state such as projectiles and uncollected coin drops is cleared on room transition.
+
+## Sunken Archive puzzle primitives — v1
+
+The first dungeon introduces reusable room-authored mechanism contracts.
+
+### Switch
+
+```js
+{
+  id: 'archive.vestibule.floorSwitch',
+  x: 480,
+  y: 310,
+  radius: 28,
+  flag: 'archive.vestibule.sealOpen'
+}
+```
+
+When player overlap reaches the authored radius and the flag is false:
+
+1. set the persistent flag,
+2. emit bounded feedback,
+3. request a save,
+4. update mechanism rendering/collision through the flag.
+
+### Door / seal
+
+```js
+{
+  id: 'archive.vestibule.southSeal',
+  x: 420,
+  y: 468,
+  w: 120,
+  h: 34,
+  flag: 'archive.vestibule.sealOpen'
+}
+```
+
+A door whose flag is false participates in the same collision path used by players, enemies and projectiles. Once the flag becomes true it stops contributing collision and renders as an opened mechanism.
+
+The switch, door and gated exit may intentionally share one flag so simulation, visuals and room transition cannot desynchronize.
+
+### Deep water
+
+The first Archive rooms treat deep water as impassable geometry. Water presentation and its hidden collision geometry occupy the same authored rectangles. Future swimming/falling/Tether traversal should change this contract explicitly rather than making decorative exceptions.
+
+### Extraction rule
+
+The above logic is currently proven inside `src/main.js`. Once owner-device testing validates the opening rooms, FORGE should extract the generic mechanism behavior before adding multiple new puzzle types.
+
+## InteractionSystem
+
+`src/data/interactables.js` provides stable authored NPC/object/rest definitions. Targeting selects the nearest in-reach object and reuses the main action control, while Resonance remains a separate input.
+
+Dialogue variants may depend on flags/abilities. Effects may set flags or perform rest/save behavior.
+
+## ProgressionSystem
+
+Enemy defeat currently feeds a shared progression pipeline:
+
+- +2 XP immediately
+- +1 JP immediately
+- spawn one physical coin drop
+- +1 Coin when Kael collects it
+
+Dungeon enemies reuse the same pipeline. Do not create dungeon-specific duplicate reward math.
+
+## CombatSystem contract
+
+Combat currently owns or coordinates:
+
+- melee attack timing and directional reach
+- enemy hurt state/health
 - knockback
-- weapon trail
-- impact audio
+- player i-frames
+- Vein Sentry state machine/projectiles
+- Resonance interruption
+- enemy death presentation
+- progression reward callback
 
-These effects must be bounded so stacked effects cannot destabilize performance.
+Presentation hooks should remain bounded so stacked particles/flash/projectiles cannot destabilize phone performance.
 
-## Cutscene Contract
+## Axiom contract
 
-A cutscene sequence should be declarative enough to express operations such as:
-- lock/unlock player control
-- camera focus/pan
-- move actor
-- face actor
-- play animation
-- show dialogue
-- wait
-- emit world event
-- change lighting
-- play/transition music
-- play sound
-- shake camera
-- set persistent flag
-- start boss
-- fade in/out
+Abilities are persistent player capabilities. Resonance is implemented as a short expanding pulse against authored compatible targets. It is not a global visibility filter.
 
-Viewed-state should be persistable for major cinematics so retry behavior can shorten or skip repeated sequences.
+The next major ability is **Tether**. Its implementation must support traversal, object/machinery manipulation and combat use from the same core targeting rules, with touch and controller considered from the first pass.
 
-## Development Diagnostics
+## Sprite architecture
 
-Implemented as an optional overlay that is off by default and never ships enabled.
+Generated 8-direction character sheets and authored enemy sheets both flow through `src/core/Sprites.js`. Missing art must fall back safely rather than block game startup.
 
-**Toggle**
-- `F3` or `` ` `` on a keyboard.
-- `?debug` appended to the URL, for touch devices with no keyboard.
-- The keyboard toggle is persisted in `settings.debugOverlay`, so a device stays in
-  development mode across reloads. `?debug` forces the overlay on for one session
-  without writing the setting.
+The current third-party packs are placeholders and remain subject to the licensing/public-repository concerns recorded in `assets/ATTRIBUTION.md`.
 
-**Text panel** (DOM, refreshed on a fixed interval rather than every frame)
-- FPS, rolling average frame time, and worst frame time in the sample window
-- room id and entry id
-- player coordinates and facing
-- health, invulnerability, attack and cooldown timers
-- Resonance availability, cooldown, and live pulse radius
-- entity counts for enemies, projectiles, and particles
-- current interactable target and whether it has already been read
-- per-enemy id, health, current state with state timer, and distance
-- active world flags
+## Audio architecture
 
-**World shapes** (canvas, drawn in world space)
-- collision rectangles and exit rectangles
-- authored Resonance node radii, including undiscovered ones
-- enemy hurtboxes plus Vein Sentry engage and retreat ranges
-- projectile hitboxes and the player hurtbox
-- the Shardblade arc; a hit lands when that arc overlaps an enemy hurtbox
+Web Audio is created only after a user gesture. Current title ambience is procedural. Audio suspends while hidden and fades rather than hard-cutting. Future area ambience and combat/Axiom sound should preserve these lifecycle rules.
 
-The reach, arc, active window, and husk aggro range used by the overlay are the same
-constants the simulation reads, so the drawn boxes cannot drift from real behaviour.
+## Title / pause lifecycle
 
-## Production Gate
+Gameplay does not update until the title starts a journey. The title never autosaves by itself.
 
-Do not dramatically expand room count until the architecture can demonstrate:
+Opening the Character menu pauses the gameplay simulation while leaving the world visible behind the UI. Menu state reads directly from the current save/player state rather than maintaining a competing progression copy.
+
+## Development diagnostics
+
+Optional diagnostics report frame timing, room/entry/player state, health/combat timers, progression, Resonance, entities, interactables, Resonance nodes, enemy states and flags.
+
+World overlays include collision, exits, enemy/player hit areas, Sentry ranges, projectiles, switches and closed Archive doors.
+
+Diagnostics remain off by default and should not add per-frame work while disabled.
+
+## Cutscene contract
+
+Major cinematic sequences should support input lock, camera focus, actor movement/facing, animation, dialogue, sound/music cues, world events, persistent flags, boss start and fade/shake operations. Retry behavior must be shortened/skippable where repetition would waste the player's time.
+
+## Production gate
+
+Do not dramatically expand world room count until the vertical slice demonstrates:
+
 1. stable transitions
 2. stable save/reload
-3. persistent room state
-4. device-independent input
+3. persistent puzzle/world state
+4. touch/keyboard/controller input
 5. reusable combat
 6. reusable puzzle primitives
-7. cutscene skip/replay behavior
-8. stable mobile performance
+7. Tether across traversal/object/combat use
+8. retry-aware cinematic behavior
+9. stable phone/tablet performance
+10. The Archivist route and `WELCOME BACK.` payoff

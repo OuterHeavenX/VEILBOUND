@@ -6,6 +6,62 @@ Use this file together with `ROADMAP.md`, `docs/VERTICAL_SLICE.md`, `docs/CANON.
 
 ---
 
+## 2026-08-30 — v0.3.2 The Cistern wing
+
+Three new Sunken Archive rooms, and the puzzle module the design doc had been asking for.
+
+### The primitives moved out of the runtime
+
+`src/core/Puzzles.js` now owns doors, switches, push blocks and routed water for every room.
+`src/main.js` supplies the wall query and reacts to activation — feedback, flags, saving — and no
+longer implements mechanism behavior. `docs/SUNKEN_ARCHIVE.md` and `docs/ARCHITECTURE.md` had both
+recorded this as the thing to do before the dungeon grew more puzzle types; it grew three today.
+
+### Cistern Walk — teach the block
+
+A plate that ignores the player entirely (`needsBlock`) and one block heavy enough to hold it. The
+plate cannot be solved by standing on it, which is what makes the block the answer rather than a
+thing to stand on. Seating it latches `archive.cistern.sealOpen`; the seal and its exit read that one
+flag, so they cannot desynchronize.
+
+### Sluice Gallery — teach the valve
+
+Resonance has only ever read things. Here it operates one: a channel of deep water is impassable
+until `archive.sluice.drained`, and the valve node north of it writes that flag. Water art and
+collision still come from a single authored rectangle, as with the static Archive water.
+
+### Reliquary Span — combine, and close the loop
+
+Valve, block and plate together, under a live Husk and Vein Sentry. Drain the channel, push the
+block south across it onto the plate, and `archive.span.shortcutOpen` opens a two-way door back to
+the Vestibule. The wing becomes a loop rather than a corridor walked twice.
+
+### Bugs found while building
+
+- Pushing crawled at half speed: the block and the player were advancing on alternate frames.
+  `push()` now returns the distance the block actually moved and the pusher travels with it.
+- Removing the old inline door handling left two debug call sites referring to the deleted local
+  `closedDoors`, which threw only inside Archive rooms. Rewired to `Puzzles.closedDoors(room)`.
+- The Span's shortcut door had no gap in the west wall to sit in — the wall was one unbroken rect.
+  Split into two.
+- Arriving in the Vestibule through the shortcut landed Kael 7px from the return trigger, which
+  bounced him straight back. The west exit moved south of the alcove and the arrival spawn with it.
+
+### Verification
+- 76 checks across ten suites, zero failures, no page errors.
+- Every new room's geometry checked programmatically before authoring: no plate, block, valve, spawn
+  or door overlaps a wall, and every block has clearance on the axis it must be pushed along.
+- The block cannot be pushed into a wall, into another block, or across undrained water.
+- Flags survive room change and Save V1 reload; blocks reset on entry, per rule 2.6.
+
+### Owner-device acceptance — PENDING
+- [ ] The plate reads as needing weight, not a footstep, at phone scale.
+- [ ] Pushing feels responsive on touch, including against a wall.
+- [ ] Flooded and drained channels are distinguishable at a glance.
+- [ ] The Span stays fair with both enemies live while pushing.
+- [ ] The shortcut is understood as a shortcut rather than a wrong turn.
+
+
 ## 2026-08-30 — v0.3.1 Sound, centring and a summoned stick
 
 Three owner reports off a device screenshot.

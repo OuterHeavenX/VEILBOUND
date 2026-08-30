@@ -20,7 +20,7 @@ Current runtime: **v0.3.0-archive**
 
 The browser game must remain launchable from static hosting without npm, a bundler or a local development server. Development-only tools may use dependencies as long as committed browser-ready output keeps the game itself zero-build.
 
-Current launch chain includes SaveManager, Audio, sprite/data registries, interaction/title/pause UI, Progression, and `src/main.js`.
+Current launch chain includes SaveManager, Audio, Sprites, Puzzles, sprite/data registries, interaction/title/pause UI, Progression, and `src/main.js`.
 
 Startup failure must surface visibly rather than leaving a blank canvas. Mobile safe areas and responsive canvas sizing are required.
 
@@ -34,11 +34,13 @@ Already separated:
 - `src/core/Audio.js`
 - `src/core/Sprites.js`
 - `src/core/Progression.js`
+- `src/core/Puzzles.js`
 - `src/ui/TitleScreen.js`
 - `src/ui/PauseMenu.js`
 - data registries for enemies, sprites, terrain, props and interactables
 
-Next extraction priority after the Sunken Archive opening is accepted: reusable dungeon puzzle/mechanism handling.
+Dungeon puzzle/mechanism handling was the last extraction, in v0.3.2. Next priority: room/encounter
+authoring, which is still the largest remaining block of `src/main.js`.
 
 ## SaveManager
 
@@ -153,9 +155,36 @@ The switch, door and gated exit may intentionally share one flag so simulation, 
 
 The first Archive rooms treat deep water as impassable geometry. Water presentation and its hidden collision geometry occupy the same authored rectangles. Future swimming/falling/Tether traversal should change this contract explicitly rather than making decorative exceptions.
 
+### Push block
+
+```js
+{ id: 'archive.cistern.block', x: 560, y: 270, size: 52 }
+```
+
+A block moves only when walking into it and only when its own destination is clear of walls and
+other blocks, so a push either succeeds whole or not at all. The pusher advances by exactly the
+distance the block moved; without that the two alternate frames and pushing crawls at half speed.
+
+Block positions are room-local and reset on entry. Anything that must outlive the room is a world
+flag (rule 2.6), so a solved puzzle stays solved without the block itself being persisted.
+
+A switch may declare `needsBlock`, which makes it ignore the player entirely and latch only under a
+seated block. That is what makes the block the answer rather than a thing to stand on.
+
+### Routed water
+
+```js
+{ x: 38, y: 248, w: 884, h: 92, flag: 'archive.sluice.drained' }
+```
+
+Deep water inside a puzzle room reads its flag: impassable while false, walkable and drawn as a dry
+channel once true. Art and collision come from the one rectangle, as with the static Archive water.
+
 ### Extraction rule
 
-The above logic is currently proven inside `src/main.js`. Once owner-device testing validates the opening rooms, FORGE should extract the generic mechanism behavior before adding multiple new puzzle types.
+This logic now lives in `src/core/Puzzles.js`, which owns doors, switches, blocks and routed water
+for every room. `src/main.js` supplies the wall query and reacts to activation (feedback, flags,
+saving); it no longer implements mechanism behavior. New puzzle types belong in that module.
 
 ## InteractionSystem
 

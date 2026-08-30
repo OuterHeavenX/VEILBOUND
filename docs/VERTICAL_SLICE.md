@@ -3,7 +3,7 @@
 ## Current Implementation Status
 
 **Current playable branch:** `feature/sunken-archive-foundation`  
-**Current playable version:** `v0.3.0-archive`  
+**Current playable version:** `v0.3.2-cistern`  
 **Last updated:** 2026-08-30
 
 The slice has moved from foundation work into the first playable dungeon. The existing title/menu, XP/JP/coin progression, Greyhaven, Hollow March, Axiom awakening, Resonance, combat, saves, sprites, and terrain remain the base for this branch.
@@ -44,12 +44,18 @@ The slice has moved from foundation work into the first playable dungeon. The ex
 - [x] deeper Archive bulkhead remains intentionally sealed
 - [x] full backtrack route to Hollow March remains available
 
+### Cistern wing — implemented, owner-device acceptance pending
+
+- [x] reusable puzzle primitives extracted to `src/core/Puzzles.js`
+- [x] `SUNKEN ARCHIVE — CISTERN WALK`, teaching the push block against a weight-only plate
+- [x] `SUNKEN ARCHIVE — SLUICE GALLERY`, where Resonance operates a valve rather than reading it
+- [x] `SUNKEN ARCHIVE — RELIQUARY SPAN`, combining valve, block and plate under two live enemies
+- [x] routed water that is impassable until drained, art and collision from one rectangle
+- [x] two-way shortcut from the Span back to the Vestibule, closing the wing into a loop
+
 ### Still required for the complete slice
 
-- [ ] owner-device acceptance of `v0.3.0-archive`
-- [ ] push/manipulation block primitive
-- [ ] water/energy-routing puzzle state
-- [ ] first major dungeon shortcut
+- [ ] owner-device acceptance of `v0.3.2-cistern`
 - [ ] Tether acquisition
 - [ ] Tether traversal teaching
 - [ ] Tether object manipulation

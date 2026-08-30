@@ -49,6 +49,48 @@ SUNKEN ARCHIVE — CATALOG ROTUNDA
        Tether later
 ```
 
+## Cistern wing — v0.3.2
+
+A west branch off the Rotunda, before the Tether-gated bulkhead, so the wing adds puzzle
+rooms without breaking the Tether boundary below.
+
+```text
+CATALOG ROTUNDA ──west──> CISTERN WALK        TEACH   the block
+                              |
+                              v
+                         SLUICE GALLERY       TEACH   the valve
+                              |
+                              v
+                        RELIQUARY SPAN        COMBINE valve + block + plate + enemies
+                              |
+                    shortcut  v
+                         VESTIBULE            the loop closes
+```
+
+### 4. Cistern Walk — TEACH the block
+
+A plate the player cannot solve by standing on it, and one block heavy enough to hold it.
+`needsBlock` plates ignore the player entirely, which is what makes the block the answer
+rather than a thing to stand on. Seating it latches `archive.cistern.sealOpen`, and the south
+seal and its exit both read that one flag.
+
+Latching rather than holding is deliberate: the doctrine says backtracking should reveal
+possibilities rather than charge travel tax, so a solved room stays solved.
+
+### 5. Sluice Gallery — TEACH the valve
+
+Resonance has only ever read things. Here it operates one. A channel of deep water crosses the
+room and is impassable until `archive.sluice.drained`; the valve node north of it writes that
+flag. This is the roadmap's "first truly interactive ancient mechanism, not only a
+clue/marker".
+
+### 6. Reliquary Span — COMBINE, and the loop home
+
+Valve, block and plate together, under a Husk and a Vein Sentry. Drain the channel, push the
+block south across it onto the plate, and `archive.span.shortcutOpen` opens a two-way door
+back to the Vestibule. That is the first meaningful shortcut: the wing becomes a loop rather
+than a corridor walked twice.
+
 ### 1. Eastern Descent — TEACH / ARRIVAL
 
 Goal: establish the Archive's identity before asking the player to solve anything.
@@ -91,17 +133,22 @@ Current memory response:
 
 ## Reusable puzzle primitive contract
 
-Rooms may define:
+Now owned by `src/core/Puzzles.js` rather than the main runtime, as this document asked.
 
 ```js
-switches: [
-  { id, x, y, radius, flag }
-]
-
-doors: [
-  { id, x, y, w, h, flag }
-]
+doors:    [{ id, x, y, w, h, flag }]              // solid until the flag is set
+switches: [{ id, x, y, radius, flag, needsBlock, say }]
+blocks:   [{ id, x, y, size }]                    // pushed by walking into them
+water:    [{ x, y, w, h, flag }]                  // impassable until the flag drains it
 ```
+
+A `needsBlock` switch ignores the player and only latches under a block. Block positions are
+room-local and reset on entry; anything that must outlive the room is a world flag, per rule
+2.6, so a solved puzzle stays solved without persisting the block itself.
+
+Pushing moves the block only when its own path is clear, so a push succeeds or fails as a
+whole rather than letting a block enter a wall. The pusher travels with the block, because
+otherwise the two alternate frames and pushing crawls at half speed.
 
 A switch is inactive while its flag is false. Player overlap activates it once, writes the flag, emits bounded feedback, and saves.
 
@@ -145,11 +192,30 @@ Owner device:
 
 ## Next Archive production pass
 
-1. Owner-device acceptance of the three opening rooms.
-2. Extract reusable switch/door handling if the opening proves stable.
-3. Add the first push/manipulation block.
-4. Add water/energy-routing state.
-5. Build the first meaningful shortcut loop.
+1. Owner-device acceptance of the six rooms.
+2. ~~Extract reusable switch/door handling~~ — done, `src/core/Puzzles.js`.
+3. ~~Add the first push/manipulation block~~ — done, Cistern Walk.
+4. ~~Add water/energy-routing state~~ — done, Sluice Gallery and Reliquary Span.
+5. ~~Build the first meaningful shortcut loop~~ — done, Span → Vestibule.
 6. Build the Tether acquisition chamber and safe teaching use.
 7. Expand into combined Tether traversal/combat/mechanism rooms.
 8. Build the Archivist approach and boss framework.
+
+## Cistern wing acceptance — v0.3.2
+
+Implementation:
+- [x] `needsBlock` plate cannot be solved by standing on it.
+- [x] Block pushes only where its own path is clear, and the pusher travels with it.
+- [x] Seating the block latches the seal, and the seal gates its exit through one flag.
+- [x] Deep water is impassable until its flag drains it, art and collision from one rect.
+- [x] Resonance operates the sluice valve rather than only reading it.
+- [x] Span combines valve, block and plate under a live Husk and Sentry.
+- [x] Shortcut opens a two-way door back to the Vestibule.
+- [x] Block positions reset on room entry; solved state persists as world flags.
+
+Owner device:
+- [ ] The plate reads as needing weight, not a footstep, at phone scale.
+- [ ] Pushing feels responsive on touch, including against a wall.
+- [ ] Flooded and drained channels are distinguishable at a glance.
+- [ ] The Span stays fair with both enemies live while pushing.
+- [ ] The shortcut is understood as a shortcut rather than a wrong turn.

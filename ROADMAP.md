@@ -3,7 +3,7 @@
 **Document owner:** ORACLE — Game Director & Planning  
 **Repository:** `OuterHeavenX/VEILBOUND`  
 **Current development branch:** `feature/sunken-archive-foundation`  
-**Current playable version:** `v0.3.1-sound`  
+**Current playable version:** `v0.3.2-cistern`  
 **Roadmap status:** ACTIVE  
 **Last roadmap update:** 2026-08-30
 
@@ -54,7 +54,7 @@ One codebase must remain first-class on phone, tablet, desktop, keyboard, touch 
 
 ---
 
-## 3. Current playable state — v0.3.1-sound
+## 3. Current playable state — v0.3.2-cistern
 
 ### Foundation / presentation
 - [x] zero-build Canvas 2D runtime
@@ -108,6 +108,16 @@ One codebase must remain first-class on phone, tablet, desktop, keyboard, touch 
 - [x] Hollow March buried Vein route reveal
 - [x] Greyhaven return discovery
 - [x] Forgotten chamber core memory
+
+### Sunken Archive cistern wing
+- [x] reusable puzzle primitives in `src/core/Puzzles.js`
+- [x] push/manipulation block
+- [x] weight-only floor plate
+- [x] routed water state
+- [x] Resonance-operated valve
+- [x] Cistern Walk, Sluice Gallery and Reliquary Span
+- [x] two-way shortcut back to the Vestibule
+- [ ] owner-device acceptance of v0.3.2
 
 ### Sunken Archive opening
 - [x] Resonance-gated route from Hollow March Field 2
@@ -203,13 +213,13 @@ See `docs/SUNKEN_ARCHIVE.md` for exact room behavior and test checklist.
 - [x] persistent door primitive v1
 - [x] flag-gated exit v1
 - [x] Resonance-reactive mechanism v1
-- [ ] push/manipulation block
+- [x] push/manipulation block
 - [ ] rotating mechanism
-- [ ] energy/water route state
-- [ ] multi-room puzzle state where justified
-- [ ] first meaningful shortcut
+- [x] energy/water route state
+- [x] multi-room puzzle state where justified
+- [x] first meaningful shortcut
 
-Once the opening is accepted, move the generic puzzle behavior out of `src/main.js` before the dungeon grows enough to make that file the permanent puzzle engine.
+Generic puzzle behavior now lives in `src/core/Puzzles.js` rather than `src/main.js`.
 
 ## 6.3 Tether acquisition
 
@@ -341,15 +351,13 @@ Still held until justified:
 
 # 10. Immediate production order
 
-1. Test `v0.3.1-sound` on iPhone using the checklist in `docs/SUNKEN_ARCHIVE.md`, plus:
+1. Test `v0.3.2-cistern` on iPhone using the checklist in `docs/SUNKEN_ARCHIVE.md`, plus:
    the world sits centred with even letterboxing; the stick appears under the thumb
    anywhere on the left; each region sounds distinct and music sits under the cues.
 2. Fix any collision/readability/save regressions found in the three Archive opening rooms.
-3. Build push/manipulation block v1.
-4. Build water/energy-routing state and first shortcut loop.
-5. Create the Tether acquisition chamber.
-6. Implement and teach Tether across traversal/object/combat use.
-7. Build deeper mastery rooms.
-8. Build The Archivist framework.
-9. Produce the `WELCOME BACK.` sequence.
-10. Run full vertical-slice device acceptance before expanding world scale.
+3. Create the Tether acquisition chamber.
+4. Implement and teach Tether across traversal/object/combat use.
+5. Build deeper mastery rooms.
+6. Build The Archivist framework.
+7. Produce the `WELCOME BACK.` sequence.
+8. Run full vertical-slice device acceptance before expanding world scale.

@@ -19,7 +19,10 @@
   const images = new Map();
   let pending = 0, failed = 0;
 
-  const manifest = () => window.Veilbound.CharacterSprites || {};
+  // Generated sheets, with hand-authored ones layered over them: characterSprites.js is
+  // rewritten by the prerenderer, so anything authored by hand lives in chibiSprites.js
+  // and wins here.
+  const manifest = () => ({ ...(window.Veilbound.CharacterSprites || {}), ...(window.Veilbound.ChibiSprites || {}) });
   const enemies = () => window.Veilbound.EnemySprites || {};
 
   // `src` is a path relative to the page, so both the generated sheets and the authored

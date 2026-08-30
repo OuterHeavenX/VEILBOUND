@@ -12,6 +12,8 @@
   // visual and audio prompt is realised with the effects the runtime actually has. The
   // prompts themselves are preserved in docs/OPENING.md as the art and audio direction.
   const S = (speaker, text) => ({ speaker, text });
+  // Withholds the portrait for a line whose speaker is deliberately unseen.
+  const Unseen = (speaker, text) => ({ speaker, text, portrait: false });
 
   window.Veilbound.Prologue = Object.freeze({
 
@@ -23,29 +25,29 @@
         // Beat 1: The Dark Room
         { fx: { black: 1, letterbox: 1 }, wait: 1.6 },
         { fx: { black: 1, veins: 0.12 }, cue: 'discover', wait: 1.1 },
-        { say: [S('ELARA', 'Kael, look at me.')] },
+        { say: [Unseen('ELARA', 'Kael, look at me.')] },
 
         // Beat 2: The Glitched Memory
         { fx: { black: 1, glitch: 0.5, veins: 0.34 }, cue: 'interact', wait: 0.5 },
         { say: [
           S('YOUNG KAEL', 'I am looking.'),
-          S('ELARA', 'No matter what happens, remember my face.'),
+          Unseen('ELARA', 'No matter what happens, remember my face.'),
         ] },
         { fx: { glitch: 0.78 }, wait: 0.4 },
         { say: [
           S('YOUNG KAEL', 'Why are you crying?'),
-          S('ELARA', 'Because I have to ask you to be brave before you should have to be.'),
+          Unseen('ELARA', 'Because I have to ask you to be brave before you should have to be.'),
         ] },
 
         // Beat 3: The Departure
         { fx: { shake: 1, glitch: 0.6, veins: 0.5 }, cue: 'hit', wait: 0.55 },
         { fx: { shake: 0.9 }, cue: 'hit', wait: 0.45 },
         { say: [
-          S('ELARA', 'When the bell rings, follow my voice.'),
+          Unseen('ELARA', 'When the bell rings, follow my voice.'),
           S('YOUNG KAEL', 'Where are you going?'),
-          S('ELARA', 'Somewhere quiet.'),
+          Unseen('ELARA', 'Somewhere quiet.'),
           S('YOUNG KAEL', 'Will you come back?'),
-          S('ELARA', 'I will find a way to reach you.'),
+          Unseen('ELARA', 'I will find a way to reach you.'),
         ] },
 
         // Beat 4: Erased
@@ -64,10 +66,10 @@
       beats: Object.freeze([
         { fx: { black: 1, letterbox: 1, static: 0.85 }, cue: 'menuOpen', wait: 1.4 },
         { say: [
-          S('UNKNOWN VOICE', 'Memory removal complete.'),
-          S('CALDRIS', 'Not complete. Something remains.'),
-          S('SERAC', 'The child?'),
-          S('CALDRIS', 'Leave him. Without her face, he will never find the door.'),
+          Unseen('UNKNOWN VOICE', 'Memory removal complete.'),
+          Unseen('CALDRIS', 'Not complete. Something remains.'),
+          Unseen('SERAC', 'The child?'),
+          Unseen('CALDRIS', 'Leave him. Without her face, he will never find the door.'),
         ] },
         { fx: { static: 0.2 }, wait: 0.8 },
         { fx: { black: 1, static: 0, letterbox: 1 }, wait: 1.0 },
@@ -155,12 +157,12 @@
         // Beat 1: The Ring
         { fx: { letterbox: 1, shake: 1, invert: 0.9 }, cue: 'bell', wait: 0.6 },
         { fx: { invert: 0 }, wait: 0.5 },
-        { say: [S('ELARA', 'Kael.')] },
+        { say: [Unseen('ELARA', 'Kael.')] },
 
         // Beat 2: The Second Toll & Flashback
         { fx: { shake: 0.9, invert: 0.7, glitch: 0.45, black: 0.4 }, cue: 'bell', wait: 0.7 },
         { fx: { invert: 0 }, wait: 0.4 },
-        { say: [S('ELARA', 'Do not let them make the world quiet again.')] },
+        { say: [Unseen('ELARA', 'Do not let them make the world quiet again.')] },
         { fx: { glitch: 0, black: 0 }, wait: 0.4 },
 
         // Beat 3: The Relic Breaks

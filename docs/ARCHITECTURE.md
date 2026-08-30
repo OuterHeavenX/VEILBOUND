@@ -1,7 +1,7 @@
 # VEILBOUND — Technical Architecture Foundation
 
 Owner: **FORGE**  
-Current runtime: **v0.4.4-kael**
+Current runtime: **v0.4.6-cast**
 
 ## Core principles
 
@@ -303,6 +303,33 @@ rest. The box is a flex row: with no portrait it lays out exactly as it did befo
 
 Portraits are DOM images rather than canvas draws, so they stay sharp at any device scale and
 carry the speaker's name as alt text.
+
+A line may set `portrait: false` to withhold the portrait even when its speaker has one. The
+opening needs this and it is not decoration: Elara's face is the thing that was taken from
+Kael, and Caldris says so aloud two scenes later, so showing it in the memory would contradict
+the plot. Caldris and Serac are voices over a black screen for the same reason. All three have
+busts, for wherever they are actually present.
+
+## Sprite directions
+
+The character draw path takes `directions` from the manifest and `directionIndex` divides a
+full turn by it, so **four directions have always been supported** — eight was an artefact of
+the KayKit prerenderer, not a requirement of the engine. With `directions: 4` the row order is
+S, E, N, W.
+
+`tools/make-chibi-sheet.mjs` builds a four-direction sheet from a single front-facing figure.
+Only south is drawn art; east is the figure narrowed, north is mirrored with the hood darkened
+to a shadow, and west is mirrored and narrowed so the blade stays on the same hand through a
+turn. Idle, walk and attack motion is applied per frame as bob, lean and squash, so a still
+figure is never simply slid around.
+
+These are stand-ins with a real shelf life at gameplay scale, not forgeries of a turnaround.
+The tool takes `--east` and `--north`, and skips deriving whichever is supplied, so authored
+views drop in without rework.
+
+Hand-authored sheets live in `src/data/chibiSprites.js` rather than `characterSprites.js`,
+because the latter is rewritten by the prerenderer. `Sprites` merges the two with the
+hand-authored entries winning.
 
 ## Sprite architecture
 

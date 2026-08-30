@@ -6,6 +6,69 @@ Use this file together with `ROADMAP.md`, `docs/VERTICAL_SLICE.md`, `docs/CANON.
 
 ---
 
+## 2026-08-30 — v0.4.6 Kael walks, and the cast has faces
+
+The owner said they felt stuck on Kael's sprites. The block turned out to be a false premise
+I had helped install.
+
+### Four directions were always supported
+
+I had been saying an eight-direction sheet needed seven views nobody had. But the character
+draw path takes `directions` from the manifest and `directionIndex` divides a full turn by it:
+`directions: 4` has always worked, and gives rows S, E, N, W. Eight was an artefact of the
+KayKit prerenderer, not a requirement of the engine. Nobody needed to draw eight views; they
+needed a smaller number and a way to get there.
+
+### One figure, four directions
+
+`tools/make-chibi-sheet.mjs` builds a four-direction sheet from a single front-facing figure.
+South is the art. East is the figure narrowed, which reads as a body turned away. North is
+mirrored with the hood darkened to a shadow — a back view is the mirror of a front view for
+anything asymmetric, and a deep hood seen from behind is exactly a shadow. West is mirrored
+and narrowed so the blade stays on the same hand through a turn. Idle, walk and attack motion
+is bob, lean and squash applied per frame, so a still figure is never merely slid around.
+
+These are stand-ins, not a forged turnaround, and they hold up at 58px. The tool takes
+`--east` and `--north` and skips deriving whichever is supplied, so authored views drop in
+later without rework.
+
+Kael now walks as himself. The sheet falls back to the old prerender if it fails to load,
+which is the contract every other sprite works to.
+
+### The bigger unlock
+
+The upload was eight characters in one consistent style, not one. That closes the portrait gap
+outright: Kael, Mira and Young Kael have faces in the dialogue box, and the whole cast has
+busts ready.
+
+Each image carried the character's name rendered into the bottom. That band is its own run of
+non-empty rows, so it is detected and dropped rather than cropped by a guessed fraction.
+
+### Caught before shipping: Elara must not have a face
+
+Wiring her portrait in made the opening line of the game read `ELARA — Kael, look at me.` with
+her face beside it. That contradicts the plot. Her face is precisely what was taken; Caldris
+says so two scenes later — *without her face, he will never find the door* — and the blueprint
+stages the memory with her face concealed.
+
+A line can now set `portrait: false`, and Elara's memory lines, her bell whispers, and Caldris
+and Serac's voices over the black screen all do. They have busts for wherever they are actually
+present. The system had to learn to withhold, which is a better feature than the one I set out
+to build.
+
+### New names
+
+Orin and Tomas arrived with the cast and appear in no script. `docs/CANON.md` records that
+nothing about either is canon, the same way it did for Mira before the opening defined her.
+
+### Verification
+- The `portrait` suite now checks the withholding as well as the showing: Kael and Mira are
+  seen, Elara is not in the memory, the void is voices rather than faces, and Elara still has
+  a bust for later.
+- Kael's four directions were walked in-game and captured.
+- Every suite passes.
+
+
 ## 2026-08-30 — v0.4.4 Both Kaels
 
 The owner supplied adult Kael, which resolves the question the previous entry raised the wrong

@@ -23,8 +23,9 @@ they permit redistribution inside this repository until that is checked.
   `assets/menu_buttons/License.txt`.
 - In-repo: `assets/characters/enemies/`, `assets/places/forest/`, `assets/path_road/`,
   `assets/menu_buttons/`.
-- Wired into the game: the goblin and slime sheets as the March Husk and Vein Sentry, and the
-  forest props as Hollow March scenery. The road tiles and menu UI are present but unused.
+- Wired into the game: the goblin and slime sheets as the March Husk and Vein Sentry, the
+  forest props as Hollow March scenery, road/ground tiles for terrain, and selected menu UI
+  PNGs as development framing for the v0.2.1 Character menu.
 
 **Read the licence before this repository is public.** CraftPix terms generally allow using
 the art inside a game while restricting redistribution of the asset files themselves, and a
@@ -32,6 +33,10 @@ public repository distributes the files to anyone who clones it. That is a diffe
 from whether the game may ship with them, and it has not been answered here. The `.psd` and
 `.aseprite` sources in these folders are editable originals, which raises the same question
 more sharply than the exported PNGs do.
+
+The v0.2.1 Character menu treats this UI kit as **placeholder/development art**, not final
+VEILBOUND identity. Replacing it with original authored menu art remains part of the public
+release gate.
 
 ## 2D sprite sheets
 

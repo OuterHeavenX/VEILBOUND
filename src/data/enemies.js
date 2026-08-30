@@ -44,5 +44,23 @@
         'Keep every projectile readable on a phone-sized display.',
       ]),
     }),
+
+    // Scene 4's Vein-corrupted creature. It fights like a Husk because that is the pressure
+    // the tutorial encounter wants; what makes it a different thing is what it says when it
+    // dies. Placeholder art: it borrows the Husk sheet until its own is authored.
+    corrupted: Object.freeze({
+      id: 'corrupted',
+      displayName: 'Vein-Corrupted',
+      role: 'melee-pursuit',
+      sheet: 'husk',
+      maxHp: 3,
+      radius: 16,
+      moveSpeed: 74,
+      contactDamage: 1,
+      designIntent: Object.freeze([
+        'Teach the attack button against something that closes distance slowly.',
+        'Pay off the opening by having the thing Kael kills turn out to have been someone.',
+      ]),
+    }),
   });
 })();

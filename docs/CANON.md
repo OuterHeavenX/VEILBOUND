@@ -24,19 +24,60 @@ Visual anchors:
 
 Kael is not initially a chosen hero in his own understanding. He is a scavenger and explorer accustomed to entering dead ruins for salvage.
 
-## Lyra and Mira — named and gendered, not yet defined
+## Elara
 
-Lyra and Mira stand beside Kael on the title key art as of v0.3.3. Both are women; Kael is a
-man, as the rest of this document already had him.
+Kael's mother, and the origin of the game's first scene. She is with him in a dark room as
+something beats on the door; she asks him to remember her face, tells him that when the bell
+rings he should follow her voice, says she is going somewhere quiet, and promises to find a
+way to reach him. Then she is erased.
 
-Nothing else about them is canon: no role, no relationship to Kael, no place in the
-Greyhaven → Archivist route, no dialogue. That is deliberate. They were named by the owner
-without a brief, and inventing a history for them here would quietly commit the story to it.
+Her face is the thing Kael cannot recall. The opening conceals it deliberately — it is never
+drawn — and Caldris names that absence as what keeps Kael from the door.
 
-Until the owner defines them, they exist as figures in the title painting and nothing more,
-and no other document, dialogue or system may assume anything further about them.
+She reaches him again through the Greyhaven bell: `Kael.` and
+`Do not let them make the world quiet again.`
 
-## The Axiom
+Whether she is alive, and what "somewhere quiet" is, are open and must have a defined answer
+before the reveal is authored.
+
+## Caldris and Serac
+
+The two voices in the void after the erasure, and the game's first antagonists. Caldris is the
+decision-maker: it is Caldris who judges the removal incomplete, who is told "the child?", and
+who answers `Leave him. Without her face, he will never find the door.`
+
+Serac speaks once. Nothing else about either is established — no faction, no appearance, no
+relationship to The Silence — and the temptation to make them the authors of The Silence should
+be resisted until SCRIBE decides it.
+
+"The door" is undefined and load-bearing. It is not yet known to be the Sunken Archive.
+
+## Mira
+
+A hunter, and the closest thing Kael has to a home. She keeps the Hunter Hall in Greyhaven,
+expected him back in two weeks, and has not seen him in four months. She reads his injuries
+before he admits them, and she is the one person he does not lie to well.
+
+She is present for the first toll and for the relic breaking, which makes her the only witness
+to the moment the world changes.
+
+## Lyra — named, still undefined
+
+Lyra stands beside Kael and Mira on the title key art and appears nowhere in the opening. She
+is a woman, as Mira is and Kael is a man. Nothing else about her is canon: no role, no
+relationship, no dialogue. That remains deliberate until the owner defines her.
+
+## Kael's memory
+
+Kael's memories of his mother were deliberately removed by Caldris and Serac when he was a
+child. He does not know this. What survives is a compulsion — the bell, the vision in the mud,
+`Not again.` — and the fact that something was left behind, which Caldris noticed and dismissed.
+
+This sits underneath the existing canon rather than replacing it: Kael still understands
+himself as a scavenger rather than a chosen hero, because the thing that would tell him
+otherwise was taken.
+
+## The Axiom## The Axiom
 
 The Axiom is the ancient mechanical gauntlet carried by Kael. It has been mostly dormant for years.
 

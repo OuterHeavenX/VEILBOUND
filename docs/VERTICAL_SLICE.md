@@ -3,12 +3,14 @@
 ## Current Implementation Status
 
 **Current playable branch:** `claude/todo-implementation-td5zeq`, merged to `main`  
-**Current playable version:** `v0.3.6-march`  
+**Current playable version:** `v0.4.0-prologue`  
 **Last updated:** 2026-08-30
 
 The slice has moved from foundation work into the first playable dungeon. The existing title/menu, XP/JP/coin progression, Greyhaven, Hollow March, Axiom awakening, Resonance, combat, saves, sprites, and terrain remain the base for this branch.
 
 ### Implemented foundation
+
+- [x] six-scene opening prologue: the memory, the void, the forest path, the title drop, the Hunter Hall and the first toll
 
 - [x] zero-build `index.html` launch
 - [x] title key art featuring Kael, Lyra and Mira, with START / CONTINUE / SETTINGS
@@ -56,7 +58,7 @@ The slice has moved from foundation work into the first playable dungeon. The ex
 
 ### Still required for the complete slice
 
-- [ ] owner-device acceptance of `v0.3.6-march`
+- [ ] owner-device acceptance of `v0.4.0-prologue`
 - [ ] Tether acquisition
 - [ ] Tether traversal teaching
 - [ ] Tether object manipulation

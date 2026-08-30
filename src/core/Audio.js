@@ -326,6 +326,18 @@
     menuOpen() { tone({ freq: 300, endFreq: 520, gain: 0.16, decay: 0.2 }); },
     menuClose() { tone({ freq: 520, endFreq: 280, gain: 0.14, decay: 0.2 }); },
     rest()    { tone({ freq: 261.63, gain: 0.09, decay: 0.8 }); tone({ freq: 392.0, gain: 0.06, decay: 1.0, delay: 0.12 }); },
+    // The Greyhaven bell, struck deliberately rather than by the ambient bed's own timer.
+    // Same partials as the beds so the town's tower and this are audibly one instrument;
+    // lower, louder and far longer, because the story turns on hearing it.
+    bell()    {
+      const c = ensureContext();
+      if (!c) return;
+      const at = c.currentTime + 0.01;
+      strike(c, sfxBus(), at, 82.4);
+      strike(c, sfxBus(), at + 0.035, 123.5);
+      tone({ freq: 41.2, endFreq: 30, type: 'sine', gain: 0.20, decay: 3.6 });
+      noise({ gain: 0.05, decay: 1.4, freq: 460, endFreq: 90, q: 0.7 });
+    },
   };
 
   const Audio = {

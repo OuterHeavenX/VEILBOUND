@@ -6,6 +6,81 @@ Use this file together with `ROADMAP.md`, `docs/VERTICAL_SLICE.md`, `docs/CANON.
 
 ---
 
+## 2026-08-30 — v0.4.0 The opening
+
+The owner supplied the complete opening as a six-scene production blueprint. All of it is in,
+every line of dialogue word for word, and the game no longer begins in Greyhaven — it begins in
+a dark room with Kael's mother.
+
+### A cutscene sequencer, at last
+
+`src/core/Cutscene.js` and `src/data/prologue.js`. Scenes are authored as data: each beat may
+carry screen effects, an audio cue, a flag write, a callback, dialogue that holds the beat
+until it is read, or a timed wait. `ARCHITECTURE.md` has specified a cutscene contract since
+v0.1.0 and the runtime had been meeting it with one hand-rolled function; this generalises that
+function and the Axiom awakening is the obvious next thing to move onto it.
+
+The effect layer is veil, letterbox, shake, colour inversion, glitch blocks, static, flash,
+red vein lines and the broken-circle glyph — enough to stage every beat the blueprint asks for
+that does not need a camera or an animated actor. What it cannot do is written down in
+`docs/OPENING.md` beside the prompt that asked for it, rather than quietly skipped.
+
+Every scene is guarded by a Save V1 world flag, so none replays — including after a reload
+mid-prologue.
+
+### What the blueprint asked for that this is not
+
+The blueprint is written for generated pixel video and generated audio, and specifies 16-bit
+SNES pixel art. This game has no video pipeline, synthesises all its audio, and now ships
+high-resolution painted plates. The prompts are preserved in `docs/OPENING.md` as art and audio
+direction, each with the substitution named. The pixel-art-versus-painted question is a real
+direction conflict and is flagged there rather than decided here.
+
+Three things in the blueprint are deliberately unbuilt, and listed: Scene 4's four interactive
+points, because no dialogue was written for them and inventing it would put words in SCRIBE's
+mouth; character portraits and expression frames; and Elara's melody, which should be the theme
+the bell later rings.
+
+### New canon
+
+`docs/CANON.md` gains Elara, Caldris, Serac, Kael's removed memory, and — at last — Mira, who
+had been on the title screen for two milestones with a note saying nothing about her was
+established. Lyra still has nothing, and still says so.
+
+### Bugs found while building
+
+- The black veil was painted over the effects rather than under them, so it buried the very
+  glitch blocks and vein lines it was meant to sit behind. That had forced the veil to be
+  partial, which let the world show through a scene it is not in — adult Kael standing in his
+  own childhood.
+- The HUD and touch controls stayed up through the cinematics.
+- Diagnostics stopped updating during a cutscene, because the update loop returns early. A
+  cutscene was the one thing in the game that could not be debugged, which cost real time
+  here: a stale overlay made a working transition look broken.
+- The Hunter Hall door was authored twice into something solid — first inside the house's own
+  collision rect, then directly behind a solid NPC standing at (645,328). The second one was
+  invisible to the offline geometry audit, which only knew about walls.
+
+### Verification
+- The geometry audit now also knows about solid interactables, and checks that an exit is
+  reachable rather than that its centre is standable — a door flush against a building has an
+  unstandable centre by design.
+- Two new suites. `prologue` plays a new game and checks all fifteen lines of Scenes 1 and 2
+  against the blueprint verbatim, in order, and that it ends with Kael on the forest path.
+  `prologue2` covers the rest: the vision firing once and not twice, the creature's line after
+  its defeat, the title card raising and lowering itself, and all twelve lines of the Hunter
+  Hall and the tolls, ending with the objective banner.
+- Every existing suite passes. One audio assertion was updated rather than deleted: it
+  expected New Game to hand the title bed to Greyhaven's, and a new game now opens on the
+  memory instead.
+
+### Owner-device acceptance — PENDING
+- [ ] The opening reads at phone scale, and the dialogue is legible over the effects.
+- [ ] The bell toll has weight on a phone speaker.
+- [ ] The glitch and inversion do not induce discomfort at full brightness.
+- [ ] The prologue can be reloaded partway through without replaying what was seen.
+
+
 ## 2026-08-30 — v0.3.6 The right Field 1
 
 The owner supplied the actual Field 1 plate and said plainly what the previous entry got

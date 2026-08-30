@@ -2,9 +2,9 @@
 
 **Document owner:** ORACLE — Game Director & Planning  
 **Repository:** `OuterHeavenX/VEILBOUND`  
-**Integration branch:** `main` — carries the full slice as of `v0.3.6-march`  
+**Integration branch:** `main` — carries the full slice as of `v0.4.0-prologue`  
 **Current development branch:** `claude/todo-implementation-td5zeq`  
-**Current playable version:** `v0.3.6-march`  
+**Current playable version:** `v0.4.0-prologue`  
 **Roadmap status:** ACTIVE  
 **Last roadmap update:** 2026-08-30
 
@@ -23,6 +23,7 @@ Before meaningful implementation work, read this file plus:
 - `docs/COMBAT.md`
 - `docs/PROGRESSION.md`
 - `docs/SUNKEN_ARCHIVE.md`
+- `docs/OPENING.md`
 - `assets/ATTRIBUTION.md`
 
 Every meaningful milestone updates the relevant documentation. Implementation completion and owner-device acceptance are separate states.
@@ -62,12 +63,13 @@ that is already cited; add new rules at the end.
 
 ---
 
-## 3. Current playable state — v0.3.6-march
+## 3. Current playable state — v0.4.0-prologue
 
 ### Foundation / presentation
 - [x] zero-build Canvas 2D runtime
 - [x] responsive authored 960×540 world
 - [x] title key art with Kael, Lyra and Mira, and START / CONTINUE / SETTINGS
+- [x] six-scene opening prologue, played through a reusable cutscene sequencer
 - [x] landscape enforced: orientation lock where granted, rotate gate everywhere else
 - [x] safe save inspection and resume
 - [x] touch, keyboard and controller movement
@@ -150,7 +152,7 @@ that is already cited; add new rules at the end.
 ## 3.1 Owner-device acceptance backlog
 
 Implementation completion and owner-device acceptance are separate states, and the gap is now
-six releases wide. Nothing below is a code defect; all of it is untested on the owner's
+seven releases wide. Nothing below is a code defect; all of it is untested on the owner's
 hardware.
 
 | Version | What it added | Checklist |
@@ -161,8 +163,9 @@ hardware.
 | `v0.3.3-threshold` | landscape gate, key-art title | `docs/PROGRESS.md` § v0.3.3 |
 | `v0.3.4-greyhaven` | painted Greyhaven town plate | `docs/PROGRESS.md` § v0.3.4 |
 | `v0.3.6-march` | painted Hollow March fields, collision authored to them | `docs/PROGRESS.md` § v0.3.5-6 |
+| `v0.4.0-prologue` | the six-scene opening, and the cutscene sequencer | `docs/OPENING.md` |
 
-One device pass on `v0.3.6-march` covers all six, since each release carries the ones
+One device pass on `v0.4.0-prologue` covers all seven, since each release carries the ones
 before it. That pass is the single largest open item in this roadmap.
 
 ---
@@ -381,7 +384,7 @@ Still held until justified:
 
 # 10. Immediate production order
 
-1. Test `v0.3.6-march` on iPhone using the checklist in `docs/SUNKEN_ARCHIVE.md`, plus:
+1. Test `v0.4.0-prologue` on iPhone using the checklist in `docs/SUNKEN_ARCHIVE.md`, plus:
    the world sits centred with even letterboxing; the stick appears under the thumb
    anywhere on the left; each region sounds distinct and music sits under the cues; the
    rotate gate appears upright and hands the game back on turning.

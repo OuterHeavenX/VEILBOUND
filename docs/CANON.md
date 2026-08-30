@@ -22,10 +22,22 @@ Visual anchors:
 - damaged Shardblade
 - ancient mechanical gauntlet fused around one forearm
 
-Reference art for all four exists as of v0.4.3: `assets/characters/kael_portrait.png` (the
-figure, hood and Axiom) and `assets/characters/kael_keyart.jpg` (mask and Shardblade). The
-bust crop is the dialogue and character-menu portrait. The gameplay sprite sheet is still the
-placeholder prerender and does not match it.
+Kael exists in two authored figures, and they are two speakers in the script rather than two
+drafts of one:
+
+- **Young Kael** — green hood and cloak, the Axiom set with green stones, a lighter build.
+  `assets/characters/kael_portrait.png`, with `kael_keyart.jpg` showing the mask and blade.
+- **Adult Kael** — dark scaled and tattered layers, a steel half-mask, the Axiom set with blue
+  stones, and the Shardblade lit. `assets/characters/kael_adult_figure.png`, with
+  `kael_adult_turned.png` as a second view.
+
+The Axiom's stones read green on the younger figure and blue on the adult. Whether that is a
+deliberate progression or an artefact of how the two were made is undecided; if deliberate it
+is a good visible marker of the gauntlet waking, which is the kind of thing `AGENTS.md` asks
+for under progression being visible on the hero.
+
+Head-and-shoulders crops of both are the dialogue portraits. The gameplay sprite sheet is
+still the placeholder prerender and matches neither.
 
 Kael is not initially a chosen hero in his own understanding. He is a scavenger and explorer accustomed to entering dead ruins for salvage.
 

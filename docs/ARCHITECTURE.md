@@ -1,7 +1,7 @@
 # VEILBOUND — Technical Architecture Foundation
 
 Owner: **FORGE**  
-Current runtime: **v0.4.3-kael**
+Current runtime: **v0.4.4-kael**
 
 ## Core principles
 

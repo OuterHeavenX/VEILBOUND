@@ -126,7 +126,6 @@ button { font: inherit; }
   background: linear-gradient(180deg, rgba(12, 26, 29, 0.9), rgba(5, 10, 12, 0.9));
   object-fit: cover;
   object-position: top center;
-  image-rendering: pixelated;
 }
 
 .dialogue-portrait[hidden] { display: none; }
@@ -402,11 +401,10 @@ button { font: inherit; }
   border: 1px solid rgba(127, 231, 225, 0.2);
   border-radius: 3px;
   background-color: rgba(127, 231, 225, 0.035);
-  background-image: url('./assets/characters/kael_bust.png');
+  background-image: url('./assets/characters/kael_adult_bust.png');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: top center;
-  image-rendering: pixelated;
 }
 
 .menu-portrait-glow {

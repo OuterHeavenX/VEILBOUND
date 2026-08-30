@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '0.4.1-prologue';
+  const VERSION = '0.4.2-prologue';
   const canvas = document.getElementById('game-canvas');
   const boot = document.getElementById('boot-screen');
   const status = document.getElementById('boot-status');
@@ -26,6 +26,8 @@
   const interactPrompt = document.getElementById('interact-prompt');
   const interactPromptVerb = document.getElementById('interact-prompt-verb');
   const interactPromptName = document.getElementById('interact-prompt-name');
+  const skipPrompt = document.getElementById('skip-prompt');
+  const skipFill = document.getElementById('skip-fill');
 
   const SaveManager = window.Veilbound && window.Veilbound.SaveManager;
   const EnemyRegistry = window.Veilbound && window.Veilbound.EnemyRegistry;
@@ -160,7 +162,9 @@
   let saveData = saveInspection.status==='ready'?saveInspection.data:SaveManager.createDefault();
   let deviceSettings = SaveManager.loadSettings();
   let running=false;
+  const DIALOGUE_MIN_MS=420, SKIP_HOLD_SECONDS=.9;
   let saveStatusTimer=0, pendingAwakening=0, dialogueSequence=null, dialogueIndex=-1, dialogueOnComplete=null;
+  let dialogueShownAt=0, skipHeld=0, actionHeld=false;
   let interactTarget=null, promptedTargetId=null, paused=false, orientationBlocked=false;
   let debugEnabled=false, debugTextTimer=0, frameCursor=0;
   const frameTimes=new Array(DEBUG_FRAME_SAMPLES).fill(16.7);
@@ -189,7 +193,7 @@
     if(!playerBlocked(nx,player.y))player.x=nx;else if(dx)player.x+=Puzzles.push(player.room,dx,0,player);
     if(!playerBlocked(player.x,ny))player.y=ny;else if(dy)player.y+=Puzzles.push(player.room,0,dy,player);}
   function tryMoveEnemy(e,dx,dy){const nx=e.x+dx,ny=e.y+dy;if(!collidesWithWalls(player.room,nx,e.y,e.radius))e.x=nx;if(!collidesWithWalls(player.room,e.x,ny,e.radius))e.y=ny;}
-  function transitionIfNeeded(){for(const exit of rooms[player.room].exits){if(!exitAvailable(exit))continue;if(player.x+player.radius>exit.x&&player.x-player.radius<exit.x+exit.w&&player.y+player.radius>exit.y&&player.y-player.radius<exit.y+exit.h){player.room=exit.room;player.entryId=exit.entry||'unnamed';Audio.setRegion(regionFor(exit.room));player.x=exit.spawnX;player.y=exit.spawnY;projectiles.length=0;Progression.clearDrops();spawnRoomEnemies();refreshHud();saveGame('AUTOSAVED');if(player.room==='awakeningRuin'&&!hasFlag('story.axiomAwakened'))pendingAwakening=.7;if(player.room==='greyhaven'&&exit.entry==='west'&&!hasFlag('prologue.titleShown'))playScene(Prologue&&Prologue.title,{once:'prologue.titleShown'});if(player.room==='hunterHall'&&!hasFlag('prologue.tolled'))playScene(Prologue&&Prologue.hall,{once:'prologue.hallMet',then:()=>{playScene(Prologue&&Prologue.toll,{once:'prologue.tolled',then:()=>{if(TitleCard)TitleCard.objective('FOLLOW THE BELL\u2019S MEMORY');saveGame('THE BELL HAS RUNG');}});}});if(player.room==='archiveThreshold'&&!hasFlag('archive.entered')){setFlag('archive.entered',true);saveGame('ARCHIVE DISCOVERED');startDialogue([{speaker:'THE AXIOM',text:'SUBMERGED INDEX NODE DETECTED.'},{speaker:'THE AXIOM',text:'DESIGNATION: SUNKEN ARCHIVE.'}]);}return;}}}
+  function transitionIfNeeded(){for(const exit of rooms[player.room].exits){if(!exitAvailable(exit))continue;if(player.x+player.radius>exit.x&&player.x-player.radius<exit.x+exit.w&&player.y+player.radius>exit.y&&player.y-player.radius<exit.y+exit.h){player.room=exit.room;player.entryId=exit.entry||'unnamed';Audio.setRegion(regionFor(exit.room));player.x=exit.spawnX;player.y=exit.spawnY;projectiles.length=0;Progression.clearDrops();spawnRoomEnemies();refreshHud();saveGame('AUTOSAVED');if(player.room==='awakeningRuin'&&!hasFlag('story.axiomAwakened'))pendingAwakening=.7;if(player.room==='greyhaven'&&exit.entry==='west'&&!hasFlag('prologue.titleShown'))playScene(Prologue&&Prologue.title,{once:'prologue.titleShown'});if(player.room==='hunterHall'&&!hasFlag('prologue.tolled')&&Prologue)playSequence([[Prologue.hall,'prologue.hallMet'],[Prologue.toll,'prologue.tolled']],()=>{if(TitleCard)TitleCard.objective('FOLLOW THE BELL\u2019S MEMORY');saveGame('THE BELL HAS RUNG');});if(player.room==='archiveThreshold'&&!hasFlag('archive.entered')){setFlag('archive.entered',true);saveGame('ARCHIVE DISCOVERED');startDialogue([{speaker:'THE AXIOM',text:'SUBMERGED INDEX NODE DETECTED.'},{speaker:'THE AXIOM',text:'DESIGNATION: SUNKEN ARCHIVE.'}]);}return;}}}
   function updateRoomMechanisms(){Puzzles.update(player);}
   function spawnRoomEnemies(){enemies.length=0;projectiles.length=0;Puzzles.enterRoom(player.room);for(const def of rooms[player.room].enemies||[]){if(def.persistent&&saveData.world.defeatedEnemies[def.id])continue;const cfg=EnemyRegistry[def.type];enemies.push({...def,radius:cfg.radius,hp:cfg.maxHp,maxHp:cfg.maxHp,speed:cfg.moveSpeed,flash:0,stun:0,lastHitSerial:-1,phase:Math.random()*Math.PI*2,state:'observe',stateTimer:.45+Math.random()*.35,aimX:0,aimY:1,faceX:0,faceY:1,clock:Math.random()*3,clip:'idle',dying:0,progressionRewarded:false});}}
   function readGamepad(){const pads=navigator.getGamepads?navigator.getGamepads():[],pad=pads&&pads[0];if(!pad)return{x:0,y:0,attack:false,resonance:false};const dead=.18;return{x:Math.abs(pad.axes[0]||0)>dead?pad.axes[0]:0,y:Math.abs(pad.axes[1]||0)>dead?pad.axes[1]:0,attack:Boolean(pad.buttons[0]&&pad.buttons[0].pressed),resonance:Boolean(pad.buttons[1]&&pad.buttons[1].pressed)};}
@@ -217,16 +221,39 @@
   function updateProjectiles(dt){for(let i=projectiles.length-1;i>=0;i--){const p=projectiles[i];if(!p)continue;p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;if(p.life<=0||p.x<0||p.x>WORLD.width||p.y<0||p.y>WORLD.height||collidesWithWalls(player.room,p.x,p.y,p.radius)){projectiles.splice(i,1);continue;}if(Math.hypot(player.x-p.x,player.y-p.y)<player.radius+p.radius){hurtPlayer(p.x-p.vx*.02,p.y-p.vy*.02);projectiles.splice(i,1);}}}
   function spawnParticles(x,y,color,count,speed){for(let i=0;i<count&&particles.length<140;i++){const a=Math.random()*Math.PI*2,v=speed*(.4+Math.random()*.6);particles.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:.25+Math.random()*.35,maxLife:.6,color});}}
   function updateParticles(dt){for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.life-=dt;if(p.life<=0){particles.splice(i,1);continue;}p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.96;p.vy*=.96;}}
-  function update(dt){if(TitleCard)TitleCard.update(dt);if(Cutscene&&!Cutscene.settled())Cutscene.update(dt);if(Cutscene&&Cutscene.active()){updateParticles(dt);if(debugEnabled){debugTextTimer-=dt;if(debugTextTimer<=0){debugTextTimer=DEBUG_TEXT_INTERVAL;refreshDebugText();}}return;}updateInput();Progression.updateControls();saveStatusTimer=Math.max(0,saveStatusTimer-dt);if(saveStatus&&saveStatusTimer<=0)saveStatus.textContent='SAVE V1 READY';screenFlash=Math.max(0,screenFlash-dt);resonanceCooldown=Math.max(0,resonanceCooldown-dt);player.invuln=Math.max(0,player.invuln-dt);player.attackTimer=Math.max(0,player.attackTimer-dt);player.attackCooldown=Math.max(0,player.attackCooldown-dt);if(resonanceTimer>0){resonanceTimer=Math.max(0,resonanceTimer-dt);resonanceRadius=Math.min(230,resonanceRadius+dt*410);evaluateResonance();}if(resonanceButton)resonanceButton.classList.toggle('cooldown',resonanceCooldown>0);if(pendingAwakening>0){pendingAwakening-=dt;if(pendingAwakening<=0)startAwakeningCutscene();}interactTarget=findInteractTarget();refreshInteractPrompt();if(!dialogueSequence){if(Math.abs(input.moveX)>.01||Math.abs(input.moveY)>.01){player.facingX=input.moveX;player.facingY=input.moveY;const len=Math.hypot(player.facingX,player.facingY)||1;player.facingX/=len;player.facingY/=len;player.walkPhase+=dt*9;tryMovePlayer(input.moveX*player.speed*dt,input.moveY*player.speed*dt);}updateRoomMechanisms();checkPrologueTriggers();transitionIfNeeded();if(Math.abs(player.knockX)>1||Math.abs(player.knockY)>1){tryMovePlayer(player.knockX*dt,player.knockY*dt);player.knockX*=.82;player.knockY*=.82;}updateEnemies(dt);updateProjectiles(dt);Progression.updateWorld(dt);}updateParticles(dt);if(debugEnabled){debugTextTimer-=dt;if(debugTextTimer<=0){debugTextTimer=DEBUG_TEXT_INTERVAL;refreshDebugText();}}}
+  function update(dt){if(TitleCard)TitleCard.update(dt);updateSkipHold(dt);if(Cutscene&&!Cutscene.settled())Cutscene.update(dt);if(Cutscene&&Cutscene.active()){updateParticles(dt);if(debugEnabled){debugTextTimer-=dt;if(debugTextTimer<=0){debugTextTimer=DEBUG_TEXT_INTERVAL;refreshDebugText();}}return;}updateInput();Progression.updateControls();saveStatusTimer=Math.max(0,saveStatusTimer-dt);if(saveStatus&&saveStatusTimer<=0)saveStatus.textContent='SAVE V1 READY';screenFlash=Math.max(0,screenFlash-dt);resonanceCooldown=Math.max(0,resonanceCooldown-dt);player.invuln=Math.max(0,player.invuln-dt);player.attackTimer=Math.max(0,player.attackTimer-dt);player.attackCooldown=Math.max(0,player.attackCooldown-dt);if(resonanceTimer>0){resonanceTimer=Math.max(0,resonanceTimer-dt);resonanceRadius=Math.min(230,resonanceRadius+dt*410);evaluateResonance();}if(resonanceButton)resonanceButton.classList.toggle('cooldown',resonanceCooldown>0);if(pendingAwakening>0){pendingAwakening-=dt;if(pendingAwakening<=0)startAwakeningCutscene();}interactTarget=findInteractTarget();refreshInteractPrompt();if(!dialogueSequence){if(Math.abs(input.moveX)>.01||Math.abs(input.moveY)>.01){player.facingX=input.moveX;player.facingY=input.moveY;const len=Math.hypot(player.facingX,player.facingY)||1;player.facingX/=len;player.facingY/=len;player.walkPhase+=dt*9;tryMovePlayer(input.moveX*player.speed*dt,input.moveY*player.speed*dt);}updateRoomMechanisms();checkPrologueTriggers();transitionIfNeeded();if(Math.abs(player.knockX)>1||Math.abs(player.knockY)>1){tryMovePlayer(player.knockX*dt,player.knockY*dt);player.knockX*=.82;player.knockY*=.82;}updateEnemies(dt);updateProjectiles(dt);Progression.updateWorld(dt);}updateParticles(dt);if(debugEnabled){debugTextTimer-=dt;if(debugTextTimer<=0){debugTextTimer=DEBUG_TEXT_INTERVAL;refreshDebugText();}}}
   function startDialogue(lines,onComplete=null){dialogueSequence={lines};dialogueIndex=0;dialogueOnComplete=onComplete;if(dialogue)dialogue.hidden=false;showDialogueLine();}
-  function showDialogueLine(){if(!dialogueSequence)return;Audio.sfx('blip');const line=dialogueSequence.lines[dialogueIndex];if(dialogueSpeaker)dialogueSpeaker.textContent=line.speaker||'';if(dialogueText)dialogueText.textContent=line.text;if(line.flash)screenFlash=.22;}
-  function advanceDialogue(){if(!dialogueSequence)return;dialogueIndex++;if(dialogueIndex>=dialogueSequence.lines.length){const done=dialogueOnComplete;dialogueSequence=null;dialogueOnComplete=null;if(dialogue)dialogue.hidden=true;if(done)done();return;}showDialogueLine();}
+  function showDialogueLine(){if(!dialogueSequence)return;dialogueShownAt=performance.now();Audio.sfx('blip');const line=dialogueSequence.lines[dialogueIndex];if(dialogueSpeaker)dialogueSpeaker.textContent=line.speaker||'';if(dialogueText)dialogueText.textContent=line.text;if(line.flash)screenFlash=.22;}
+  function advanceDialogue(){if(!dialogueSequence)return;if(performance.now()-dialogueShownAt<DIALOGUE_MIN_MS)return;dialogueIndex++;if(dialogueIndex>=dialogueSequence.lines.length){const done=dialogueOnComplete;dialogueSequence=null;dialogueOnComplete=null;if(dialogue)dialogue.hidden=true;if(done)done();return;}showDialogueLine();}
   // Scenes are played through the sequencer rather than hand-rolled. `once` guards on a
   // world flag, so a scene the player has already seen never replays on reload — the
   // retry-aware behaviour the cutscene contract asks for.
+  // Holding the action control through a cutscene fast-forwards it. The prompt only appears
+  // once the hold has begun, so it never advertises itself over a first read.
+  function skipHeldNow(){
+    if(!Cutscene||!Cutscene.active())return false;
+    if(input.keys.has('Space')||input.keys.has('KeyZ')||input.keys.has('KeyJ')||input.keys.has('Enter'))return true;
+    return actionHeld;
+  }
+  function updateSkipHold(dt){
+    if(!Cutscene||!Cutscene.active()){if(skipHeld!==0){skipHeld=0;refreshSkipPrompt();}return;}
+    if(skipHeldNow()){
+      skipHeld+=dt;
+      if(skipHeld>=SKIP_HOLD_SECONDS){skipHeld=0;refreshSkipPrompt();Audio.sfx('menuClose');Cutscene.skip();return;}
+    } else if(skipHeld!==0) skipHeld=0;
+    refreshSkipPrompt();
+  }
+  function refreshSkipPrompt(){
+    if(!skipPrompt)return;
+    const showing=skipHeld>0.12;
+    skipPrompt.hidden=!showing;
+    if(showing&&skipFill)skipFill.style.width=`${Math.min(100,(skipHeld/SKIP_HOLD_SECONDS)*100)}%`;
+  }
+
   function setCinematicChrome(on){
     if(hud)hud.hidden=on||!running;
     if(touchControls)touchControls.hidden=on||!running;
+    if(!on){skipHeld=0;refreshSkipPrompt();}
   }
 
   function playScene(scene,{once=null,then=null}={}){
@@ -244,14 +271,30 @@
     return true;
   }
 
+  // Play a list of [scene, flag] in order, skipping any the player has already seen. This is
+  // what lets an interrupted opening pick up where it stopped rather than being lost.
+  function playSequence(steps,done=null){
+    const next=i=>{
+      while(i<steps.length&&hasFlag(steps[i][1]))i++;
+      if(i>=steps.length){if(done)done();return;}
+      const [scene,flag]=steps[i];
+      if(!playScene(scene,{once:flag,then:()=>next(i+1)})){next(i+1);}
+    };
+    next(0);
+  }
+
+  const INTRO_SCENES=()=>[[Prologue.memory,'prologue.memorySeen'],[Prologue.void,'prologue.voidSeen']];
+  const introUnfinished=()=>Boolean(Prologue)&&hasFlag('prologue.started')
+    &&INTRO_SCENES().some(([,flag])=>!hasFlag(flag));
+
   // The opening: the memory, then the void, then Kael on the forest path in the rain.
   function startPrologue(){
     if(!Prologue||!Cutscene)return;
     player.room='forestPath';player.entryId='prologue';player.x=118;player.y=270;
     spawnRoomEnemies();refreshHud();
-    playScene(Prologue.memory,{once:'prologue.memorySeen',then:()=>{
-      playScene(Prologue.void,{once:'prologue.voidSeen',then:()=>{saveGame('JOURNEY BEGUN');}});
-    }});
+    // Recorded before the first beat, so an opening interrupted at any point is recoverable.
+    setFlag('prologue.started',true);saveGame('JOURNEY BEGUN');
+    playSequence(INTRO_SCENES(),()=>saveGame('JOURNEY BEGUN'));
   }
 
   // Scene 3's flash vision fires once, when Kael has walked far enough into the mud that the
@@ -377,6 +420,8 @@
       touchZone.addEventListener('pointercancel',release);
       addEventListener('blur',()=>release({pointerId}));
     }
+    addEventListener('pointerdown',()=>{actionHeld=true;},{passive:true});
+    for(const ev of ['pointerup','pointercancel','blur'])addEventListener(ev,()=>{actionHeld=false;},{passive:true});
     if(actionButton)actionButton.addEventListener('pointerdown',e=>{e.preventDefault();actionPressed();});if(resonanceButton)resonanceButton.addEventListener('pointerdown',e=>{e.preventDefault();resonancePressed();});if(menuButton)menuButton.addEventListener('click',e=>{e.preventDefault();toggleMenu();});if(dialogue)dialogue.addEventListener('pointerdown',e=>{e.preventDefault();if(dialogueSequence)advanceDialogue();});}
   const REGION_BY_DETAILS = { town:'greyhaven', field:'march', field2:'march', ruin:'ruin' };
   function regionFor(roomId){const room=rooms[roomId];if(!room)return 'march';return REGION_BY_DETAILS[room.details]||(roomId.startsWith('archive')?'archive':'march');}
@@ -391,6 +436,7 @@
     if(touchControls)touchControls.hidden=false;
     canvas.focus({preventScroll:true});
     if(mode==='new'){startPrologue();saveGame('JOURNEY BEGUN');}
+    else if(introUnfinished())startPrologue();
   }
   function armAudio(){
     const kick=()=>{
@@ -420,7 +466,8 @@
     if(status)status.textContent='Bound user confirmed.';
     restoreSave();
     Puzzles.init({rooms,hasFlag,wallsBlock,onSwitch:onSwitchActivated});
-    if(Cutscene)Cutscene.init({say:startDialogue,sfx:name=>Audio.sfx(name),setFlag});
+    if(Cutscene)Cutscene.init({say:startDialogue,sfx:name=>Audio.sfx(name),setFlag,
+      endDialogue(){dialogueSequence=null;dialogueOnComplete=null;if(dialogue)dialogue.hidden=true;}});
     Puzzles.enterRoom(player.room);
     Progression.init({getSaveData:()=>saveData,getPlayer:()=>player,getRoomName:()=>rooms[player.room].name,saveGame,touchControls,onMenuButton:toggleMenu});
     Progression.setActive(false);

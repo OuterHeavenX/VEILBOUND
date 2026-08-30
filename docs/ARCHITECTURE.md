@@ -1,7 +1,7 @@
 # VEILBOUND — Technical Architecture Foundation
 
 Owner: **FORGE**  
-Current runtime: **v0.4.1-prologue**
+Current runtime: **v0.4.2-prologue**
 
 ## Core principles
 
@@ -360,8 +360,24 @@ Not yet supported, and named here rather than implied: camera focus and movement
 movement, facing and animation, and prop animation. Anything a scene needs from those is
 currently staged with effects instead, and `docs/OPENING.md` records each substitution.
 
+Cutscenes are skippable: holding the action control for 0.9 s fast-forwards the running
+scene. A hold rather than a press, so a first-time reader can never skip by accident, and the
+prompt only appears once a hold has begun so it does not advertise itself over a first read.
+Skipping runs every remaining beat's flag writes and callbacks, so a skipped scene and a
+watched one leave the world in the same state — only the dialogue and the waits are dropped.
+
+Dialogue holds each line for a minimum of 420 ms before it can be dismissed. Without it a
+player arriving from the title with a thumb already on the action button could mash past every
+line of a scene without seeing one.
+
 A scene is played through `playScene(scene, { once })`. The `once` flag is a Save V1 world
 flag, so a scene the player has seen never replays — including after reloading mid-scene.
+`playSequence` chains scenes and skips any already seen, which is what lets an opening
+interrupted part-way resume rather than being lost. Resuming keys on an explicit
+`prologue.started` marker, not on the absence of the completion flags — every save written
+before the opening existed is also missing those, and resuming on that basis would teleport an
+existing journey into the prologue.
+
 While a scene runs the HUD and touch controls are hidden, the world does not simulate, and
 movement, attack, Resonance, interaction and room transitions are all held. Diagnostics keep
 running, because a cutscene is otherwise the one thing in the game that cannot be debugged.

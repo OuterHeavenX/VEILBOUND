@@ -6,6 +6,57 @@ Use this file together with `ROADMAP.md`, `docs/VERTICAL_SLICE.md`, `docs/CANON.
 
 ---
 
+## 2026-08-30 — v0.4.2 The opening, made survivable
+
+Asked what else the opening needed, I probed it instead of guessing, and found three real
+defects.
+
+### A player could miss the entire opening without noticing
+
+Coming off the title the thumb is already on the action button. There was no minimum display
+time on a dialogue line, so mashing dismissed each one the frame it appeared: a measured
+masher saw **0 of 15 lines**. Lines now hold 420 ms before they can be dismissed. The same
+masher now sees ten in six seconds.
+
+### Nothing was skippable
+
+`docs/ARCHITECTURE.md` has required retry-aware, skippable cinematics since v0.1.0, and a
+readable playthrough of the first two scenes ran **47 seconds with no way out**. Holding the
+action control for 0.9 s now fast-forwards the running scene, with a fill bar that only
+appears once a hold has begun so it never advertises itself over a first read. On touch the
+hold works anywhere on screen, because the action button is hidden during a scene.
+
+Skipping runs every remaining beat's flag writes and callbacks, so a skipped scene and a
+watched one leave the world identical — only the dialogue and the waits are dropped. A skip
+must be faster, not different.
+
+### Closing the tab during the opening lost it permanently
+
+The intro only ran from a new game, and the save had already recorded the forest path with no
+flags. Reopening and pressing Continue dropped the player onto the path having never seen the
+memory or the void, with no way to reach them. `playSequence` now chains the scenes and skips
+the ones already seen, so an interrupted opening resumes.
+
+### The bug in the fix
+
+Keying the resume on "the completion flags are missing" was wrong, and the suites caught it
+immediately: **every save written before v0.4.0 is also missing them**, so loading an existing
+journey teleported it to the forest path and played the intro at it. Nine suites failed at
+once. The resume now keys on an explicit `prologue.started` marker, written and saved before
+the first beat, which distinguishes "part-way through the opening" from "predates it".
+
+### Verification
+- A new `prologue3` suite: mashing still shows the lines, a hold skips and records the scene,
+  skipping the whole intro lands in a lit playable world, an interrupted opening resumes, and
+  a finished one does not replay.
+- Every suite passes. Five had dialogue-advance timings faster than the new 420 ms hold; those
+  were encoding the old behaviour and were updated, not the gate.
+
+### Owner-device acceptance — PENDING
+- [ ] The hold-to-skip feels deliberate rather than fiddly on a phone.
+- [ ] 420 ms per line does not feel sticky when re-reading.
+
+
 ## 2026-08-30 — v0.4.1 Painted, and the screen comes back
 
 Two owner corrections.

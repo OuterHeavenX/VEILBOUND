@@ -59,6 +59,23 @@ what terms, before the repository or the game is public. It is the only third-pa
 art the player actually sees at launch, so it is the sharpest version of the question the
 rest of this file asks.
 
+## Greyhaven and Hollow March map plates
+
+- In-repo: `assets/maps/`. Supplied by the owner in v0.3.4 as eleven PNGs with opaque
+  filenames, renamed here to what they are.
+- `greyhaven/town-dormant.png` is the source for `greyhaven-town.jpg`, the plate the game
+  loads. Committed at JPEG quality 0.88 (423 KB) beside the 3.3 MB PNG source.
+- `greyhaven/town-awake-npcs.png` and `greyhaven/town-ground-only.png` are alternate renders
+  kept as reference. Neither is loaded: the awake one has NPCs painted into it that would
+  fight the game's own NPC sprites, and the three plates are independent generations whose
+  lighting does not match, so they cannot be composited.
+- `march-field.png` and the seven `buildings/*.png` elevations are unused so far. See
+  `docs/PROGRESS.md` § v0.3.4 for why the march plate is not wired to either Hollow March
+  field yet.
+
+**Unresolved:** origin and licence not recorded, as with the title key art. These are now the
+second body of owner-supplied art the player sees directly.
+
 ## Generated, not third-party
 
 - `assets/sprites/` is produced by `tools/prerender-characters.mjs` from the KayKit models.

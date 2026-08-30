@@ -2,9 +2,9 @@
 
 **Document owner:** ORACLE — Game Director & Planning  
 **Repository:** `OuterHeavenX/VEILBOUND`  
-**Integration branch:** `main` — carries the full slice as of `v0.3.3-threshold`  
+**Integration branch:** `main` — carries the full slice as of `v0.3.4-greyhaven`  
 **Current development branch:** `claude/todo-implementation-td5zeq`  
-**Current playable version:** `v0.3.3-threshold`  
+**Current playable version:** `v0.3.4-greyhaven`  
 **Roadmap status:** ACTIVE  
 **Last roadmap update:** 2026-08-30
 
@@ -62,7 +62,7 @@ that is already cited; add new rules at the end.
 
 ---
 
-## 3. Current playable state — v0.3.3-threshold
+## 3. Current playable state — v0.3.4-greyhaven
 
 ### Foundation / presentation
 - [x] zero-build Canvas 2D runtime
@@ -84,6 +84,7 @@ that is already cited; add new rules at the end.
 - [x] Old Lift Station backtracking hook
 - [x] Hollow March Field 1 and Field 2
 - [x] authored terrain/scenery
+- [x] painted Greyhaven map plate, with the lift gate waking on `story.axiomAwakened`
 - [x] Forgotten Relic Chamber
 
 ### Combat
@@ -149,7 +150,7 @@ that is already cited; add new rules at the end.
 ## 3.1 Owner-device acceptance backlog
 
 Implementation completion and owner-device acceptance are separate states, and the gap is now
-four releases wide. Nothing below is a code defect; all of it is untested on the owner's
+five releases wide. Nothing below is a code defect; all of it is untested on the owner's
 hardware.
 
 | Version | What it added | Checklist |
@@ -158,8 +159,9 @@ hardware.
 | `v0.3.1-sound` | region beds, gameplay cues, centring, summoned stick | `docs/PROGRESS.md` § v0.3.1 |
 | `v0.3.2-cistern` | Cistern Walk, Sluice Gallery, Reliquary Span, shortcut | `docs/SUNKEN_ARCHIVE.md` § Cistern wing acceptance |
 | `v0.3.3-threshold` | landscape gate, key-art title | `docs/PROGRESS.md` § v0.3.3 |
+| `v0.3.4-greyhaven` | painted Greyhaven town plate | `docs/PROGRESS.md` § v0.3.4 |
 
-One device pass on `v0.3.3-threshold` covers all four, since each release carries the ones
+One device pass on `v0.3.4-greyhaven` covers all five, since each release carries the ones
 before it. That pass is the single largest open item in this roadmap.
 
 ---
@@ -378,7 +380,7 @@ Still held until justified:
 
 # 10. Immediate production order
 
-1. Test `v0.3.3-threshold` on iPhone using the checklist in `docs/SUNKEN_ARCHIVE.md`, plus:
+1. Test `v0.3.4-greyhaven` on iPhone using the checklist in `docs/SUNKEN_ARCHIVE.md`, plus:
    the world sits centred with even letterboxing; the stick appears under the thumb
    anywhere on the left; each region sounds distinct and music sits under the cues; the
    rotate gate appears upright and hands the game back on turning.

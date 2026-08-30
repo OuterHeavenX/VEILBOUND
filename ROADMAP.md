@@ -2,1543 +2,350 @@
 
 **Document owner:** ORACLE — Game Director & Planning  
 **Repository:** `OuterHeavenX/VEILBOUND`  
-**Current development branch:** `feature/vertical-slice-foundation`  
-**Current playable version:** `v0.2.1-menu`  
+**Current development branch:** `feature/sunken-archive-foundation`  
+**Current playable version:** `v0.3.0-archive`  
 **Roadmap status:** ACTIVE  
 **Last roadmap update:** 2026-08-30
 
 ---
 
-# 0. READ THIS FIRST
+## 0. Production rule
 
-This is the master production roadmap for VEILBOUND.
+Before meaningful implementation work, read this file plus:
 
-Before meaningful implementation work, read this file and then consult:
+- `AGENTS.md`
+- `docs/CANON.md`
+- `docs/ARCHITECTURE.md`
+- `docs/VERTICAL_SLICE.md`
+- `docs/PROGRESS.md`
+- `docs/COMBAT.md`
+- `docs/PROGRESSION.md`
+- `docs/SUNKEN_ARCHIVE.md`
 
-- `AGENTS.md` — discipline ownership and handoff rules.
-- `docs/CANON.md` — established world/story truth.
-- `docs/ARCHITECTURE.md` — engine, save, input, room, and system contracts.
-- `docs/VERTICAL_SLICE.md` — exact requirements for the first complete playable slice.
-- `docs/PROGRESS.md` — chronological implementation history and owner-device findings.
-
-This roadmap answers:
-
-1. What are we building?
-2. What exists now?
-3. What comes next?
-4. What must be proven before expansion?
-5. What are we intentionally not building yet?
-
-**Documentation rule:** every meaningful implementation milestone must update the relevant MD files. The roadmap, vertical-slice status, progress log, architecture, agent handbook, and canon must never silently drift away from the code.
+Every meaningful milestone updates the relevant documentation. Implementation completion and owner-device acceptance are separate states.
 
 ---
 
-# 1. PRODUCT VISION
+## 1. North star
 
-VEILBOUND is an original top-down browser action-adventure RPG set in **Eidol**, a melancholy post-collapse world built over the remains of an ancient underground system called **The Vein**.
+VEILBOUND is an original top-down browser action-adventure RPG set in **Eidol**. Kael, a masked relic hunter carrying the damaged **Shardblade**, becomes bound to an ancient mechanical gauntlet called **The Axiom** as the underground relic network known as **The Vein** begins waking after centuries of silence.
 
-The player controls **Kael**, a masked relic hunter carrying:
+The vertical slice must prove:
 
-- the damaged relic weapon **Shardblade**,
-- the ancient mechanical gauntlet **The Axiom**.
+**Greyhaven → Hollow March → Axiom Awakening → Sunken Archive → Tether → The Archivist → `WELCOME BACK.`**
 
-The player experience should combine:
-
-- deliberate top-down exploration,
-- responsive melee combat,
-- puzzle-driven dungeons,
-- ability-based backtracking,
-- evolving settlements and NPCs,
-- environmental storytelling,
-- ancient machinery that reacts to Kael,
-- persistent world-state change,
-- concise cinematic storytelling,
-- strong visual and sonic identity,
-- phone, tablet, desktop, keyboard, touch, and controller play from one codebase.
-
-The first major promise is:
-
-> Explore a forgotten world, awaken something ancient, gain powers that change traversal, puzzles, combat, and discovery, then learn that ancient systems recognize Kael in ways they should not.
+One codebase must remain first-class on phone, tablet, desktop, keyboard, touch and controller.
 
 ---
 
-# 2. NON-NEGOTIABLE PRODUCTION RULES
+## 2. Non-negotiable rules
 
-## 2.1 Zero-setup launch
-
-`index.html` is the canonical launch point.
-
-The shipped browser version must remain static-host friendly and playable without requiring npm install, a local bundler, or a development server.
-
-## 2.2 One codebase, first-class devices
-
-Support from the beginning:
-
-- iPhone,
-- iPad,
-- Android phone/tablet,
-- desktop browser,
-- keyboard,
-- touch,
-- controller/gamepad.
-
-Mobile is not a future port.
-
-## 2.3 Vertical slice before scale
-
-Do not aggressively expand the full game until the route from **Greyhaven to The Archivist** is coherent, satisfying, stable, and accepted on owner devices.
-
-Room count alone is not progress.
-
-## 2.4 Abilities must affect multiple systems
-
-Whenever practical, an Axiom ability should matter in at least two of:
-
-- traversal,
-- puzzles,
-- combat,
-- secrets,
-- environmental interaction,
-- story presentation.
-
-## 2.5 Backtracking must reward memory
-
-Returning to earlier spaces should reveal new routes, secrets, shortcuts, NPC changes, optional fights, lore, treasure, or altered world state.
-
-## 2.6 Persistent state must be explicit
-
-Anything that matters after leaving a room uses authored IDs and Save Schema state.
-
-Examples:
-
-- Axiom awakened,
-- Resonance route revealed,
-- opened chest,
-- solved puzzle,
-- defeated enemy/boss (opt-in per enemy; ordinary enemies repopulate on re-entry by owner decision),
-- opened shortcut,
-- activated mechanism,
-- completed quest stage.
-
-## 2.7 Major mysteries require real answers
-
-SCRIBE must define hidden answers before narrative payoff production reaches them.
-
-The central early mystery is why The Archivist says:
-
-**WELCOME BACK.**
-
-## 2.8 Cutscenes respect the player
-
-Cinematics are short, intentional, and replay-aware. Boss intros must not become long mandatory repeats after death.
-
-## 2.9 Original identity
-
-VEILBOUND may learn structural lessons from classic action-adventure games but must not reproduce another game's proprietary art, maps, code, music, characters, or distinctive copyrighted content.
-
-## 2.10 Truthful documentation
-
-A checkbox is marked complete only when the feature exists in the active branch. Owner-device acceptance is separate from implementation completion.
+- `index.html` remains the canonical zero-build launch path.
+- Static hosting must work without npm/bundling for the game runtime.
+- Mobile is a primary target, not a later port.
+- Backtracking must reward memory rather than create travel tax.
+- Persistent world state uses stable authored IDs and Save V1 flags.
+- Ordinary enemies may repopulate; bosses/story kills opt into persistence.
+- Axiom powers should affect more than one system where practical.
+- Resonance is selective authored interaction, not generic detective vision.
+- Cutscenes stay concise and retry-aware.
+- Third-party art currently in the repository remains placeholder/development material until licensing and final-art direction are resolved.
+- No major full-game expansion until the complete vertical slice is stable and accepted.
 
 ---
 
-# 3. STATUS LEGEND
+## 3. Current playable state — v0.3.0-archive
 
-- `[x]` implemented in active development branch
-- `[~]` prototype or implemented but still requires refinement/acceptance
-- `[ ]` not implemented
-- `[HOLD]` deliberately deferred
-- `[GATE]` required before major expansion
+### Foundation / presentation
+- [x] zero-build Canvas 2D runtime
+- [x] responsive authored 960×540 world
+- [x] title / Continue / New Game / Settings
+- [x] safe save inspection and resume
+- [x] touch, keyboard and controller movement
+- [x] development diagnostics
+- [x] procedural title ambience
+- [x] character/enemy sprite pipeline with fallbacks
 
----
+### Greyhaven / overworld
+- [x] six Greyhaven exterior landmarks
+- [x] five world-state-reactive NPCs
+- [x] Wayfarer's Rest save/rest point
+- [x] Old Lift Station backtracking hook
+- [x] Hollow March Field 1 and Field 2
+- [x] authored terrain/scenery
+- [x] Forgotten Relic Chamber
 
-# 4. CURRENT STATE — v0.2.1-menu
+### Combat
+- [x] Shardblade melee
+- [x] health, damage, knockback and i-frames
+- [x] March Husk melee pursuit
+- [x] Vein Sentry ranged state machine
+- [x] telegraph/projectile/recovery loop
+- [x] Resonance interruption of Sentry telegraph
+- [x] enemy death animation pipeline
+- [x] ordinary-enemy repopulation
 
-## Foundation
+### Progression / menu
+- [x] Character pause menu
+- [x] Vitality, XP, JP, Coins, Shardblade level and Axiom protocols
+- [x] +2 XP per enemy defeat
+- [x] +1 JP per enemy defeat
+- [x] one physical coin drop per enemy defeat
+- [x] coin pickup and persistence
+- [ ] XP spending / player level curve
+- [ ] JP spending / mastery system
+- [ ] Inventory tab
+- [ ] Equipment tab
 
-- [x] Repository initialized.
-- [x] `AGENTS.md` studio handbook.
-- [x] `docs/CANON.md` canon foundation.
-- [x] `docs/ARCHITECTURE.md` architecture contract.
-- [x] `docs/VERTICAL_SLICE.md` vertical-slice definition/status.
-- [x] `docs/PROGRESS.md` chronological implementation log.
-- [x] Master roadmap.
-- [x] Zero-build `index.html` launch.
-- [x] Static-host/browser launch contract.
-- [x] Visible runtime version.
-- [x] Fatal startup error screen.
+### Axiom / story
+- [x] Axiom awakening
+- [x] `RESONANCE DETECTED`
+- [x] `BOUND USER CONFIRMED`
+- [x] Resonance grant and persistence
+- [x] authored Resonance nodes
+- [x] Hollow March buried Vein route reveal
+- [x] Greyhaven return discovery
+- [x] Forgotten chamber core memory
 
-## Runtime / movement
-
-- [x] Canvas game loop.
-- [x] Responsive 960×540 authored world viewport.
-- [x] Keyboard movement.
-- [x] Touch virtual joystick.
-- [x] Controller analog movement.
-- [x] Four-direction facing.
-- [x] Authored collision rectangles.
-- [x] Room transitions.
-- [x] Greyhaven prototype.
-- [x] Hollow March Field 1 prototype.
-- [x] Hollow March Field 2 prototype.
-- [x] Forgotten Relic Chamber prototype.
-
-## Combat
-
-- [x] Shardblade attack input.
-- [x] Directional melee overlap.
-- [x] Enemy health.
-- [x] Enemy hurt flash.
-- [x] Enemy knockback.
-- [x] Player health.
-- [x] Player damage.
-- [x] Player knockback.
-- [x] Invulnerability frames.
-- [x] Bounded impact particles.
-- [x] First melee enemy behavior.
-
-## Ranged combat — Vein Sentry
-
-- [x] Data-driven enemy registry.
-- [x] Observe → Position → Telegraph → Fire → Recover state machine.
-- [x] Amber charge ring and dashed aim-line telegraph.
-- [x] Projectiles with lifetime, wall collision, and player collision.
-- [x] Projectile damage, i-frames, and knockback.
-- [x] Projectiles cleared on room transition and player recovery.
-- [x] Resonance interrupts the Telegraph window.
-- [x] Visible Disrupted state.
-- [x] Shardblade stays the damage tool; Resonance disrupts rather than damaging.
-- [x] Authored mixed encounter in Hollow March Field 2.
-- [ ] Owner-device acceptance of the Sentry encounter.
-
-## Persistence
-
-- [x] Save Schema V1.
-- [x] LocalStorage save/load normalization.
-- [x] Room/position persistence.
-- [x] Health persistence.
-- [x] Axiom ability list persistence.
-- [x] World flags.
-- [x] Stable defeated-enemy IDs.
-- [~] Defeated-enemy persistence. Machinery kept and still correct, but now opt-in per
-      enemy: ordinary enemies repopulate on room re-entry.
-- [x] Room-transition autosave.
-- [x] Autosave on page hide.
-- [x] Autosave when app/tab becomes hidden.
-- [ ] Full owner-device refresh/reopen acceptance.
-
-## Axiom / story
-
-- [x] Axiom awakening trigger.
-- [x] `RESONANCE DETECTED` presentation.
-- [x] `BOUND USER CONFIRMED` presentation.
-- [x] Persistent Axiom-awakened flag.
-- [x] Resonance ability grant persisted.
-
-## Resonance v1
-
-- [x] Dedicated Resonance input separate from Shardblade.
-- [x] Touch `◇` Resonance button.
-- [x] Keyboard `E` / `R` / Shift mapping.
-- [x] Controller secondary-face-button mapping.
-- [x] Expanding pulse visualization.
-- [x] Cooldown behavior.
-- [x] Authored per-room Resonance nodes.
-- [x] Persistent discovery flags.
-- [x] Hollow March Field 2 buried Vein route discovery.
-- [x] Forgotten Relic Chamber core-memory response.
-- [x] Resonance remains selective instead of a global detective-vision overlay.
-- [x] Greyhaven lift-station node, so the starting town rewards a returning player.
-- [ ] Owner-device acceptance of touch Resonance and persistence.
-
-## Development diagnostics
-
-- [x] FPS, average frame time, and worst frame time in the sample window.
-- [x] Room id and entry id.
-- [x] Player coordinates and facing.
-- [x] Health, invulnerability, attack, and cooldown timers.
-- [x] Resonance availability, cooldown, and live pulse radius.
-- [x] Entity counts for enemies, projectiles, and particles.
-- [x] Current interactable target.
-- [x] Per-enemy id, health, state with state timer, and distance.
-- [x] Active world flags.
-- [x] Collision, exit, hurtbox, hitbox, reach, and Sentry range shapes.
-- [x] Development-mode toggle: `F3` / `` ` `` on keyboard, `?debug` for touch devices.
-- [x] Keyboard toggle persisted per device in `settings.debugOverlay`.
-- [x] Overlay off by default, with neither text refresh nor shape pass while disabled.
-- [x] Overlay reads the same constants the simulation reads, so drawn boxes cannot drift.
-
-## Interaction layer
-
-- [x] Data-driven interactable registry keyed by room id.
-- [x] Stable authored interactable ids.
-- [x] Nearest-target resolution within authored reach.
-- [x] Contextual on-screen interact prompt.
-- [x] Contextual action control: interact when a target is in reach, Shardblade otherwise.
-- [x] Interact glyph kept distinct from the Resonance control.
-- [x] Ordered dialogue variants gated on `flag` / `notFlag` / `ability`.
-- [x] Post-dialogue effects for world flags and rest.
-- [x] Solid interactable collision bodies.
-- [x] Save Schema V1 unchanged; no migration required.
-- [ ] Owner-device acceptance of touch interaction.
-
-## Greyhaven
-
-- [x] Six authored exterior landmarks with collision and world-space labels.
-- [x] Five NPCs with distinct palettes, marks, and voices.
-- [x] World-state-reactive dialogue for every NPC.
-- [x] First save/rest point at the Wayfarer's Rest hearth.
-- [x] Dormant Old Lift Station authored as the backtracking hook.
-- [x] Shardblade repair offer as the future upgrade/service hook.
-- [x] Concrete authored reason to leave town.
-- [ ] Owner-device acceptance of `v0.1.5-greyhaven`.
-
-## Title / boot
-
-- [x] Title screen with wordmark, mark, tagline, and version.
-- [x] `CONTINUE`, shown only for a resumable save and labelled with its room and health.
-- [x] `NEW GAME`, with explicit confirmation before replacing an existing save.
-- [x] `SETTINGS`, reachable before any save exists.
-- [x] Device-appropriate control hint for gamepad, touch, and keyboard.
-- [x] Live still of the resumable room rendered behind the menu.
-- [x] Gameplay input and updates suspended until the title hands over.
-- [x] Title ambience/music.
-
-## Safe resume
-
-- [x] `SaveManager.inspect()` reports stored state without modifying it.
-- [x] Distinct handling for empty, unreadable, incompatible, and unavailable storage.
-- [x] A save that cannot be resumed is reported and left on disk, never silently discarded.
-- [x] No autosave while the title is up, so an unstarted journey is never manufactured.
-- [x] Erase requires explicit confirmation.
-
-## Settings
-
-- [x] Device-level preferences stored outside the save, under `veilbound.settings.v1`.
-- [x] Preferences survive erasing or replacing a save.
-- [x] Diagnostics overlay toggle.
-- [x] Audio on/off toggle.
-- [~] In-game settings entry. The pause menu exists; settings are still title-only.
-
-## Audio
-
-- [x] Procedural Web Audio synthesis, with no audio assets and no build step.
-- [x] Title ambience: low Vein drone, wind texture, and the Greyhaven bell struck sparsely.
-- [x] Bed voices above the drone lowpass, so the mix survives a phone speaker's rolloff.
-- [x] Autoplay handled: nothing is created until a real user gesture unlocks it.
-- [x] Fade in and fade out rather than abrupt starts and cuts.
-- [x] Audio suspended while the tab is hidden.
-- [x] Output level analyser, so the diagnostics overlay and tests measure real output.
-- [x] Offline `render()` audition of the same synthesis the game plays.
-- [ ] Location sonic identities for Greyhaven and the Hollow March.
-- [ ] Shardblade, Axiom, and Resonance signature sounds.
-- [ ] Owner-device confirmation that the bed is audible on a phone speaker.
-
-## Character sprites
-
-- [x] Offline prerenderer turning the uploaded 3D models into 8-direction sprite sheets.
-- [x] Zero-build launch preserved: sheets are plain images, the manifest is a `.js` module.
-- [x] Kael drawn from sheets with idle, walk, and an attack stand-in.
-- [x] All five Greyhaven NPCs drawn from sheets.
-- [x] Facing vector maps onto a sheet row directly.
-- [x] Feet-anchored placement measured from the generated sheets.
-- [x] Procedural fallback when a sheet is missing, so a fresh clone stays playable.
-- [ ] Attack clip. The pack has none; the swing borrows `Use_Item`.
-- [x] Enemy sprites for the Husk and the Vein Sentry, with idle, walk, attack, hurt and death.
-- [x] Death animation before a defeated enemy leaves the field.
-- [x] Authored Hollow March scenery drawn from the forest set.
-- [ ] Original character art replacing the placeholder cast.
-- [ ] Asset licence confirmation before any public release.
-
-## Hollow March scenery
-
-- [x] Authored props for Field 1 and Field 2 from the forest set.
-- [x] Obstacle art placed over the collision rectangles that already existed, so visuals and
-      collision agree without retuning accepted traversal.
-- [x] Interior obstacle slabs no longer painted underneath their scenery.
-- [x] Ground tiling from the uploaded grass set.
-- [x] Path and road tiling, including the cobbled road through Greyhaven.
-- [x] Track through both fields that bends around the landmark tree.
-- [ ] Autotiled edges. Interior field tiles only; transitions are handled by authored geometry.
-- [ ] Water, stairs and the remaining forest sheets.
-- [ ] Region ambience and environmental motion.
-
-## Enemy repopulation
-
-- [x] Ordinary enemies repopulate their room on every entry.
-- [x] Persistence kept as an explicit per-enemy opt-in, for bosses and story kills.
-- [x] Saves that still carry old defeat flags no longer suppress spawns.
-
-## Pause menu
-
-- [x] Character menu on `M` / `Tab` / `Escape` and a touch button.
-- [x] Pause suspends the simulation while the world stays visible behind the menu.
-- [x] Kael's own prerendered portrait, animated.
-- [x] Vitality, XP, JP, coins, Shardblade level, and held Axiom protocols.
-- [x] Journey list of authored milestones, with unearned ones shown only as a count.
-- [x] Amber glyphs from the uploaded icon sheet.
-- [x] Responsive down to a landscape phone.
-- [ ] Inventory and Equipment tabs. Present and marked SOON; neither system exists.
-- [ ] Settings from inside the menu. Title-only for now.
-
-## Progression counters
-
-- [x] XP, JP and coins in the save, awarded on enemy defeat.
-- [x] No migration needed; `normalize()` merges over defaults for saves written before them.
-- [ ] Anything that spends them. No levelling, shop, or repair yet.
-- [ ] A canonical name for JP. SCRIBE and ORACLE own that.
-
-## Portrait rendering correction
-
-The v0.1.2 iPhone test exposed cyan cinematic flash bleeding into portrait letterbox regions.
-
-- [x] Full physical canvas clears to void black each frame.
-- [x] Gameplay stays inside scaled world viewport.
-- [x] Cinematic flash clips to gameplay viewport.
-- [ ] iPhone confirmation that cyan letterbox contamination is gone.
+### Sunken Archive opening
+- [x] Resonance-gated route from Hollow March Field 2
+- [x] Eastern Descent
+- [x] one-time `archive.entered` acknowledgement
+- [x] drowned side chambers with matching art/collision geometry
+- [x] Vestibule
+- [x] mixed Husk + Vein Sentry dungeon encounter
+- [x] persistent floor-switch primitive
+- [x] persistent door/seal primitive
+- [x] flag-gated room exit
+- [x] Catalog Rotunda
+- [x] Rotunda Resonance memory
+- [x] `PROTOCOL TRACE: TETHER.` foreshadowing
+- [x] deeper Archive bulkhead intentionally sealed
+- [ ] owner-device acceptance of v0.3.0
 
 ---
 
-# 5. MASTER PHASE MAP
+# 4. Phase map
 
 ```text
-PHASE 0 — FOUNDATION
+PHASE 0 — FOUNDATION                         MOSTLY COMPLETE
         |
-PHASE 1 — OPENING GAMEPLAY LOOP
+PHASE 1 — OPENING GAMEPLAY LOOP             FUNCTIONALLY COMPLETE / ACCEPTANCE ONGOING
         |
-PHASE 2 — SUNKEN ARCHIVE
+PHASE 2 — SUNKEN ARCHIVE                    ACTIVE
         |
-PHASE 3 — THE ARCHIVIST + WELCOME BACK
+PHASE 3 — THE ARCHIVIST + WELCOME BACK      PLANNED
         |
-PHASE 4 — VERTICAL SLICE POLISH / ACCEPTANCE
+PHASE 4 — VERTICAL SLICE POLISH             PLANNED
         |
         +---- FIRST MAJOR PRODUCTION GATE ----+
                                                |
 PHASE 5 — FULL GAME SYSTEM EXPANSION           |
-        |                                      |
 PHASE 6 — WORLD / DUNGEON PRODUCTION           |
-        |                                      |
 PHASE 7 — ALPHA                                |
-        |                                      |
 PHASE 8 — BETA / CONTENT LOCK                  |
-        |                                      |
 PHASE 9 — RELEASE CANDIDATE / 1.0 <------------+
 ```
 
-Phases 0–4 are the committed production target. Phases 5–9 remain directional until the vertical slice is approved.
+---
+
+# 5. Phase 1 — Opening gameplay loop
+
+**Status:** FUNCTIONALLY COMPLETE; owner-device checklist still has deferred items.
+
+The opening now proves title/resume, Greyhaven NPCs, rest/save, Hollow March traversal, melee/ranged combat, Axiom awakening, Resonance, progression rewards and the route into the first dungeon.
+
+Remaining Phase 1 work is refinement/acceptance rather than another foundational system:
+
+- [ ] complete deferred iPhone checks
+- [ ] iPad acceptance
+- [ ] desktop acceptance
+- [ ] controller acceptance
+- [ ] region ambience and authored combat/Axiom sound
+- [ ] optional Hollow March collectible/side route
+
+Do not block Sunken Archive production on cosmetic Phase 1 polish unless a regression appears.
 
 ---
 
-# PHASE 0 — FOUNDATION
+# 6. Phase 2 — The Sunken Archive
 
-**Status:** MOSTLY COMPLETE
+**Status:** ACTIVE
 
-## ORACLE
+Owners: ARCHITECT + FORGE + WRAITH + SCRIBE + ECHO, with SPECTER on acquisition/cinematic beats.
 
-- [x] Prime directive.
-- [x] Agent ownership.
-- [x] Canon change rules.
-- [x] Vertical-slice scope.
-- [x] Master roadmap.
-- [x] Progress-log convention.
-- [ ] Formal changelog/release-note convention.
-- [ ] Dedicated owner-device acceptance checklist file.
-
-## FORGE
-
-- [x] Zero-build launch.
-- [x] Game loop.
-- [x] Input foundation.
-- [x] Room system.
-- [x] Collision.
-- [x] Save V1.
-- [ ] Event bus/presentation hooks.
-- [x] Debug overlay.
-- [x] Runtime diagnostics.
-- [x] Development-mode toggle.
-- [ ] Save migration registry before schema-breaking public changes.
-
-## Phase 0 gate
-
-- [GATE] `index.html` launches from static hosting.
-- [GATE] no build server required.
-- [GATE] startup errors surface visibly.
-- [GATE] phone/tablet canvas scaling does not corrupt world rendering.
-
----
-
-# PHASE 1 — OPENING GAMEPLAY LOOP
-
-**Status:** ACTIVE  
-**Target experience:** first 5–15 minutes.
-
-The player should launch VEILBOUND, understand Kael's immediate purpose, travel from Greyhaven through the Hollow March, survive early enemies, awaken the Axiom, learn Resonance, and discover the direction of the Sunken Archive.
-
-## 1.1 Title / boot
-
-Owners: SPECTER + WRAITH + ECHO + FORGE
-
-- [~] Boot identity. Mark, wordmark, tagline, and version present; cinematic treatment is SPECTER's.
-- [x] Version display.
-- [x] Proper title screen.
-- [x] New Game / Continue logic.
-- [x] Settings entry.
-- [x] device-appropriate control hint.
-- [x] title ambience/music.
-- [x] safe resume flow.
-
-## 1.2 Greyhaven
-
-Owners: WRAITH + SCRIBE + ARCHITECT + FORGE
-
-### Core exterior
-
-Exteriors only. No landmark has a walkable interior yet, and none is required by this item.
-
-- [x] Main exterior prototype.
-- [x] Wayfarer's Rest.
-- [x] Relic Workshop.
-- [x] Market Row.
-- [x] Old Lift Station.
-- [x] Archivist's House.
-- [x] Bell Tower landmark.
-
-### NPC layer
-
-- [x] Innkeeper. (MARETH)
-- [x] Workshop NPC. (TOLL)
-- [x] Archivist/researcher NPC. (ISEN)
-- [x] ordinary resident. (BRAY)
-- [x] optional side-story NPC. (WREN)
-
-### Gameplay purpose
-
-- [x] establish Kael as relic hunter.
-- [x] establish ancient technology as common but poorly understood.
-- [x] give concrete reason to leave town.
-- [x] show one inactive mechanism for future backtracking.
-- [x] first save/rest location.
-- [x] one future upgrade/service hook.
-
-### Future persistent evolution flags
-
-- [x] Greyhaven reaction to awakened Axiom.
-- [~] Greyhaven reaction to Archive opening. Authored; `story.archiveOpened` is not set by any content yet.
-- [~] Greyhaven reaction to Archivist defeat. Authored; `boss.archivist.defeated` is not set by any content yet.
-- [~] service unlocks. Repair offer and its flag exist; no service is purchasable yet.
-- [x] NPC quest-stage flags.
-
-## 1.3 Hollow March Field 1
-
-- [~] Traversal/collision prototype.
-- [x] first melee enemy.
-- [x] stronger landmark guiding eastward progression.
-- [ ] optional side route.
-- [ ] first collectible/chest.
-- [ ] environmental motion.
-- [ ] region ambience/music.
-
-## 1.4 Hollow March Field 2
-
-- [~] Traversal/collision prototype.
-- [x] second enemy authored. (Vein Sentry)
-- [x] route to Forgotten Relic Chamber.
-- [x] authored hidden Resonance node.
-- [x] persistent buried Vein route reveal.
-- [x] fully authored ranged/area-control behavior.
-- [x] readable telegraph.
-- [ ] visible future Tether anchor.
-- [~] optional lore object. Ruins are placed as scenery; none is inspectable yet.
-- [ ] actual Sunken Archive overworld entrance route.
-
-## 1.5 Shardblade combat
-
-Owners: FORGE + WRAITH + ECHO
-
-- [x] basic attack.
-- [x] directional hit overlap.
-- [x] health/damage.
-- [x] knockback.
-- [x] i-frames.
-- [~] attack arc placeholder.
-- [ ] polished anticipation/contact/recovery timing.
-- [ ] bounded hit pause.
-- [ ] authored weapon trail.
-- [ ] impact audio.
-- [ ] enemy-hit vs environment-hit distinction.
-- [x] stronger death/defeat presentation.
-- [ ] controller acceptance.
-
-## 1.6 Forgotten Relic Chamber
-
-Owners: SCRIBE + SPECTER + WRAITH + FORGE + ECHO
-
-- [x] chamber.
-- [x] awakening trigger.
-- [x] first dialogue/cinematic pass.
-- [x] persistent awakening flag.
-- [x] Resonance granted.
-- [x] core Resonance node.
-- [~] chamber visual composition.
-- [ ] camera staging.
-- [ ] authored lighting reaction.
-- [ ] large-scale Vein activation pulse presentation.
-- [ ] Axiom sound design.
-- [ ] music/silence cue.
-- [ ] replay/skip policy.
-
-Canon beats retained:
-
-- `RESONANCE DETECTED`
-- `BOUND USER CONFIRMED`
-- Kael realizes the system responds specifically to him.
-- The Vein begins waking across Eidol.
-
-## 1.7 Resonance v1
-
-Owners: FORGE + ARCHITECT + WRAITH + ECHO
-
-**Design rule:** Resonance is not a generic detective-vision filter. It reveals authored compatible Vein structures and mechanisms only.
-
-### Implemented
-
-- [x] separate input.
-- [x] expanding pulse.
-- [x] cooldown.
-- [x] dedicated mobile control.
-- [x] controller mapping.
-- [x] authored node contract.
-- [x] persistent discovered-state flags.
-- [x] first overworld route clue.
-- [x] first chamber memory response.
-
-### Still required
-
-- [ ] owner-device usability confirmation.
-- [ ] first truly interactive ancient mechanism, not only a clue/marker.
-- [ ] hidden circuitry visual language refinement.
-- [ ] later enemy-vulnerability integration where appropriate.
-- [ ] Resonance sound identity.
-
-## Phase 1 exit gate
-
-Before full Sunken Archive production:
-
-- [x] title/New Game/Continue flow works.
-- [ ] save reload is owner-device accepted.
-- [x] Greyhaven basic NPC interaction exists.
-- [~] opening motivation is clear. Authored through ISEN; reads as clear on acceptance only.
-- [ ] melee enemy accepted. Implemented; awaiting owner-device acceptance.
-- [ ] ranged/area-control enemy accepted. Implemented; awaiting owner-device acceptance.
-- [x] awakening is persistent.
-- [~] Resonance is playable and understood. Playable; comprehension is an acceptance judgement.
-- [~] Resonance reveals the Archive direction. Field 2 route clue and the chamber `ACCESS PATH: SUNKEN ARCHIVE` line are authored; there is no Archive to reach yet.
-- [ ] iPhone Phase 1 acceptance.
-- [ ] iPad Phase 1 acceptance.
-- [ ] desktop acceptance.
-- [ ] controller acceptance.
-
----
-
-# PHASE 2 — THE SUNKEN ARCHIVE
-
-**Status:** PLANNED — starts after Phase 1 exit conditions are sufficiently stable.
-
-The Sunken Archive is the first complete dungeon and must prove VEILBOUND's reusable dungeon language.
-
-## 2.1 Identity
-
-Owners: WRAITH + ECHO
-
-Visual pillars:
-
-- monumental stone halls,
-- turquoise flooded chambers,
-- rotating archive cylinders/rings,
-- luminous submerged script,
-- hanging roots,
-- broken bridges,
-- corroded metal integrated into stone,
-- ancient engineered doors.
-
-Sonic pillars:
-
-- dripping water,
-- enormous distant mechanisms,
-- low Vein resonance,
-- restrained musical motif,
-- stronger music layer after Tether acquisition.
-
-## 2.2 Entrance
-
-- [ ] overworld route opened/revealed through Resonance progression.
-- [ ] location reveal/title treatment.
-- [ ] safe threshold room.
-- [ ] dungeon-entered persistent flag.
-- [ ] first dungeon save/checkpoint behavior.
-- [ ] visible future locks/shortcuts.
-
-## 2.3 Puzzle primitives
-
-Owners: ARCHITECT + FORGE
-
-- [ ] switch.
-- [ ] persistent door.
-- [ ] push/manipulation block.
-- [ ] Resonance-reactive mechanism.
-- [ ] rotating mechanism.
-- [ ] energy/water route state.
-- [ ] authored multi-room state if needed.
-
-## 2.4 Teaching doctrine
-
-Every major mechanic follows:
+The dungeon follows:
 
 **Teach → Test → Combine → Twist → Master**
 
-Early rooms:
+## 6.1 Opening — v0.3.0
 
-- [ ] movement/environment reading.
-- [ ] switch + persistent door.
-- [ ] push object.
-- [ ] water/energy routing introduction.
-- [ ] Resonance reveal room.
+- [x] Resonance-revealed overworld entrance
+- [x] Eastern Descent arrival room
+- [x] persistent dungeon-entered flag
+- [x] drowned visual/collision language
+- [x] Vestibule mixed encounter
+- [x] floor switch
+- [x] persistent seal/door
+- [x] flag-gated exit
+- [x] Catalog Rotunda
+- [x] authored Resonance memory
+- [x] Tether foreshadowing
+- [ ] owner-device acceptance
 
-Mid rooms:
+See `docs/SUNKEN_ARCHIVE.md` for exact room behavior and test checklist.
 
-- [ ] combined mechanism + enemy pressure.
-- [ ] environmental hazard.
-- [ ] optional treasure.
-- [ ] first major shortcut.
-- [ ] Tether acquisition.
+## 6.2 Reusable puzzle language — next
 
-## 2.5 Tether acquisition
+- [x] switch primitive v1
+- [x] persistent door primitive v1
+- [x] flag-gated exit v1
+- [x] Resonance-reactive mechanism v1
+- [ ] push/manipulation block
+- [ ] rotating mechanism
+- [ ] energy/water route state
+- [ ] multi-room puzzle state where justified
+- [ ] first meaningful shortcut
 
-Owners: ARCHITECT + FORGE + SCRIBE + SPECTER + WRAITH + ECHO
+Once the opening is accepted, move the generic puzzle behavior out of `src/main.js` before the dungeon grows enough to make that file the permanent puzzle engine.
 
-- [ ] narrative reason.
-- [ ] activation cinematic.
-- [ ] authored Axiom transformation.
-- [ ] signature sound.
-- [ ] immediate safe use.
+## 6.3 Tether acquisition
 
-Technical requirements:
+Tether is acquired roughly halfway through the dungeon, not at the entrance.
 
-- [ ] anchor targets.
-- [ ] valid/invalid targeting feedback.
-- [ ] traversal pull.
-- [ ] object pull.
-- [ ] machinery manipulation.
-- [ ] combat interaction.
-- [ ] touch targeting.
-- [ ] controller targeting.
+Required:
 
-## 2.6 Tether teaching sequence
+- [ ] establish manipulation problem before acquisition
+- [ ] acquisition chamber
+- [ ] narrative reason / Axiom protocol restoration
+- [ ] concise activation cinematic
+- [ ] signature audiovisual identity
+- [ ] safe first use
+- [ ] anchor target contract
+- [ ] valid/invalid targeting feedback
+- [ ] traversal pull
+- [ ] object pull
+- [ ] machinery manipulation
+- [ ] combat interaction
+- [ ] touch targeting
+- [ ] controller targeting
 
-- [ ] Room 1: cross gap.
-- [ ] Room 2: pull object.
-- [ ] Room 3: combine object + traversal.
-- [ ] Room 4: use in combat.
-- [ ] Room 5: manipulate moving machinery.
-- [ ] Room 6: combine traversal + machinery + enemy pressure.
+## 6.4 Tether teaching sequence
 
-## 2.7 Backtracking / secrets
+Planned progression:
 
-- [ ] earlier route becomes reachable with Tether.
-- [ ] optional lore room.
-- [ ] optional treasure.
-- [ ] meaningful shortcut.
-- [ ] loop back to recognized landmark.
+1. cross a gap
+2. pull an object
+3. combine object + traversal
+4. use Tether under enemy pressure
+5. manipulate moving Archive machinery
+6. mastery room combining traversal + machinery + combat
 
-## Phase 2 exit gate
+## 6.5 Backtracking / optionality
 
-- [ ] dungeon completable from fresh save.
-- [ ] dungeon completable after mid-dungeon reload.
-- [ ] no required puzzle soft-lock.
-- [ ] Tether understandable with minimal text.
-- [ ] Tether accepted on touch/controller/keyboard.
-- [ ] shortcut/backtracking reduces friction.
+- [ ] earlier visible route becomes reachable with Tether
+- [ ] optional lore room
+- [ ] optional treasure
+- [ ] major shortcut
+- [ ] loop to a recognized landmark
+- [ ] pre-boss recovery/save point
+
+## Phase 2 gate
+
+Before boss production is considered stable:
+
+- [ ] dungeon route completable from a fresh save
+- [ ] mid-dungeon reload safe
+- [ ] no required puzzle soft-lock
+- [ ] Tether understandable with minimal text
+- [ ] touch/keyboard/controller Tether acceptance
+- [ ] shortcut materially reduces backtracking
 
 ---
 
-# PHASE 3 — THE ARCHIVIST
+# 7. Phase 3 — The Archivist
 
 **Status:** PLANNED
 
-Goal: prove multi-phase boss architecture and land the first major narrative mystery.
+The first major boss is an ancient six-limbed Archive machine with a rotating-ring head and glowing core.
 
-## 3.1 Boss visual identity
+Required encounter arc:
 
-The Archivist combines:
+- [ ] Phase 1: readable legs/core vulnerability
+- [ ] Phase 2 at ~60%: flooding/platform/Tether anchors/beam pressure
+- [ ] Phase 3 at ~25%: freed body, faster aggression, open core, collapsing arena
+- [ ] Tether-to-core punish sequence
+- [ ] clear restart/checkpoint
+- [ ] first-view intro with shortened/skippable retry behavior
+- [ ] defeat persistence
+- [ ] post-boss recognition sequence
 
-- massive stone guardian language,
-- spider-like segmented locomotion,
-- six segmented limbs,
-- rotating astronomical/mechanical rings,
-- luminous core.
+Canon payoff:
 
-## 3.2 Arena
+`BOUND USER IDENTIFIED`  
+`AXIOM LINEAGE...`  
+`CONFIRMED`  
+`WELCOME BACK.`
 
-- [ ] authored boss arena.
-- [ ] readable Tether anchors.
-- [ ] phase-change geometry.
-- [ ] floodable arena state.
-- [ ] immediate pre-boss checkpoint.
-
-## 3.3 Phase 1 — leg joints
-
-- [ ] limb telegraphs.
-- [ ] joint damage.
-- [ ] protected core.
-- [ ] readable vulnerability windows.
-
-## 3.4 Phase 2 — flooded arena
-
-Approximate trigger: 60% health, subject to playtesting.
-
-- [ ] arena floods partially.
-- [ ] safe ground segments.
-- [ ] Tether traversal required.
-- [ ] beam/line attacks.
-- [ ] music escalation.
-
-## 3.5 Phase 3 — severed guardian
-
-Approximate trigger: 25% health, subject to playtesting.
-
-- [ ] boss tears free.
-- [ ] movement accelerates.
-- [ ] core opens aggressively.
-- [ ] arena fails/collapses.
-- [ ] player Tethers to exposed core.
-- [ ] Shardblade final punish window.
-
-## 3.6 Retry behavior
-
-Owners: FORGE + SPECTER
-
-- [ ] checkpoint before fight.
-- [ ] viewed-intro flag.
-- [ ] full first-view intro.
-- [ ] reduced/skip-friendly retry.
-- [ ] deterministic reset.
-- [ ] no duplicate permanent reward.
-
-## 3.7 Post-boss reveal
-
-Owners: SCRIBE + SPECTER + ECHO
-
-Established sequence includes:
-
-- `BOUND USER IDENTIFIED`
-- `AXIOM LINEAGE...`
-- `CONFIRMED`
-- **`WELCOME BACK.`**
-
-Requirements:
-
-- [ ] quiet after combat.
-- [ ] meaningful pause.
-- [ ] minimal exposition.
-- [ ] readable Kael confusion.
-- [ ] deliberate music/silence.
-- [ ] boss-defeated persistent flag.
-- [ ] reveal-viewed flag.
+Kael: `What does that mean?`
 
 ---
 
-# PHASE 4 — VERTICAL SLICE POLISH & ACCEPTANCE
+# 8. Phase 4 — Vertical slice polish / acceptance
 
-**Planning target:** `v0.2.0-vertical-slice`
+Before broad production expansion:
 
-This is the first major production gate.
-
-## Complete route
-
-```text
-TITLE
-  ↓
-GREYHAVEN
-  ↓
-HOLLOW MARCH FIELD 1
-  ↓
-HOLLOW MARCH FIELD 2
-  ↓
-AXIOM AWAKENING
-  ↓
-RESONANCE RETURN / DISCOVERY
-  ↓
-SUNKEN ARCHIVE
-  ↓
-TETHER ACQUISITION / MASTERY
-  ↓
-THE ARCHIVIST
-  ↓
-WELCOME BACK.
-  ↓
-ALTERED GREYHAVEN / OVERWORLD
-```
-
-## Visual polish — WRAITH
-
-- [ ] authored Kael gameplay sprite.
-- [ ] idle/walk frames.
-- [ ] authored Shardblade attacks.
-- [ ] Axiom glow states.
-- [ ] final slice enemy art.
-- [ ] Greyhaven visual kit.
-- [ ] Hollow March visual kit.
-- [ ] Sunken Archive visual kit.
-- [ ] Archivist production slice art.
-- [ ] UI/HUD pass.
-- [ ] location-title treatments.
-
-## Audio polish — ECHO
-
-- [ ] title identity.
-- [ ] Greyhaven ambience/theme.
-- [ ] Hollow March ambience/theme.
-- [ ] Sunken Archive theme.
-- [ ] combat layer/stingers.
-- [ ] Shardblade swing/hit.
-- [ ] Resonance signature.
-- [ ] Tether signature.
-- [ ] Archivist adaptive score.
-- [ ] reveal cue.
-- [ ] UI audio.
-
-## Story polish — SCRIBE
-
-- [ ] Greyhaven dialogue pass.
-- [ ] opening motivation.
-- [ ] Kael voice consistency.
-- [ ] restrained environmental lore.
-- [ ] Archive mystery support.
-- [ ] private explanation for `WELCOME BACK.`
-- [ ] terminology audit.
-
-## Cinematics — SPECTER
-
-- [ ] title/opening transition.
-- [ ] final awakening staging.
-- [ ] Archive reveal.
-- [ ] Tether acquisition.
-- [ ] Archivist entrance.
-- [ ] Phase 2 transition.
-- [ ] Phase 3 transition.
-- [ ] `WELCOME BACK.` sequence.
-- [ ] retry/skipping acceptance.
-
-## UX/device — FORGE + ORACLE
-
-- [x] portrait gameplay viewport preserves dark letterbox by design in code.
-- [ ] owner-device confirmation of portrait fix.
-- [ ] touch controls avoid critical content.
-- [ ] safe areas accepted on notched devices.
-- [ ] explicit portrait/landscape policy.
-- [ ] controller mappings documented.
-- [ ] pause/settings.
-- [ ] audio controls.
-- [ ] shake option.
-- [ ] readable phone typography.
-
-## Save acceptance matrix
-
-- [ ] Greyhaven refresh/reopen.
-- [ ] enemy defeat refresh.
-- [ ] awakening refresh.
-- [ ] Resonance discovery refresh.
-- [ ] Archive mid-progress refresh.
-- [ ] puzzle solve refresh.
-- [ ] Tether acquisition refresh.
-- [ ] pre-Archivist refresh.
-- [ ] post-Archivist refresh.
-- [ ] corrupted data fallback.
-- [ ] schema mismatch migration behavior before public save promises.
-
-## Stability acceptance
-
-- [ ] 30-minute session.
-- [ ] repeated transitions.
-- [ ] repeated boss retries.
-- [ ] effect/particle stress.
-- [ ] no runaway arrays/timers.
-- [ ] touch interruption recovery.
-- [ ] controller reconnect.
-
-## Owner-device matrix
-
-### iPhone
-
-- [x] static-host launch demonstrated.
-- [x] touch movement demonstrated.
-- [x] Forgotten Relic Chamber reached.
-- [~] combat/save build demonstrated; full behavior still needs explicit confirmation.
-- [ ] portrait letterbox fix confirmation on the current build.
-- [ ] Resonance touch action.
-- [ ] save/reload persistence.
-- [ ] dialogue.
-- [ ] dungeon.
-- [ ] boss.
-
-### iPad
-
-- [ ] launch.
-- [ ] movement.
-- [ ] attack.
-- [ ] Resonance.
-- [ ] dialogue.
-- [ ] save/reload.
-- [ ] dungeon.
-- [ ] boss.
-
-### Desktop
-
-- [ ] keyboard full route.
-- [ ] resize behavior.
-- [ ] full slice playthrough.
-
-### Controller
-
-- [ ] movement.
-- [ ] attack.
-- [ ] Resonance.
-- [ ] Tether.
-- [ ] dialogue.
-- [ ] menus/pause.
-
-# FIRST MAJOR PRODUCTION GATE
-
-The vertical slice is approved only when:
-
-- the complete route is playable,
-- movement feels good,
-- combat feels good,
-- Resonance is useful and selective,
-- Tether is understandable,
-- puzzles do not soft-lock,
-- saves are reliable,
-- boss retries are fair,
-- mobile is comfortable,
-- visual/audio identity is recognizable,
-- `WELCOME BACK.` creates curiosity,
-- architecture can scale without major rewrites.
+- [ ] full Greyhaven → Archivist route coherent
+- [ ] iPhone acceptance
+- [ ] iPad acceptance
+- [ ] desktop acceptance
+- [ ] controller acceptance
+- [ ] stable performance in combat/boss effects
+- [ ] save/reload across all critical progression points
+- [ ] no soft locks
+- [ ] concise retry-aware cinematics
+- [ ] distinct Greyhaven / Hollow March / Archive presentation
+- [ ] asset licensing/public-repository risk resolved
+- [ ] final-or-approved-placeholder art boundary documented
 
 ---
 
-# PHASE 5 — FULL GAME SYSTEM EXPANSION
+# 9. Post-slice direction — HOLD until gate
 
-**Status:** HOLD UNTIL VERTICAL SLICE GATE.
+After the first vertical slice proves itself, expand deliberately into:
 
-## Axiom progression direction
+- larger Eidol overworld structure
+- additional settlements
+- additional Axiom protocols: Impulse, Phase, Shatter and late-game restoration
+- additional dungeons
+- equipment/inventory systems
+- XP-level and JP-mastery spending
+- deeper Shardblade progression
+- more enemy families and bosses
+- expanded quests/lore
+- full soundtrack and SFX identity
+- release-quality original art pipeline
 
-1. Resonance — established and playable v1.
-2. Tether — established design target.
-3. Impulse — concept.
-4. Phase — concept.
-5. Shatter — concept.
-6. restoration-oriented late-game ability — concept only.
+Still held until justified:
 
-Each ability must earn its place through traversal, puzzle, combat/tactical, backtracking, story, visual/audio, and device value.
-
-## Shardblade progression
-
-- [ ] upgrade philosophy.
-- [ ] visible reconstruction stages.
-- [ ] damage/moveset/utility role.
-- [ ] Relic Shard/component relationship.
-
-## Focused inventory/equipment
-
-Potential categories only after slice approval:
-
-- key relics,
-- recovery items,
-- limited equipment modifiers,
-- quest items,
-- map/lore artifacts.
-
-Avoid turning VEILBOUND into inventory management for its own sake.
-
-## Quest system
-
-- [ ] main quest states.
-- [ ] Greyhaven side quests.
-- [ ] NPC chains.
-- [ ] persistent dialogue changes.
-- [ ] rewards and world consequences.
-
-## Map system
-
-Generate from authored room connectivity/discovery:
-
-- discovered rooms,
-- unresolved POIs,
-- known ability gates,
-- shortcuts,
-- important NPCs where useful.
-
-The map supports memory; it does not solve puzzles.
-
-## Greyhaven evolution
-
-After major milestones, consider:
-
-- repaired structures,
-- workshop growth,
-- new residents/travelers,
-- changed dialogue,
-- market changes,
-- Old Lift activation,
-- side quests,
-- visible Vein activity.
+- multiplayer
+- cloud accounts/saves
+- monetization
+- giant crafting systems
+- massive skill trees
+- procedural world generation
 
 ---
 
-# PHASE 6 — WORLD & DUNGEON PRODUCTION
-
-**Status:** DIRECTIONAL ONLY.
-
-Do not invent regions merely to fill a biome checklist.
-
-Every region requires:
-
-- distinct visual materials,
-- distinct traversal identity,
-- distinct sonic identity,
-- major landmark,
-- NPC/world story,
-- ability-gated return path,
-- secrets/optional content,
-- links to established world systems.
-
-Every major dungeon requires:
-
-- clear gameplay thesis,
-- new or expanded mechanic,
-- Teach → Test → Combine → Twist → Master,
-- shortcuts,
-- persistence,
-- optional discovery,
-- boss-mechanic integration,
-- story relevance.
-
----
-
-# PHASE 7 — ALPHA
-
-Alpha means feature-complete main progression with unfinished polish allowed.
-
-- [ ] full main story playable.
-- [ ] required Axiom abilities.
-- [ ] major dungeons.
-- [ ] major bosses.
-- [ ] side-quest architecture.
-- [ ] Greyhaven evolution.
-- [ ] save migrations.
-- [ ] map progression.
-- [ ] no known main-story blocker.
-- [ ] full game completable on supported device classes.
-
----
-
-# PHASE 8 — BETA / CONTENT LOCK
-
-Priorities:
-
-- balance,
-- pacing,
-- bug fixing,
-- accessibility,
-- device performance,
-- save reliability,
-- audio mix,
-- visual consistency,
-- dialogue cleanup,
-- hint tuning,
-- boss tuning,
-- progression clarity.
-
-Rules:
-
-- no casual large-system additions,
-- no unnecessary major story rewrites,
-- prioritize confusion/frustration reports,
-- soft-lock/save bugs are immediate priority.
-
----
-
-# PHASE 9 — RELEASE CANDIDATE / 1.0
-
-- [ ] full game phone completion.
-- [ ] full game tablet completion.
-- [ ] full game desktop completion.
-- [ ] full game controller completion.
-- [ ] promised save migrations.
-- [ ] no known progression soft-lock.
-- [ ] no known save-corruption path.
-- [ ] no repeatable normal-play crash/freeze.
-- [ ] worst-case boss/effects performance stable.
-- [ ] credits complete.
-- [ ] release metadata correct.
-- [ ] clean-checkout deployment verified.
-- [ ] static hosting verified.
-
----
-
-# 6. DEPARTMENT ROADMAP
-
-## ORACLE — Planning
-
-Immediate:
-
-- [x] master roadmap.
-- [x] progress log.
-- [x] truthful milestone update rule.
-- [ ] dedicated acceptance checklist.
-- [ ] formal release-note convention.
-
-Long-term: sequencing, dependencies, scope, version targets, release gates, documentation audits.
-
-## FORGE — Technical
-
-Immediate:
-
-- [x] runtime.
-- [x] input.
-- [x] collision.
-- [x] transitions.
-- [x] Save V1.
-- [x] melee combat foundation.
-- [x] Resonance v1.
-- [x] portrait flash clipping.
-- [x] second enemy/projectile or area-control foundation.
-- [x] NPC interaction cleanup.
-- [x] debug overlay.
-- [ ] event bus.
-- [ ] dungeon object primitives.
-
-Before slice completion:
-
-- [ ] Tether.
-- [ ] boss-phase framework.
-- [ ] deterministic checkpoint/retry.
-- [ ] cutscene viewed-state.
-- [x] settings persistence. Device-level, stored outside the save.
-- [ ] save migrations.
-- [~] performance diagnostics.
-
-## WRAITH — Visuals
-
-Immediate:
-
-- [~] Kael gameplay sprite spec. Drawn from prerendered placeholder sheets; no authored spec yet.
-- [ ] Shardblade authored attacks.
-- [~] Greyhaven authored pass. Exterior authored as six landmarks; final art fidelity outstanding.
-- [~] Hollow March authored pass. Scenery authored; ground and roads still untiled.
-- [~] first enemies. Both now draw from authored sheets; the casting is placeholder.
-- [~] Resonance pulse language prototype exists.
-- [ ] Resonance final visual language.
-
-Vertical slice:
-
-- [ ] Archive kit.
-- [ ] Tether language.
-- [ ] Archivist concept/production art.
-- [ ] UI/HUD pass.
-- [ ] cinematic lighting states.
-
-## ECHO — Audio
-
-Immediate:
-
-- [x] procedural audio system and title ambience.
-- [ ] Greyhaven identity.
-- [ ] Hollow March identity.
-- [ ] Shardblade SFX.
-- [ ] Axiom awakening identity.
-- [ ] Resonance signature.
-
-Vertical slice:
-
-- [ ] Tether sound.
-- [ ] Archive score.
-- [ ] Archivist adaptive phases.
-- [ ] reveal cue.
-- [ ] UI sound.
-
-## SCRIBE — Story
-
-Immediate:
-
-- [x] opening motivation.
-- [x] Greyhaven NPC identities. (MARETH, TOLL, ISEN, BRAY, WREN)
-- [x] dialogue voices. Shipped in dialogue; not yet codified in the Story Bible.
-- [x] awakening beat.
-- [ ] private Story Bible.
-
-Before Archivist completion:
-
-- [ ] exact reason for recognition.
-- [ ] Axiom lineage meaning.
-- [ ] Axiom/Vein relationship.
-- [ ] public vs true Silence history.
-- [ ] Archivist's actual knowledge.
-
-## ARCHITECT — Puzzle/dungeon
-
-Immediate:
-
-- [x] first Resonance discovery prototype.
-- [ ] interactive Resonance mechanism.
-- [ ] first switch.
-- [ ] first push object.
-- [ ] Archive room graph.
-- [ ] shortcut plan.
-
-Vertical slice:
-
-- [ ] Tether teaching chain.
-- [ ] optional Tether secret.
-- [ ] boss-mechanic teaching audit.
-- [ ] soft-lock audit.
-
-## SPECTER — Cinematics
-
-Immediate:
-
-- [~] awakening first pass.
-- [x] portrait flash behavior corrected in engine.
-- [ ] final awakening camera/blocking.
-- [ ] title/start transition.
-
-Vertical slice:
-
-- [ ] Archive reveal.
-- [ ] Tether acquisition.
-- [ ] Archivist introduction.
-- [ ] boss phase transitions.
-- [ ] `WELCOME BACK.` reveal.
-- [ ] retry-aware cinematic behavior.
-
----
-
-# 7. CURRENT EXACT DEVELOPMENT ORDER
-
-This is the authoritative immediate sequence from `v0.2.1-menu`.
-
-## NEXT 1 — owner-device acceptance v0.2.1
-
-Acceptance has stacked across nine builds without a device pass. All of it is
-confirmed against `v0.2.1-menu`, on iPhone.
-
-Carried from v0.1.3:
-
-- [ ] confirm cyan portrait letterbox contamination is gone.
-- [ ] confirm Shardblade still works.
-- [ ] confirm `◇` appears after awakening.
-- [ ] confirm Resonance pulse works.
-- [ ] confirm Hollow March Field 2 buried Vein route reveals.
-- [ ] refresh/reopen and confirm route remains revealed.
-- [ ] confirm chamber/position/health state survives refresh as expected.
-- [ ] confirm awakening does not replay after persisted completion.
-
-Carried from v0.1.4:
-
-- [ ] Vein Sentry visibly cycles into an amber telegraph before firing.
-- [ ] projectile is readable and dodgeable in landscape.
-- [ ] projectile contact costs one health diamond and knocks back, without repeat damage.
-- [ ] Resonance during the telegraph cancels the shot and visibly disrupts the Sentry.
-- [ ] disrupted Sentry can be closed on and finished with the Shardblade.
-- [ ] defeated Sentry stays defeated across transition and refresh.
-
-New in v0.1.5:
-
-- [ ] HUD displays `v0.2.1-menu` after refresh.
-- [ ] interact prompt is readable and clear of the touch controls.
-- [ ] action button visibly changes between the Shardblade and the interact glyph.
-- [ ] tapping the action button beside an NPC talks instead of swinging.
-- [ ] resting at the hearth refills health and reports a save.
-- [ ] returning to Greyhaven after the awakening shows the changed dialogue.
-- [ ] landmark labels stay legible at phone scale in landscape and portrait.
-- [ ] `?debug` shows the diagnostics overlay without breaking touch controls.
-
-New in v0.1.6:
-
-- [ ] title screen fits and reads in both orientations.
-- [ ] `CONTINUE` resumes the correct room and health.
-- [ ] `NEW GAME` over an existing save asks before replacing it.
-- [ ] settings toggle for the diagnostics overlay works without a keyboard.
-- [ ] closing the tab on the title does not create a save.
-
-New in v0.1.7:
-
-- [ ] title ambience is audible on the phone speaker at a normal volume.
-- [ ] ambience starts after the first touch, and never blips when tapping straight into play.
-- [ ] the `AUDIO` setting silences it and is remembered.
-- [ ] backgrounding and returning to the app does not leave audio stuck or doubled.
-
-New in v0.1.8:
-
-- [ ] character sprites are readable at phone scale and do not blur into the ground.
-- [ ] Kael's facing reads correctly in all eight directions while moving.
-- [ ] sprite sheets do not cost noticeable frame time on device.
-
-New in v0.1.9:
-
-- [ ] enemies read clearly against the new scenery at phone scale.
-- [ ] the Sentry telegraph still reads over its sprite.
-- [ ] death animations do not make an enemy look alive after it is defeated.
-- [ ] the Hollow March fields hold their frame rate with scenery drawn.
-
-New in v0.2.0:
-
-- [ ] tiled ground and paths read well at phone scale and hold their frame rate.
-- [ ] the terrain wash sits the tile sets close enough to the Eidol palette, or wants tuning.
-- [ ] repopulating enemies feel like pressure rather than a chore on the walk east.
-
-New in v0.2.1:
-
-- [ ] the menu button is reachable without covering the view, in both orientations.
-- [ ] the menu reads at phone scale and scrolls where it must.
-- [ ] pausing and resuming does not drop input or leave the player moving.
-
-## NEXT 2 — second enemy archetype — IMPLEMENTED in v0.1.4
-
-- [x] ranged or area-control behavior.
-- [x] readable windup/telegraph.
-- [x] projectile/hazard technical primitive if selected.
-- [x] hit response.
-- [x] persistent defeat.
-- [~] touch-screen readability. Authored for it; confirmed under NEXT 1.
-
-## NEXT 3 — Greyhaven interaction layer — IMPLEMENTED in v0.1.5
-
-- [x] interaction action/targeting.
-- [x] NPC dialogue primitive.
-- [x] first named NPCs.
-- [x] first save/rest point.
-- [x] opening motivation.
-- [x] post-Axiom reaction flag/dialogue.
-
-## NEXT 3B — title / New Game / Continue — IMPLEMENTED in v0.1.6
-
-Pulled ahead of NEXT 4 because the Phase 1 exit gate requires it before full Sunken Archive
-production, and because a Continue/New Game flow is what makes the NEXT 1 device pass
-repeatable without clearing browser storage by hand.
-
-- [x] title screen.
-- [x] New Game / Continue logic.
-- [x] settings entry and device-level settings persistence.
-- [x] device-appropriate control hint.
-- [x] safe resume flow.
-- [x] title ambience/music.
-
-## NEXT 4 — Sunken Archive entrance
-
-- [ ] turn Resonance clue into world progression.
-- [ ] entrance area.
-- [ ] location reveal.
-- [ ] persistent Archive-entered flag.
-- [ ] first dungeon checkpoint.
-
-## NEXT 5 — puzzle primitives
-
-- [ ] switch.
-- [ ] persistent door.
-- [ ] push/manipulation object.
-- [ ] interactive Resonance mechanism.
-
-## NEXT 6 — Tether
-
-- [ ] target system.
-- [ ] traversal.
-- [ ] object manipulation.
-- [ ] combat use.
-- [ ] six-stage teaching chain.
-
-## NEXT 7 — Archivist framework
-
-- [ ] boss state machine.
-- [ ] phase transitions.
-- [ ] checkpoint/retry.
-- [ ] arena state changes.
-- [ ] Tether/core interaction.
-
-## NEXT 8 — vertical-slice presentation and acceptance
-
-- [ ] authored art.
-- [ ] audio.
-- [ ] cinematics.
-- [ ] UI.
-- [ ] device polish.
-- [ ] full acceptance matrix.
-
----
-
-# 8. EXPLICITLY DEFERRED
-
-Until the vertical slice passes its major gate:
-
-- [HOLD] cloud accounts.
-- [HOLD] multiplayer.
-- [HOLD] leaderboards.
-- [HOLD] large crafting system.
-- [HOLD] huge inventory.
-- [HOLD] procedural world generation.
-- [HOLD] dozens of enemies/weapons.
-- [HOLD] large skill trees.
-- [HOLD] monetization.
-- [HOLD] extensive achievements.
-- [HOLD] full soundtrack production.
-- [HOLD] final late-game-region art.
-- [HOLD] large cloud-save infrastructure.
-- [HOLD] unrelated side systems that do not improve the vertical slice.
-
----
-
-# 9. DEFINITION OF DONE
-
-A feature is not done merely because code exists.
-
-Where applicable, it must:
-
-- work in normal play,
-- avoid progression blockers,
-- persist correctly,
-- survive room reload,
-- survive save reload,
-- support touch,
-- support keyboard,
-- support controller,
-- have readable visual feedback,
-- expose audio hooks,
-- remain performant,
-- update architecture/canon docs when contracts change,
-- update roadmap/progress trackers truthfully,
-- pass owner-device acceptance when device-critical.
-
----
-
-# 10. CHANGE CONTROL
-
-Canon changes → update `docs/CANON.md`.  
-Architecture changes → update `docs/ARCHITECTURE.md`.  
-Agent ownership changes → update `AGENTS.md`.  
-Vertical-slice requirement/status changes → update `docs/VERTICAL_SLICE.md`.  
-Meaningful implementation milestone → append/update `docs/PROGRESS.md`.  
-Phase/current-version/priority changes → update `ROADMAP.md`.
-
----
-
-# 11. THE VEILBOUND PROMISE
-
-Development repeatedly returns to:
-
-> Does this make VEILBOUND feel more like an atmospheric, mysterious, responsive adventure where exploration, ancient mechanisms, combat, puzzles, music, visuals, and story all belong to the same world?
-
-If not, it probably does not belong in the current build.
-
-The mission is not to build the largest possible game first.
-
-The mission is to make **Greyhaven → Hollow March → Axiom Awakening → Resonance → Sunken Archive → Tether → The Archivist → WELCOME BACK.** so coherent, satisfying, mysterious, and technically stable that the rest of Eidol has a foundation worth expanding.
+# 10. Immediate production order
+
+1. Test `v0.3.0-archive` on iPhone using the checklist in `docs/SUNKEN_ARCHIVE.md`.
+2. Fix any collision/readability/save regressions found in the three Archive opening rooms.
+3. Build push/manipulation block v1.
+4. Build water/energy-routing state and first shortcut loop.
+5. Create the Tether acquisition chamber.
+6. Implement and teach Tether across traversal/object/combat use.
+7. Build deeper mastery rooms.
+8. Build The Archivist framework.
+9. Produce the `WELCOME BACK.` sequence.
+10. Run full vertical-slice device acceptance before expanding world scale.

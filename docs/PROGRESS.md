@@ -233,8 +233,69 @@ acceptance runs, which the pending device pass depends on.
 
 ---
 
+## 2026-08-30 — v0.1.7 Title ambience
+
+The last open item in section 1.1, and the project's first audio of any kind.
+
+### ECHO / FORGE — procedural audio system
+- Added `src/core/Audio.js`. Every voice is synthesised through Web Audio. VEILBOUND ships
+  zero-build and file://-friendly, so there are no audio assets to fetch, and procedural
+  synthesis also keeps the sound original by construction.
+- The bed and the bell are built against whatever context they are handed, so the same
+  synthesis serves live playback and `render()`, an offline audition of the mix.
+- A pass-through analyser sits after the master gain, so real output level is observable in
+  the diagnostics overlay and in tests rather than assumed.
+
+### ECHO — the title bed
+- Low Vein drone on A1/E2/C3, breathing on a slow LFO rather than holding flat.
+- Wind texture: integrated noise through a drifting bandpass.
+- The Greyhaven bell, struck every 7–16 seconds on an A minor pentatonic, built from
+  inharmonic partials with per-partial decay so it reads as metal rather than a beep. The
+  town's bell has no clapper in canon, so it is written as memory, not melody.
+- Transitions fade. The bed rises over 2.6s and gives way to play over 1.1s.
+
+### Mobile-first mix correction
+- The first mix peaked at -20 dBFS and was almost entirely below 100 Hz. Phone speakers roll
+  off hard down there, so on the device this project targets first it would have been close
+  to silent. Raised the bed and added A3/E4 voices that bypass the drone's lowpass.
+- Measured through a 450 Hz highpass approximating a phone speaker, 45% of full-range level
+  now survives, against a small fraction before.
+
+### Autoplay and lifecycle
+- Browsers refuse audio before a user gesture, so nothing is created until a real
+  interaction unlocks it. A player who never interacts with the title hears nothing, which
+  is the platform rule rather than a defect.
+- The unlock listener runs in the capture phase, and the bed is only raised 220ms later if
+  play has not started. Tapping straight into the game therefore never blips a note.
+- The context is suspended while the tab is hidden and resumed when it returns.
+- Added an `AUDIO` toggle to the title settings, stored with the other device-level
+  preferences outside the save.
+
+### Verification
+- Measured, not assumed: rendered output RMS and peak read back through the analyser.
+- Nothing is created before a gesture; context is `none` on a fresh title.
+- After a gesture the bed fades in to the configured gain and produces measurable output.
+- Bell strikes peak 5.7 dB above the drone floor over a 20s window.
+- Starting play fades the bed to silence and releases its nodes.
+- Tapping the start button as the very first gesture never raises the bed.
+- `AUDIO` off silences and persists, survives reload, and turning it back on resumes.
+- Hiding the tab suspends the context; returning resumes it with output restored.
+- Spectral check confirms energy at the designed frequencies, and rolloff above the
+  drone's 340 Hz lowpass corner.
+- Full v0.1.4, v0.1.5, and v0.1.6 regression passes unchanged. No console or page errors.
+
+### Owner-device acceptance — PENDING
+- [ ] HUD displays `v0.1.7-ambience` after refresh.
+- [ ] Title ambience is audible on the phone speaker at a normal volume.
+- [ ] Ambience starts after the first touch, and does not blip when tapping straight into play.
+- [ ] The `AUDIO` setting silences it and is remembered.
+- [ ] Backgrounding and returning does not leave audio stuck or doubled.
+- [ ] Ambience does not fight the iPhone's own audio session or silent switch expectations.
+
+---
+
 ## Current immediate production order
-1. Complete v0.1.6 iPhone acceptance, including the deferred v0.1.3, v0.1.4, and v0.1.5 items.
+1. Complete v0.1.7 iPhone acceptance, including the deferred v0.1.3 through v0.1.6 items.
 2. Build Sunken Archive entrance revealed through Resonance progression.
 3. Build reusable switch, persistent door, and push/manipulation primitives.
 4. Build Tether acquisition and teaching sequence.

@@ -69,7 +69,7 @@
   }
 
   function defaultSettings() {
-    return { debugOverlay: false };
+    return { audio: true, debugOverlay: false };
   }
 
   const SaveManager = {

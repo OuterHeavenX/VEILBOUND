@@ -3,7 +3,7 @@
 ## Current Implementation Status
 
 **Current playable branch:** `feature/vertical-slice-foundation`  
-**Current playable version:** `v0.1.6-title`  
+**Current playable version:** `v0.1.7-ambience`  
 **Last updated:** 2026-08-29
 
 Implemented and awaiting owner-device acceptance:
@@ -33,10 +33,12 @@ Implemented and awaiting owner-device acceptance:
 - [x] title screen with New Game / Continue / Settings
 - [x] safe resume that never silently discards an unreadable save
 - [x] device-level settings persistence outside the save
+- [x] procedural audio system with no assets and no build step
+- [x] title ambience: Vein drone, wind, and the Greyhaven bell
 
 Still required before Phase 1 exits:
 
-- [ ] owner-device acceptance of `v0.1.6-title`, carrying the unconfirmed v0.1.3, v0.1.4, and v0.1.5 items
+- [ ] owner-device acceptance of `v0.1.7-ambience`, carrying the unconfirmed v0.1.3 through v0.1.6 items
 - [~] second ranged/area-control enemy fully authored; acceptance outstanding
 - [x] Greyhaven NPC/dialogue interaction layer
 - [x] first save/rest point

@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '0.1.6-title';
+  const VERSION = '0.1.7-ambience';
   const canvas = document.getElementById('game-canvas');
   const boot = document.getElementById('boot-screen');
   const status = document.getElementById('boot-status');
@@ -29,10 +29,12 @@
   const EnemyRegistry = window.Veilbound && window.Veilbound.EnemyRegistry;
   const Interactables = window.Veilbound && window.Veilbound.Interactables;
   const TitleScreen = window.Veilbound && window.Veilbound.TitleScreen;
+  const Audio = window.Veilbound && window.Veilbound.Audio;
   if (!SaveManager) throw new Error('SaveManager failed to load.');
   if (!EnemyRegistry) throw new Error('Enemy registry failed to load.');
   if (!Interactables) throw new Error('Interaction registry failed to load.');
   if (!TitleScreen) throw new Error('Title screen failed to load.');
+  if (!Audio) throw new Error('Audio system failed to load.');
 
   const WORLD = { width: 960, height: 540 };
   // Shared by the live combat checks and the debug overlay so drawn boxes
@@ -135,6 +137,7 @@
       `HP ${player.health}/${player.maxHealth}  IFRAME ${player.invuln.toFixed(2)}  ATK ${player.attackTimer.toFixed(2)}/${player.attackCooldown.toFixed(2)}`,
       `RESONANCE ${resonance}  PULSE r=${resonanceRadius.toFixed(0)}`,
       `ENTITIES enemy ${enemies.length}  proj ${projectiles.length}  fx ${particles.length}`,
+      `AUDIO ${(()=>{const a=Audio.state();return `${a.enabled?'on':'off'} ctx=${a.context} bed=${a.ambient?'playing':'silent'} gain=${a.gain} rms=${a.level}`;})()}`,
       `TARGET ${debugTargetLabel()}`,
       `NODE ${debugNodeLabel()}`,
     ];
@@ -263,6 +266,7 @@
   function setupTouch(){if(!touchStick||!touchKnob)return;let pointerId=null;const max=38,updateStick=e=>{const r=touchStick.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let dx=e.clientX-cx,dy=e.clientY-cy,len=Math.hypot(dx,dy);if(len>max){dx=dx/len*max;dy=dy/len*max;}input.touchX=dx/max;input.touchY=dy/max;touchKnob.style.transform=`translate(${dx}px, ${dy}px)`;};touchStick.addEventListener('pointerdown',e=>{pointerId=e.pointerId;touchStick.setPointerCapture(pointerId);updateStick(e);});touchStick.addEventListener('pointermove',e=>{if(e.pointerId===pointerId)updateStick(e);});const release=e=>{if(pointerId!==null&&e.pointerId!==pointerId)return;pointerId=null;input.touchX=0;input.touchY=0;touchKnob.style.transform='translate(0, 0)';};touchStick.addEventListener('pointerup',release);touchStick.addEventListener('pointercancel',release);if(actionButton)actionButton.addEventListener('pointerdown',e=>{e.preventDefault();actionPressed();});if(resonanceButton)resonanceButton.addEventListener('pointerdown',e=>{e.preventDefault();resonancePressed();});if(dialogue)dialogue.addEventListener('pointerdown',e=>{e.preventDefault();if(dialogueSequence)advanceDialogue();});}
   function describeSave(data){const room=rooms[data.player.roomId];const name=room?room.name:'UNCHARTED';return `${name}    ${data.player.health}/${data.player.maxHealth} \u25c6`;}
   function beginPlay(mode){
+    Audio.fadeOut(1.1);
     if(mode==='new'){saveData=SaveManager.reset();saveInspection={status:'empty'};}
     restoreSave();
     running=true;
@@ -271,13 +275,23 @@
     canvas.focus({preventScroll:true});
     if(mode==='new')saveGame('JOURNEY BEGUN');
   }
+  function armAudio(){
+    const kick=()=>{
+      removeEventListener('pointerdown',kick,true);removeEventListener('keydown',kick,true);
+      Audio.unlock();
+      // If that gesture was the one starting the game, never raise the bed at all.
+      setTimeout(()=>{if(!running)Audio.playTitleAmbience();},220);
+    };
+    addEventListener('pointerdown',kick,true);
+    addEventListener('keydown',kick,true);
+  }
   function presentTitle(){
     TitleScreen.present({
       version:VERSION,
       inspection:saveInspection,
       describeSave,
       settings:deviceSettings,
-      onSettingsChange(next){deviceSettings=next;SaveManager.saveSettings(next);setDebugMode(Boolean(next.debugOverlay),false);},
+      onSettingsChange(next){deviceSettings=next;SaveManager.saveSettings(next);setDebugMode(Boolean(next.debugOverlay),false);Audio.configure(next);if(next.audio&&!running)Audio.playTitleAmbience();},
       onStart:beginPlay,
     });
   }
@@ -292,13 +306,15 @@
     setDebugMode(debugRequestedByUrl()||Boolean(deviceSettings.debugOverlay),false);
     setupKeyboard();
     setupTouch();
+    Audio.configure(deviceSettings);
+    armAudio();
     setTimeout(()=>{if(boot)boot.hidden=true;presentTitle();},350);
     let previous=performance.now();
     const frame=t=>{resizeCanvas();const elapsed=t-previous;const dt=Math.min(elapsed/1000,.05);previous=t;sampleFrameTime(elapsed);if(running)update(dt);drawWorld(ctx);requestAnimationFrame(frame);};
     addEventListener('resize',resizeCanvas,{passive:true});
     // Never autosave from the title: that would manufacture a save the player never started.
     addEventListener('pagehide',()=>{if(running)saveGame('AUTOSAVED');});
-    document.addEventListener('visibilitychange',()=>{if(running&&document.visibilityState==='hidden')saveGame('AUTOSAVED');});
+    document.addEventListener('visibilitychange',()=>{const hidden=document.visibilityState==='hidden';if(hidden){Audio.suspend();if(running)saveGame('AUTOSAVED');}else Audio.resume();});
     requestAnimationFrame(frame);
     console.info(`[VEILBOUND] v${VERSION} booted. Save V${SaveManager.VERSION}. Stored save: ${saveInspection.status}.`);
     console.info('[VEILBOUND] Diagnostics: press F3 or ` , or append ?debug to the URL.');

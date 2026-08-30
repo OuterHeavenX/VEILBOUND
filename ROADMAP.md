@@ -3,7 +3,7 @@
 **Document owner:** ORACLE — Game Director & Planning  
 **Repository:** `OuterHeavenX/VEILBOUND`  
 **Current development branch:** `feature/vertical-slice-foundation`  
-**Current playable version:** `v0.1.6-title`  
+**Current playable version:** `v0.1.7-ambience`  
 **Roadmap status:** ACTIVE  
 **Last roadmap update:** 2026-08-30
 
@@ -152,7 +152,7 @@ A checkbox is marked complete only when the feature exists in the active branch.
 
 ---
 
-# 4. CURRENT STATE — v0.1.6-title
+# 4. CURRENT STATE — v0.1.7-ambience
 
 ## Foundation
 
@@ -301,7 +301,7 @@ A checkbox is marked complete only when the feature exists in the active branch.
 - [x] Device-appropriate control hint for gamepad, touch, and keyboard.
 - [x] Live still of the resumable room rendered behind the menu.
 - [x] Gameplay input and updates suspended until the title hands over.
-- [ ] Title ambience/music. No audio system exists yet.
+- [x] Title ambience/music.
 
 ## Safe resume
 
@@ -315,8 +315,23 @@ A checkbox is marked complete only when the feature exists in the active branch.
 
 - [x] Device-level preferences stored outside the save, under `veilbound.settings.v1`.
 - [x] Preferences survive erasing or replacing a save.
-- [x] Diagnostics overlay toggle, which is the only device-settable option so far.
+- [x] Diagnostics overlay toggle.
+- [x] Audio on/off toggle.
 - [ ] In-game settings entry. Title-only for now.
+
+## Audio
+
+- [x] Procedural Web Audio synthesis, with no audio assets and no build step.
+- [x] Title ambience: low Vein drone, wind texture, and the Greyhaven bell struck sparsely.
+- [x] Bed voices above the drone lowpass, so the mix survives a phone speaker's rolloff.
+- [x] Autoplay handled: nothing is created until a real user gesture unlocks it.
+- [x] Fade in and fade out rather than abrupt starts and cuts.
+- [x] Audio suspended while the tab is hidden.
+- [x] Output level analyser, so the diagnostics overlay and tests measure real output.
+- [x] Offline `render()` audition of the same synthesis the game plays.
+- [ ] Location sonic identities for Greyhaven and the Hollow March.
+- [ ] Shardblade, Axiom, and Resonance signature sounds.
+- [ ] Owner-device confirmation that the bed is audible on a phone speaker.
 
 ## Portrait rendering correction
 
@@ -414,7 +429,7 @@ Owners: SPECTER + WRAITH + ECHO + FORGE
 - [x] New Game / Continue logic.
 - [x] Settings entry.
 - [x] device-appropriate control hint.
-- [ ] title ambience/music.
+- [x] title ambience/music.
 - [x] safe resume flow.
 
 ## 1.2 Greyhaven
@@ -1182,6 +1197,7 @@ Vertical slice:
 
 Immediate:
 
+- [x] procedural audio system and title ambience.
 - [ ] Greyhaven identity.
 - [ ] Hollow March identity.
 - [ ] Shardblade SFX.
@@ -1254,12 +1270,12 @@ Vertical slice:
 
 # 7. CURRENT EXACT DEVELOPMENT ORDER
 
-This is the authoritative immediate sequence from `v0.1.6-title`.
+This is the authoritative immediate sequence from `v0.1.7-ambience`.
 
-## NEXT 1 — owner-device acceptance v0.1.6
+## NEXT 1 — owner-device acceptance v0.1.7
 
-Acceptance has stacked across four builds without a device pass. All of it is
-confirmed against `v0.1.6-title`, on iPhone.
+Acceptance has stacked across five builds without a device pass. All of it is
+confirmed against `v0.1.7-ambience`, on iPhone.
 
 Carried from v0.1.3:
 
@@ -1283,7 +1299,7 @@ Carried from v0.1.4:
 
 New in v0.1.5:
 
-- [ ] HUD displays `v0.1.6-title` after refresh.
+- [ ] HUD displays `v0.1.7-ambience` after refresh.
 - [ ] interact prompt is readable and clear of the touch controls.
 - [ ] action button visibly changes between the Shardblade and the interact glyph.
 - [ ] tapping the action button beside an NPC talks instead of swinging.
@@ -1299,6 +1315,13 @@ New in v0.1.6:
 - [ ] `NEW GAME` over an existing save asks before replacing it.
 - [ ] settings toggle for the diagnostics overlay works without a keyboard.
 - [ ] closing the tab on the title does not create a save.
+
+New in v0.1.7:
+
+- [ ] title ambience is audible on the phone speaker at a normal volume.
+- [ ] ambience starts after the first touch, and never blips when tapping straight into play.
+- [ ] the `AUDIO` setting silences it and is remembered.
+- [ ] backgrounding and returning to the app does not leave audio stuck or doubled.
 
 ## NEXT 2 — second enemy archetype — IMPLEMENTED in v0.1.4
 
@@ -1329,7 +1352,7 @@ repeatable without clearing browser storage by hand.
 - [x] settings entry and device-level settings persistence.
 - [x] device-appropriate control hint.
 - [x] safe resume flow.
-- [ ] title ambience/music. Blocked on there being any audio system.
+- [x] title ambience/music.
 
 ## NEXT 4 — Sunken Archive entrance
 

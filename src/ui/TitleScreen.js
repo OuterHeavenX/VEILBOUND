@@ -29,6 +29,7 @@
       const confirmText = el('title-confirm-text');
       const confirmYes = el('title-confirm-yes');
       const confirmNo = el('title-confirm-no');
+      const audioButton = el('settings-audio');
       const diagnosticsButton = el('settings-diagnostics');
       const eraseButton = el('settings-erase');
       const backButton = el('settings-back');
@@ -56,6 +57,8 @@
         notice.hidden = !message;
         if (message) notice.textContent = message;
         hint.textContent = controlHint();
+        audioButton.textContent = `AUDIO  ${state.audio ? 'ON' : 'OFF'}`;
+        audioButton.setAttribute('aria-pressed', String(Boolean(state.audio)));
         diagnosticsButton.textContent = `DIAGNOSTICS OVERLAY  ${state.debugOverlay ? 'ON' : 'OFF'}`;
         diagnosticsButton.setAttribute('aria-pressed', String(Boolean(state.debugOverlay)));
       }
@@ -100,7 +103,7 @@
       settingsButton.addEventListener('click', () => {
         screen.hidden = true;
         settingsScreen.hidden = false;
-        diagnosticsButton.focus({ preventScroll: true });
+        audioButton.focus({ preventScroll: true });
       });
       confirmYes.addEventListener('click', () => {
         const action = pendingConfirm;
@@ -109,6 +112,11 @@
       });
       confirmNo.addEventListener('click', closeConfirm);
 
+      audioButton.addEventListener('click', () => {
+        state = { ...state, audio: !state.audio };
+        onSettingsChange(state);
+        refresh();
+      });
       diagnosticsButton.addEventListener('click', () => {
         state = { ...state, debugOverlay: !state.debugOverlay };
         onSettingsChange(state);

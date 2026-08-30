@@ -156,6 +156,23 @@ Device-level preferences live outside the save, under `veilbound.settings.v1`, v
 they must survive erasing or replacing a save, and must be settable before any save exists.
 The save's own `settings` field stays reserved for per-journey settings.
 
+### Audio
+Every voice is synthesised through Web Audio. VEILBOUND ships zero-build and
+file://-friendly, so there are no audio assets to fetch, and procedural synthesis keeps
+the sound original by construction.
+
+- Browsers refuse audio before a user gesture. Nothing is created until `unlock()` is
+  called from a real interaction; that is a platform rule, not a bug, and a player who
+  never interacts with the title correctly hears nothing.
+- The bed and the bell are built against whatever context they are handed, so the same
+  synthesis serves live playback and `render()`, an offline audition of the mix.
+- A pass-through analyser sits after the master gain, so the real output level is
+  observable in the diagnostics overlay and in tests rather than assumed.
+- Transitions fade rather than cut, per ECHO's pillars.
+- The context is suspended while the tab is hidden.
+- Mixes are checked against a lowpassed phone speaker, not just full range. A bed that is
+  all sub-100 Hz is inaudible on the device this project targets first.
+
 ### Title / boot
 Owns the entry point into play. Gameplay does not update until the title hands over, and the
 runtime never autosaves while the title is up — otherwise a player who never pressed anything
@@ -164,6 +181,8 @@ would be given a save they did not start.
 - `CONTINUE` appears only for a `ready` save, labelled with its room and health.
 - `NEW GAME` over an existing save requires explicit confirmation.
 - `SETTINGS` is reachable before any save exists, because its preferences are device-level.
+- Title ambience gives way to play with a fade, and never starts if the gesture that
+  unlocked audio was itself the one starting the game.
 - The control hint is chosen from the active input: gamepad, coarse pointer, or keyboard.
 
 The world is restored before the title is shown, so the menu sits over a live still of the

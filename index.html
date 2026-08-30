@@ -37,13 +37,14 @@
     <section id="settings-screen" class="title-screen" hidden aria-label="Settings">
       <h2 class="title-word title-word-small">SETTINGS</h2>
       <div class="title-menu">
+        <button id="settings-audio" class="title-button" type="button" aria-pressed="true"></button>
         <button id="settings-diagnostics" class="title-button" type="button" aria-pressed="false"></button>
         <button id="settings-erase" class="title-button title-button-danger" type="button" hidden>ERASE SAVED JOURNEY</button>
         <button id="settings-back" class="title-button" type="button">BACK</button>
       </div>
     </section>
     <canvas id="game-canvas" width="1280" height="720" tabindex="0" aria-label="VEILBOUND game canvas"></canvas>
-    <div id="hud" class="hud" hidden><div><div class="hud-brand">VEILBOUND <span class="hud-version">v0.1.6-title</span></div><div id="hud-health" class="hud-health" aria-label="Health">◆ ◆ ◆ ◆ ◆ ◆</div><div id="hud-ability" class="hud-ability">AXIOM: DORMANT</div></div><div class="hud-right"><div id="hud-room">GREYHAVEN</div><div id="save-status" class="save-status">SAVE V1 READY</div></div></div>
+    <div id="hud" class="hud" hidden><div><div class="hud-brand">VEILBOUND <span class="hud-version">v0.1.7-ambience</span></div><div id="hud-health" class="hud-health" aria-label="Health">◆ ◆ ◆ ◆ ◆ ◆</div><div id="hud-ability" class="hud-ability">AXIOM: DORMANT</div></div><div class="hud-right"><div id="hud-room">GREYHAVEN</div><div id="save-status" class="save-status">SAVE V1 READY</div></div></div>
     <div id="interact-prompt" class="interact-prompt" hidden aria-live="polite"><span id="interact-prompt-verb" class="interact-prompt-verb">TALK</span><span id="interact-prompt-name" class="interact-prompt-name"></span></div>
     <pre id="debug-overlay" class="debug-overlay" hidden aria-hidden="true"></pre>
     <div id="dialogue" class="dialogue" hidden aria-live="polite"><div id="dialogue-speaker" class="dialogue-speaker"></div><div id="dialogue-text" class="dialogue-text"></div><div class="dialogue-hint">TAP / A / SPACE</div></div>
@@ -52,6 +53,7 @@
   </main>
   <!-- Classic scripts preserve true zero-build, file:// friendly startup. -->
   <script src="./src/core/SaveManager.js"></script>
+  <script src="./src/core/Audio.js"></script>
   <script src="./src/data/enemies.js"></script>
   <script src="./src/data/interactables.js"></script>
   <script src="./src/ui/TitleScreen.js"></script>

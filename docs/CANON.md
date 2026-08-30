@@ -94,7 +94,16 @@ This sits underneath the existing canon rather than replacing it: Kael still und
 himself as a scavenger rather than a chosen hero, because the thing that would tell him
 otherwise was taken.
 
-## The Axiom## The Axiom
+## The Axiom## Orin and Tomas — named, undefined
+
+Two further names arrived with the chibi cast in v0.4.6. Neither appears in any script, and
+nothing about either is canon: no role, no age, no allegiance, no relationship to anyone
+established. Their art exists; their place in Eidol does not.
+
+The same was true of Mira for two milestones before the opening defined her. Leave them until
+someone writes them.
+
+## The Axiom
 
 The Axiom is the ancient mechanical gauntlet carried by Kael. It has been mostly dormant for years.
 

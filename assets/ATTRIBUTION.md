@@ -105,6 +105,18 @@ both Hollow March fields now painted, this is most of what the player looks at.
 the adult is painted, and `ROADMAP.md` 2.14 settles the register as painted. See
 `docs/OPENING.md` § Art direction.
 
+## The chibi cast
+
+- In-repo: `assets/characters/main_character/*-pixel-chibi.png` as supplied, and
+  `assets/characters/chibi/` holding each figure trimmed plus a head-and-shoulders bust.
+- Eight characters in one consistent style: Kael, Elara, Mira, Lyra, Caldris, Serac, Orin and
+  Tomas. Supplied by the owner in v0.4.6 with real alpha, and with the character's name
+  rendered into the bottom of each image; that band is detected as its own row-run and dropped.
+- Kael's is also the source for his gameplay sprite sheet, built by
+  `tools/make-chibi-sheet.mjs`.
+
+**Unresolved:** origin and licence not recorded, as with every other supplied asset.
+
 ## Generated, not third-party
 
 - `assets/sprites/` is produced by `tools/prerender-characters.mjs` from the KayKit models.

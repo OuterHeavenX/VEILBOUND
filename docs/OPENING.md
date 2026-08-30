@@ -164,9 +164,12 @@ the bell as a summons are all new and all load-bearing.
 
 ## Art direction — an open conflict
 
-`ROADMAP.md` 2.14 settles VEILBOUND's register as **painted**, and the two supplied Kaels are
-in different registers: the younger is **pixel art**, the adult is **painted**. They sit side
-by side in the same dialogue box.
+`ROADMAP.md` 2.14 settles VEILBOUND's register as **painted**, and the supplied art is now
+mostly **pixel art**: the chibi cast, and the younger Kael. The painted adult Kael figure
+remains, and is the character menu's portrait.
+
+The dialogue box is at least internally consistent — every speaker in it is a chibi from the
+one cast, which is why they were used there in preference to the painted bust.
 
 The adult agrees with the rule. The younger does not, and reads as a different game whenever
 the two appear near each other. Either the younger figure gets a painted version, or 2.14
@@ -176,8 +179,9 @@ is recorded rather than quietly resolved.
 ## Still to build
 
 - The four Scene 4 interactive points, once someone writes what they say.
-- Portraits for everyone but the two Kaels. Both `KAEL` and `YOUNG KAEL` have one; Elara,
-  Mira, Caldris, Serac, the creature and the vision do not, and correctly show none.
+- A chibi for **YOUNG KAEL**, who currently borrows the earlier green-hooded figure.
+- Whether Elara, Caldris and Serac should stay unseen once they appear in person. They have
+  busts; the opening withholds them deliberately, and something has to decide when that lifts.
 - Elara's melody, and the bell ringing it.
 - Painted plates for The Forest Path and the Hunter Hall.
 - Art for the Vein-Corrupted, which currently borrows the March Husk's sheet.

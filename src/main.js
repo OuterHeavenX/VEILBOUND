@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '0.4.3-kael';
+  const VERSION = '0.4.4-kael';
   const canvas = document.getElementById('game-canvas');
   const boot = document.getElementById('boot-screen');
   const status = document.getElementById('boot-status');

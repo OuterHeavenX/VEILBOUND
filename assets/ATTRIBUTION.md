@@ -97,8 +97,13 @@ both Hollow March fields now painted, this is most of what the player looks at.
 
 **Unresolved:** origin and licence not recorded, as with the title key art and the map plates.
 
-**Also unresolved:** this art is pixel art, and `ROADMAP.md` 2.14 settles VEILBOUND's register
-as painted. See `docs/OPENING.md` § Art direction. Either the rule or this art needs to give.
+- Adult Kael arrived in v0.4.4 as two further images, also RGB with the background painted in:
+  `kael_adult_figure.png` (front, blade drawn), `kael_adult_turned.png` (a second view) and
+  `kael_adult_bust.png` (the portrait crop).
+
+**Also unresolved:** the two figures are in different registers — the younger is pixel art,
+the adult is painted, and `ROADMAP.md` 2.14 settles the register as painted. See
+`docs/OPENING.md` § Art direction.
 
 ## Generated, not third-party
 

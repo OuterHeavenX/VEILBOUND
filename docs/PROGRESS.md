@@ -6,6 +6,53 @@ Use this file together with `ROADMAP.md`, `docs/VERTICAL_SLICE.md`, `docs/CANON.
 
 ---
 
+## 2026-08-30 — v0.4.4 Both Kaels
+
+The owner supplied adult Kael, which resolves the question the previous entry raised the wrong
+way round. The two labels — "Young Kael", then "Adult Kael" — map exactly onto the two speakers
+the opening script already has, `YOUNG KAEL` and `KAEL`, so both now have a face.
+
+I had reasoned that the first figure could not be the younger Kael because it carries the
+Axiom, and left the child speaker without a portrait on that basis. It was the younger Kael;
+the gauntlet on him is the owner's design, not an error.
+
+### The figures
+
+Adult Kael is dark scaled and tattered layers, a steel half-mask, the Axiom set with blue
+stones, and the Shardblade lit and crackling. The younger is the green hood with green stones.
+Both arrived as RGB with the background painted in rather than as alpha, and both were keyed,
+trimmed and cropped the same way.
+
+The bust crop needed rethinking. The flare heuristic that found the shoulder line on the pixel
+figure — the first row wider than two-thirds of the frame — reads a gradual painted cloak as a
+shoulder and cut a half-body. Both busts are now anchored on the head: centred on the figure's
+own axis measured from the top rows, where only the hood is in frame.
+
+### Wired
+
+`KAEL` takes the adult bust, `YOUNG KAEL` the younger, and every other speaker still correctly
+shows none. The character menu takes the adult. Nearest-neighbour scaling came off both slots:
+it is right for the pixel figure and wrong for the painted one, and the painted one is what the
+menu shows.
+
+### The register conflict got sharper, not softer
+
+The two figures are drawn in different registers — the younger in pixel art, the adult
+painted — and they now appear in the same dialogue box within one scene of each other. The
+adult agrees with `ROADMAP.md` 2.14; the younger does not. Recorded in `docs/OPENING.md` and
+`assets/ATTRIBUTION.md` rather than resolved unilaterally.
+
+Also noted in `docs/CANON.md`: the Axiom's stones read green on the younger figure and blue on
+the adult. If that is deliberate it is a good visible marker of the gauntlet waking, which is
+what `AGENTS.md` asks for under progression being visible on the hero. If it is an artefact of
+how the two were made, it should be reconciled.
+
+### Verification
+- The `portrait` suite now covers both: adult Kael's lines take the adult bust in the Hunter
+  Hall, young Kael's take the younger in the memory, and Elara and Mira still show none.
+- Every suite passes.
+
+
 ## 2026-08-30 — v0.4.3 Kael has a face, or the absence of one
 
 The owner supplied two images of Kael and the blueprint's portrait system finally had

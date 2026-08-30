@@ -212,6 +212,34 @@ button { font: inherit; }
    Same language as the title screen and HUD: near black, thin cyan and amber
    rules, monospace caps. Icons come from the uploaded kit's amber glyph rows.  */
 
+.reward-toast {
+  position: absolute;
+  z-index: 7;
+  left: 50%;
+  top: calc(21% + var(--stack, 0) * 27px);
+  transform: translateX(-50%);
+  padding: 7px 12px;
+  border: 1px solid rgba(201, 162, 95, 0.4);
+  background: rgba(7, 10, 9, 0.9);
+  color: #e8ddc3;
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: reward-rise 1.35s ease forwards;
+}
+
+@keyframes reward-rise {
+  0% { opacity: 0; transform: translate(-50%, 8px); }
+  15% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -18px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reward-toast { animation-duration: 1.35s; }
+}
+
 .pause-menu {
   position: absolute;
   inset: 0;

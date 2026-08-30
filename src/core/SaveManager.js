@@ -4,8 +4,6 @@
   window.Veilbound = window.Veilbound || {};
 
   const STORAGE_KEY = 'veilbound.save.v1';
-  // Device-level preferences deliberately live outside the save file: they belong to
-  // the device, not to a journey, and must survive erasing or replacing a save.
   const SETTINGS_KEY = 'veilbound.settings.v1';
   const VERSION = 1;
 
@@ -56,11 +54,10 @@
       meta: { ...base.meta, ...(raw.meta || {}) },
     };
 
-    // Progression recovery: v0.1.3 could autosave a dormant player inside the
-    // Forgotten Relic Chamber, then reload directly into the room without
-    // replaying the room-entry awakening trigger. Route that exact incomplete
-    // state back to the chamber threshold so the normal authored transition
-    // fires once on re-entry. Never alter a save after the Axiom has awakened.
+    data.player.xp = Number.isFinite(data.player.xp) ? Math.max(0, Math.floor(data.player.xp)) : 0;
+    data.player.jp = Number.isFinite(data.player.jp) ? Math.max(0, Math.floor(data.player.jp)) : 0;
+    data.player.coins = Number.isFinite(data.player.coins) ? Math.max(0, Math.floor(data.player.coins)) : 0;
+
     const awakened = Boolean(data.world.flags['story.axiomAwakened']);
     const hasResonance = Array.isArray(data.player.abilities) && data.player.abilities.includes('resonance');
     if (data.player.roomId === 'awakeningRuin' && !awakened && !hasResonance) {
@@ -81,13 +78,9 @@
     VERSION,
     STORAGE_KEY,
     SETTINGS_KEY,
-
     createDefault: defaultSave,
     createDefaultSettings: defaultSettings,
 
-    // Report what is in storage without touching it, so the title screen can offer a
-    // safe resume and never silently discards a save it could not read.
-    // status: 'ready' | 'empty' | 'unreadable' | 'incompatible' | 'unavailable'
     inspect() {
       let raw;
       try {
@@ -98,11 +91,7 @@
       }
       if (!raw) return { status: 'empty' };
       let parsed;
-      try {
-        parsed = JSON.parse(raw);
-      } catch (error) {
-        return { status: 'unreadable' };
-      }
+      try { parsed = JSON.parse(raw); } catch (error) { return { status: 'unreadable' }; }
       if (!parsed || typeof parsed !== 'object') return { status: 'unreadable' };
       if (parsed.version !== VERSION) return { status: 'incompatible', version: parsed.version };
       return { status: 'ready', data: normalize(parsed) };
@@ -124,13 +113,8 @@
 
     saveSettings(settings) {
       const data = { ...defaultSettings(), ...(settings || {}) };
-      try {
-        localStorage.setItem(SETTINGS_KEY, JSON.stringify(data));
-        return true;
-      } catch (error) {
-        console.warn('[VEILBOUND] Settings write failed.', error);
-        return false;
-      }
+      try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(data)); return true; }
+      catch (error) { console.warn('[VEILBOUND] Settings write failed.', error); return false; }
     },
 
     load() {
@@ -147,21 +131,13 @@
     save(state) {
       const data = normalize(state);
       data.meta.savedAt = new Date().toISOString();
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        return true;
-      } catch (error) {
-        console.warn('[VEILBOUND] Save write failed.', error);
-        return false;
-      }
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); return true; }
+      catch (error) { console.warn('[VEILBOUND] Save write failed.', error); return false; }
     },
 
     reset() {
-      try {
-        localStorage.removeItem(STORAGE_KEY);
-      } catch (error) {
-        console.warn('[VEILBOUND] Save reset failed.', error);
-      }
+      try { localStorage.removeItem(STORAGE_KEY); }
+      catch (error) { console.warn('[VEILBOUND] Save reset failed.', error); }
       return defaultSave();
     },
   };

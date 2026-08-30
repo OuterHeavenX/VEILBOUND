@@ -249,6 +249,13 @@ rows 0-5 of `Icons.png` are amber monochrome glyphs that sit naturally on a dark
 addressed by cell through a CSS custom property. Kael's portrait is his own prerendered idle
 sheet, stepped frame by frame with a `steps()` animation off one `--cell` value.
 
+### Progression
+`src/core/Progression.js` owns the rules in `docs/PROGRESSION.md`: the reward values, coin
+world-drops and their pickup, reward toasts, and the controller's menu button. It holds no
+reference to the menu, so presentation can change without touching the contract. XP and JP
+land the moment an enemy enters its death state; the coin is a physical drop that must be
+walked over, is room-local, and is cleared on transitions and on recovery.
+
 ### Progression counters
 XP, JP and coins live in `player` and are awarded on enemy defeat. They were added after Save
 V1 shipped; `normalize()` merges over defaults, so saves written before they existed load with

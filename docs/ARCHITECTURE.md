@@ -1,7 +1,7 @@
 # VEILBOUND — Technical Architecture Foundation
 
 Owner: **FORGE**  
-Current runtime: **v0.4.6-cast**
+Current runtime: **v0.4.7-views**
 
 ## Core principles
 
@@ -323,7 +323,11 @@ to a shadow, and west is mirrored and narrowed so the blade stays on the same ha
 turn. Idle, walk and attack motion is applied per frame as bob, lean and squash, so a still
 figure is never simply slid around.
 
-These are stand-ins with a real shelf life at gameplay scale, not forgeries of a turnaround.
+The back holds up. The side does not, and the reason is anatomical rather than a matter of
+tuning: a profile shows one arm, and a squeezed front view shows two, with both gauntlets.
+East and west are honest placeholders until a side view is drawn. `docs/SPRITE_VIEWS.md`
+carries the prompt for generating one.
+
 The tool takes `--east` and `--north`, and skips deriving whichever is supplied, so authored
 views drop in without rework.
 

@@ -15,9 +15,16 @@
  *      a shadow — which is exactly what Kael's is.
  *   W  mirrored and narrowed, so the blade stays on his same hand through a turn.
  *
- * These are stand-ins with a real shelf life at gameplay scale, not forgeries of a proper
- * turnaround. When authored side and back views exist, pass them with --east / --north and
- * the derivation is skipped for whichever are supplied.
+ * The back holds up: mirroring is correct for anything asymmetric, and a hood closed with
+ * its own cloth genuinely reads as the back of a head.
+ *
+ * The side does not, and no amount of squeezing fixes it. A profile shows one arm; a squeezed
+ * front view shows two, with both gauntlets, and the eye reads that immediately at any scale.
+ * East and west are honest placeholders until someone draws a side view. Squeezing harder
+ * makes it worse, not better - 0.52 was tried and rejected.
+ *
+ * When authored views exist, pass them with --east / --north and the derivation is skipped
+ * for whichever are supplied.
  *
  * Usage:
  *   node tools/make-chibi-sheet.mjs --in assets/characters/chibi/kael.png --id kael_chibi
@@ -79,6 +86,25 @@ const sheets = await page.evaluate(async ({ front, east, north, cell, clips }) =
   };
   const face = faceBox(F);
 
+  // The hood's own fabric, sampled from the band just above the opening. Closing the hood
+  // with a black ellipse reads as a hole punched in the character; closing it with its own
+  // cloth, shaded and seamed, reads as the back of a head.
+  const hoodFabric = (img, face) => {
+    if (!face) return [56, 58, 42];
+    const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
+    const g = c.getContext('2d'); g.drawImage(img, 0, 0);
+    const px = g.getImageData(0, 0, c.width, c.height).data;
+    const acc = [0, 0, 0]; let n = 0;
+    for (let y = Math.max(0, face.y - Math.round(face.h * 0.9)); y < face.y - 2; y++)
+      for (let x = face.x; x < face.x + face.w; x++) {
+        const i = (y * c.width + x) * 4;
+        if (px[i + 3] > 200) { acc[0] += px[i]; acc[1] += px[i + 1]; acc[2] += px[i + 2]; n++; }
+      }
+    return n ? acc.map(v => Math.round(v / n)) : [56, 58, 42];
+  };
+  const fabric = hoodFabric(F, face);
+  const shade = m => `rgb(${Math.round(fabric[0] * m)}, ${Math.round(fabric[1] * m)}, ${Math.round(fabric[2] * m)})`;
+
   // One cell: the figure fitted by height, anchored so the feet sit on the engine's anchor.
   const FEET = 0.84;
   const drawFigure = (g, img, { mirror = false, narrow = 1, bob = 0, lean = 0, squash = 0, hideFace = false }) => {
@@ -91,13 +117,24 @@ const sheets = await page.evaluate(async ({ front, east, north, cell, clips }) =
     g.imageSmoothingEnabled = false;
     g.drawImage(img, -w / 2, -h, w, h);
     if (hideFace && face) {
-      // The inside of a hood, seen from behind.
+      // Cloth over the back of a head: the hood's own colour, lit from above, with the seam
+      // that runs down the centre of a hood.
       const fx = (face.x + face.w / 2) / img.width - 0.5;
-      g.fillStyle = 'rgba(9, 12, 10, 0.96)';
-      g.beginPath();
-      g.ellipse(fx * w, -h + (face.y + face.h / 2) * scale * (1 + squash),
-                face.w * scale * 0.62, face.h * scale * 0.58, 0, 0, Math.PI * 2);
-      g.fill();
+      const cx = fx * w;
+      const cy = -h + (face.y + face.h / 2) * scale * (1 + squash);
+      const rx = face.w * scale * 0.54, ry = face.h * scale * 0.58;
+      const grad = g.createLinearGradient(0, cy - ry, 0, cy + ry);
+      grad.addColorStop(0, shade(1.06));
+      grad.addColorStop(0.55, shade(0.9));
+      grad.addColorStop(1, shade(0.62));
+      g.save();
+      g.beginPath(); g.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2); g.clip();
+      g.fillStyle = grad;
+      g.fillRect(cx - rx - 2, cy - ry - 2, rx * 2 + 4, ry * 2 + 4);
+      g.strokeStyle = shade(0.5);
+      g.lineWidth = Math.max(0.8, rx * 0.07);
+      g.beginPath(); g.moveTo(cx, cy - ry * 0.95); g.lineTo(cx, cy + ry * 0.95); g.stroke();
+      g.restore();
     }
     g.restore();
   };
@@ -111,9 +148,9 @@ const sheets = await page.evaluate(async ({ front, east, north, cell, clips }) =
       const common = { bob: spec.bob[f] || 0, lean: spec.lean[f] || 0, squash: spec.squash[f] || 0 };
       const rows = [
         { img: F, o: { ...common } },                                        // S
-        { img: E || F, o: { ...common, narrow: E ? 1 : 0.74 } },             // E
+        { img: E || F, o: { ...common, narrow: E ? 1 : 0.74, hideFace: !E } }, // E
         { img: N || F, o: { ...common, mirror: !N, hideFace: !N } },         // N
-        { img: E || F, o: { ...common, mirror: true, narrow: E ? 1 : 0.74 } }, // W
+        { img: E || F, o: { ...common, mirror: true, narrow: E ? 1 : 0.74, hideFace: !E } }, // W
       ];
       rows.forEach((r, row) => {
         g.save(); g.translate(f * cell, row * cell); drawFigure(g, r.img, r.o); g.restore();

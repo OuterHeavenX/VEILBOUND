@@ -3,7 +3,7 @@
 ## Current Implementation Status
 
 **Current playable branch:** `claude/todo-implementation-td5zeq`, merged to `main`  
-**Current playable version:** `v0.4.6-cast`  
+**Current playable version:** `v0.4.7-views`  
 **Last updated:** 2026-08-30
 
 The slice has moved from foundation work into the first playable dungeon. The existing title/menu, XP/JP/coin progression, Greyhaven, Hollow March, Axiom awakening, Resonance, combat, saves, sprites, and terrain remain the base for this branch.
@@ -58,7 +58,7 @@ The slice has moved from foundation work into the first playable dungeon. The ex
 
 ### Still required for the complete slice
 
-- [ ] owner-device acceptance of `v0.4.6-cast`
+- [ ] owner-device acceptance of `v0.4.7-views`
 - [ ] Tether acquisition
 - [ ] Tether traversal teaching
 - [ ] Tether object manipulation

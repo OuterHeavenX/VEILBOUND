@@ -6,6 +6,46 @@ Use this file together with `ROADMAP.md`, `docs/VERTICAL_SLICE.md`, `docs/CANON.
 
 ---
 
+## 2026-08-30 — v0.4.7 The back is derivable, the side is not
+
+Asked to generate Kael's back and side views. There is no image generation in this session, so
+the question became how much of each can be constructed from the front figure honestly. The
+answer is: one of them, entirely, and the other not at all.
+
+### The back, properly
+
+It had been a black ellipse stamped over the face — a hole punched in the character. It is now
+the hood's own cloth: the fabric colour is sampled from the band just above the opening,
+filled with a top-to-bottom shade and given the centre seam a hood has. Combined with the
+mirroring, which is already correct for anything asymmetric, it reads as the back of a head.
+The side views close the hood the same way, since a profile shows a sliver of opening at most.
+
+### The side, and why not
+
+A squeezed front view will not become a profile, and the reason is anatomical rather than a
+matter of tuning: **a profile shows one arm; a squeezed front view shows two**, with both
+gauntlets, and the eye reads that at any scale. Squeezing harder was tried at 52% and is
+worse — it stops looking like a turn and starts looking like a compression artefact.
+
+So east and west stay as honest placeholders at 74%, and the tool's own header now says so
+rather than implying all three derivations are equal.
+
+### docs/SPRITE_VIEWS.md
+
+A short page with the actual prompt to generate a side view, carrying the details the front
+view establishes so a generator keeps them — the mask, the olive cloak, the blue-stoned
+gauntlet on his left arm, the blade in his right, far arm hidden. It also asks for the two
+things that have each cost a pass already: a genuinely transparent background rather than a
+drawn checkerboard, and no name text rendered into the image. Both are handled in code now;
+neither should have to be.
+
+One image fixes both sides, since west is east mirrored. The tool takes `--east` and skips
+deriving whichever views are supplied.
+
+### Verification
+- All four directions walked in-game and captured; every suite passes.
+
+
 ## 2026-08-30 — v0.4.6 Kael walks, and the cast has faces
 
 The owner said they felt stuck on Kael's sprites. The block turned out to be a false premise

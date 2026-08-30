@@ -16,16 +16,93 @@
       <p id="boot-status">Awakening the Vein…</p>
       <noscript>VEILBOUND requires JavaScript to run.</noscript>
     </section>
+    <section id="title-screen" class="title-screen title-screen-art" hidden aria-label="VEILBOUND title">
+      <img id="title-art" class="title-art" src="./assets/title/keyart.jpg" alt="" aria-hidden="true" decoding="async" />
+      <div class="title-scrim" aria-hidden="true"></div>
+      <div class="title-panel">
+        <div class="title-mark" aria-hidden="true">◇</div>
+        <h1 class="title-word">VEILBOUND</h1>
+        <p class="title-tagline">THE VEIN IS WAKING</p>
+        <p id="title-notice" class="title-notice" hidden role="status"></p>
+        <div id="title-menu" class="title-menu">
+          <button id="title-continue" class="title-button" type="button" hidden><span class="title-button-label">CONTINUE</span><span id="title-continue-detail" class="title-button-detail"></span></button>
+          <button id="title-new" class="title-button" type="button"><span class="title-button-label">START</span><span class="title-button-detail">BEGIN A NEW JOURNEY</span></button>
+          <button id="title-settings" class="title-button" type="button"><span class="title-button-label">SETTINGS</span></button>
+        </div>
+        <div id="title-confirm" class="title-confirm" hidden>
+          <p id="title-confirm-text" class="title-confirm-text"></p>
+          <button id="title-confirm-yes" class="title-button title-button-danger" type="button"></button>
+          <button id="title-confirm-no" class="title-button" type="button">CANCEL</button>
+        </div>
+        <p id="title-hint" class="title-hint"></p>
+      </div>
+      <p id="title-version" class="title-version"></p>
+    </section>
+    <section id="settings-screen" class="title-screen" hidden aria-label="Settings">
+      <h2 class="title-word title-word-small">SETTINGS</h2>
+      <div class="title-menu">
+        <button id="settings-audio" class="title-button" type="button" aria-pressed="true"></button>
+        <button id="settings-diagnostics" class="title-button" type="button" aria-pressed="false"></button>
+        <button id="settings-erase" class="title-button title-button-danger" type="button" hidden>ERASE SAVED JOURNEY</button>
+        <button id="settings-back" class="title-button" type="button">BACK</button>
+      </div>
+    </section>
     <canvas id="game-canvas" width="1280" height="720" tabindex="0" aria-label="VEILBOUND game canvas"></canvas>
-    <div id="hud" class="hud" hidden><div><div class="hud-brand">VEILBOUND <span class="hud-version">v0.1.4-sentry</span></div><div id="hud-health" class="hud-health" aria-label="Health">◆ ◆ ◆ ◆ ◆ ◆</div><div id="hud-ability" class="hud-ability">AXIOM: DORMANT</div></div><div class="hud-right"><div id="hud-room">GREYHAVEN</div><div id="save-status" class="save-status">SAVE V1 READY</div></div></div>
+    <div id="hud" class="hud" hidden><div><div class="hud-brand">VEILBOUND <span class="hud-version">v0.3.3-threshold</span></div><div id="hud-health" class="hud-health" aria-label="Health">◆ ◆ ◆ ◆ ◆ ◆</div><div id="hud-ability" class="hud-ability">AXIOM: DORMANT</div></div><div class="hud-right"><div id="hud-room">GREYHAVEN</div><div id="save-status" class="save-status">SAVE V1 READY</div></div></div>
+    <div id="interact-prompt" class="interact-prompt" hidden aria-live="polite"><span id="interact-prompt-verb" class="interact-prompt-verb">TALK</span><span id="interact-prompt-name" class="interact-prompt-name"></span></div>
     <pre id="debug-overlay" class="debug-overlay" hidden aria-hidden="true"></pre>
     <div id="dialogue" class="dialogue" hidden aria-live="polite"><div id="dialogue-speaker" class="dialogue-speaker"></div><div id="dialogue-text" class="dialogue-text"></div><div class="dialogue-hint">TAP / A / SPACE</div></div>
-    <div id="touch-controls" class="touch-controls" hidden aria-label="Touch controls"><div id="touch-stick" class="touch-stick" aria-hidden="true"><div id="touch-knob" class="touch-knob"></div></div><div class="touch-actions"><button id="resonance-button" class="resonance-button" type="button" aria-label="Use Axiom Resonance" hidden>◇</button><button id="action-button" class="action-button" type="button" aria-label="Attack with Shardblade">⚔</button></div></div>
+    <div id="touch-controls" class="touch-controls" hidden aria-label="Touch controls"><div id="touch-zone" class="touch-zone" aria-hidden="true"></div><div id="touch-stick" class="touch-stick" aria-hidden="true"><div id="touch-knob" class="touch-knob"></div></div><div class="touch-actions"><button id="resonance-button" class="resonance-button" type="button" aria-label="Use Axiom Resonance" hidden>◇</button><button id="action-button" class="action-button" type="button" aria-label="Attack with Shardblade">⚔</button></div><div class="touch-menu"><button id="menu-button" class="menu-button" type="button" aria-label="Open character menu">☰</button></div></div>
+    <div id="pause-menu" class="pause-menu" hidden role="dialog" aria-modal="true" aria-label="Character menu">
+      <div class="menu-frame">
+        <header class="menu-header">
+          <div class="menu-brand"><span class="menu-mark" aria-hidden="true">◇</span>VEILBOUND</div>
+          <nav class="menu-tabs">
+            <button class="menu-tab is-active" type="button">STATUS</button>
+            <button class="menu-tab" type="button" data-locked="true">INVENTORY<em>SOON</em></button>
+            <button class="menu-tab" type="button" data-locked="true">EQUIPMENT<em>SOON</em></button>
+          </nav>
+          <div class="menu-header-right">
+            <span id="menu-region" class="menu-region-label"></span>
+            <button id="menu-close" class="menu-close" type="button" aria-label="Resume">RESUME</button>
+          </div>
+        </header>
+        <div id="menu-body" class="menu-body"></div>
+        <footer class="menu-footer">
+          <span>M / TAB / ESC TO RESUME</span>
+          <span class="menu-footer-rule">ENEMY DEFEAT &nbsp;//&nbsp; +2 XP &nbsp;·&nbsp; +1 JP &nbsp;·&nbsp; +1 COIN</span>
+        </footer>
+      </div>
+    </div>
+    <section id="rotate-screen" class="rotate-screen" hidden aria-live="assertive" aria-label="Rotate your device">
+      <div class="rotate-glyph" aria-hidden="true">
+        <svg viewBox="0 0 120 84" role="presentation" focusable="false">
+          <rect class="rotate-phone" x="46" y="6" width="28" height="50" rx="4" />
+          <rect class="rotate-phone-screen" x="50" y="12" width="20" height="36" rx="2" />
+          <path class="rotate-arrow" d="M22 66 A 42 42 0 0 1 98 66" />
+          <path class="rotate-arrow-head" d="M22 78 L13 60 L31 60 Z" />
+        </svg>
+      </div>
+      <h2 class="rotate-title">ROTATE YOUR DEVICE</h2>
+      <p class="rotate-text">VEILBOUND is played in landscape.</p>
+    </section>
     <div id="fatal-error" class="fatal-error" hidden role="alert"><h2>VEILBOUND could not start</h2><p id="fatal-error-message"></p></div>
   </main>
   <!-- Classic scripts preserve true zero-build, file:// friendly startup. -->
   <script src="./src/core/SaveManager.js"></script>
+  <script src="./src/core/Audio.js"></script>
+  <script src="./src/data/characterSprites.js"></script>
+  <script src="./src/data/enemySprites.js"></script>
+  <script src="./src/data/terrain.js"></script>
+  <script src="./src/data/props.js"></script>
+  <script src="./src/core/Sprites.js"></script>
   <script src="./src/data/enemies.js"></script>
+  <script src="./src/data/interactables.js"></script>
+  <script src="./src/ui/Orientation.js"></script>
+  <script src="./src/ui/TitleScreen.js"></script>
+  <script src="./src/ui/PauseMenu.js"></script>
+  <script src="./src/core/Puzzles.js"></script>
+  <script src="./src/core/Progression.js"></script>
   <script src="./src/main.js"></script>
 </body>
 </html>

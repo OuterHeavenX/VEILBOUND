@@ -2,115 +2,170 @@
 
 ## Current Implementation Status
 
-**Current playable branch:** `feature/vertical-slice-foundation`  
-**Current playable version:** `v0.1.3-resonance`  
-**Last updated:** 2026-08-29
+**Current playable branch:** `claude/todo-implementation-td5zeq`  
+**Current playable version:** `v0.3.3-threshold`  
+**Last updated:** 2026-08-30
 
-Implemented and awaiting owner-device acceptance:
+The slice has moved from foundation work into the first playable dungeon. The existing title/menu, XP/JP/coin progression, Greyhaven, Hollow March, Axiom awakening, Resonance, combat, saves, sprites, and terrain remain the base for this branch.
+
+### Implemented foundation
 
 - [x] zero-build `index.html` launch
-- [x] Greyhaven prototype
+- [x] title key art featuring Kael, Lyra and Mira, with START / CONTINUE / SETTINGS
+- [x] landscape enforced by orientation lock where granted and a rotate gate everywhere else
+- [x] pause / Character menu with HP, XP, JP, coins, Shardblade level, protocols and journey state
+- [x] Greyhaven exterior, NPC interaction and Wayfarer's Rest save/rest point
 - [x] Hollow March Field 1 and Field 2
-- [x] four-direction movement and collision
-- [x] Shardblade attack, health, damage, knockback, and i-frames
-- [x] Save V1 local persistence and room-transition autosave
-- [x] autosave on page hide / app background transition
-- [x] defeated-enemy persistence
-- [x] Forgotten Relic Chamber
-- [x] Axiom awakening sequence
-- [x] Resonance ability grant persistence
-- [x] Resonance v1 input on touch, keyboard, and controller
-- [x] Resonance expanding pulse
-- [x] authored Resonance nodes with persistent discovery flags
-- [x] first hidden Vein route clue in Hollow March Field 2
-- [x] portrait cinematic flash clipping so letterbox remains void-black
+- [x] movement, collision and room transitions
+- [x] Shardblade combat, damage, knockback and i-frames
+- [x] March Husk and Vein Sentry enemy roles
+- [x] Save V1 local persistence and safe resume
+- [x] XP +2 and JP +1 on each enemy defeat
+- [x] one physical coin drop per enemy defeat and coin pickup persistence
+- [x] Forgotten Relic Chamber / Axiom awakening
+- [x] Resonance on touch, keyboard and controller
+- [x] authored Resonance discoveries and persistent world flags
+- [x] enemy repopulation on ordinary room re-entry
+- [x] development diagnostics
 
-Still required before Phase 1 exits:
+### Sunken Archive opening — implemented, owner-device acceptance pending
 
-- [ ] owner-device acceptance of `v0.1.3-resonance`
-- [ ] second ranged/area-control enemy fully authored and accepted
-- [ ] Greyhaven NPC/dialogue interaction layer
-- [ ] first save/rest point
-- [ ] Sunken Archive entrance
-- [ ] reusable switch/door/push puzzle primitives
+- [x] Resonance-revealed route from Hollow March Field 2 to the Archive
+- [x] `SUNKEN ARCHIVE — EASTERN DESCENT`
+- [x] persistent `archive.entered` first-entry acknowledgement
+- [x] drowned side chambers with matching water/collision geometry
+- [x] `SUNKEN ARCHIVE — VESTIBULE`
+- [x] mixed Husk + Vein Sentry dungeon encounter
+- [x] reusable persistent floor-switch behavior
+- [x] reusable persistent door/seal collision behavior
+- [x] gated exit tied to the same seal-open flag
+- [x] `SUNKEN ARCHIVE — CATALOG ROTUNDA`
+- [x] Rotunda Resonance memory node
+- [x] explicit Tether foreshadowing
+- [x] deeper Archive bulkhead remains intentionally sealed
+- [x] full backtrack route to Hollow March remains available
+
+### Cistern wing — implemented, owner-device acceptance pending
+
+- [x] reusable puzzle primitives extracted to `src/core/Puzzles.js`
+- [x] `SUNKEN ARCHIVE — CISTERN WALK`, teaching the push block against a weight-only plate
+- [x] `SUNKEN ARCHIVE — SLUICE GALLERY`, where Resonance operates a valve rather than reading it
+- [x] `SUNKEN ARCHIVE — RELIQUARY SPAN`, combining valve, block and plate under two live enemies
+- [x] routed water that is impassable until drained, art and collision from one rectangle
+- [x] two-way shortcut from the Span back to the Vestibule, closing the wing into a loop
+
+### Still required for the complete slice
+
+- [ ] owner-device acceptance of `v0.3.3-threshold`
+- [ ] Tether acquisition
+- [ ] Tether traversal teaching
+- [ ] Tether object manipulation
+- [ ] Tether combat integration
+- [ ] deeper Archive rooms combining learned verbs
+- [ ] Archivist boss encounter
+- [ ] post-boss `WELCOME BACK.` recognition sequence
+- [ ] full iPhone/iPad/desktop/controller acceptance
 
 ## Objective
 
-Prove the game's core identity and architecture with a compact, high-quality sequence before expanding production.
+Prove VEILBOUND's complete identity with one compact, high-quality route before expanding world scale.
 
-The slice should be small enough to understand completely and rich enough to validate the complete gameplay loop.
+The player should experience exploration, combat, a returning town, Axiom discovery, authored Resonance, a real multi-room dungeon, Tether progression, a boss, persistent world change, and the first major mystery payoff.
 
 ## Target Flow
 
 1. Greyhaven introduction.
 2. Hollow March traversal.
-3. Forgotten ruin / Axiom awakening.
+3. Forgotten Relic Chamber / Axiom awakening.
 4. Return path with altered world state.
-5. Entry into the Sunken Archive.
-6. Dungeon teaching rooms.
-7. Tether acquisition.
-8. Tether mastery rooms.
-9. Archivist boss encounter.
-10. Post-boss recognition reveal and return to the overworld.
+5. Resonance reveals the Eastern Descent.
+6. Enter the Sunken Archive.
+7. Learn the Archive's switch/seal language.
+8. Read the Catalog Rotunda and discover the missing Tether protocol.
+9. Continue into deeper teaching rooms.
+10. Acquire Tether halfway through the dungeon.
+11. Master Tether through traversal, puzzles and combat.
+12. Fight The Archivist.
+13. Receive the `WELCOME BACK.` reveal.
+14. Return to an altered Greyhaven / overworld state.
 
-## Proposed Room Graph
+## Current Room Graph
 
 ```text
-                 [OPTIONAL SECRET]
-                        |
-[GREYHAVEN]--[FIELD 1]--[FIELD 2]
-                 |          |
-              [RUIN]    [ARCHIVE 1]
-                            |
-                       [ARCHIVE 2]
-                            |
-                       [PUZZLE HUB]
-                       /          \
-                [TETHER ROOM]   [COMBAT]
-                       \          /
-                         [BOSS]
+[GREYHAVEN]
+     |
+[HOLLOW MARCH — FIELD 1]
+     |
+[HOLLOW MARCH — FIELD 2] ---- [FORGOTTEN RELIC CHAMBER]
+     |
+     | Resonance-revealed route
+     v
+[SUNKEN ARCHIVE — EASTERN DESCENT]
+     |
+[SUNKEN ARCHIVE — VESTIBULE] <--------------+
+     |                                     |
+     | persistent floor switch / seal      | shortcut
+     v                                     |
+[SUNKEN ARCHIVE — CATALOG ROTUNDA]         |
+     |                    \                |
+     |                     \ west          |
+     |                      v              |
+     |          [SUNKEN ARCHIVE — CISTERN WALK]
+     |                      |     push block -> weight plate
+     |                      v
+     |          [SUNKEN ARCHIVE — SLUICE GALLERY]
+     |                      |     Resonance valve -> drained channel
+     |                      v
+     |          [SUNKEN ARCHIVE — RELIQUARY SPAN]
+     |                      |              |
+     |                      +--------------+
+     v
+ [DEEP ARCHIVE — SEALED]
+     |
+   TETHER
+     |
+ [FUTURE TEACH / COMBINE ROOMS]
+     |
+ [THE ARCHIVIST]
 ```
 
-Exact physical layout may change after playtesting. The functional sequence should remain intentionally compact.
+Exact physical layout can change after playtesting. The functional teaching sequence should remain compact.
 
 ## Systems the Slice Must Prove
 
 ### Player
-- responsive four-direction movement
-- facing and animation state
-- Shardblade basic attack
-- damage, knockback, hurt state, invulnerability window
+- responsive movement
+- readable facing/animation
+- Shardblade attack
+- damage, knockback, hurt state and i-frames
 - readable health state
 
 ### Input
 - keyboard
 - touch
 - gamepad/controller
-- input abstraction so gameplay code does not directly depend on device APIs
+- menu input independent from gameplay actions
 
 ### World
-- room loading and unloading
-- authored entry points
-- collision
-- exits and transitions
+- authored room entry points
+- collision and transitions
 - persistent room/world flags
-- return visits reflecting previous actions
+- return visits reflecting prior actions
+- visual geometry agreeing with collision
 
 ### Combat
-- melee hitboxes
-- enemy hurtboxes
-- enemy states
-- damage resolution
-- hit feedback
-- one melee enemy archetype
-- one ranged or area-control archetype
+- melee hit/hurt overlap
+- enemy states and telegraphs
+- one melee archetype
+- one ranged/area-control archetype
+- XP/JP reward and physical coin drop pipeline
 
 ### Interaction
 - NPC dialogue
-- chest/collectible
-- switch or mechanism
-- locked/gated route
-- inspectable relic object
+- save/rest mechanism
+- switch / persistent door
+- locked or ability-gated route
+- inspectable ancient mechanisms
 
 ### Axiom
 - Resonance
@@ -118,104 +173,72 @@ Exact physical layout may change after playtesting. The functional sequence shou
 - Tether object interaction
 - Tether combat use
 
-### Resonance v1 contract
+### Resonance contract
 
-Resonance is a short Axiom pulse, not a permanent detective-vision overlay.
-
-The first implementation must:
-- use a dedicated input separate from Shardblade attack
-- emit a visible expanding pulse
-- react only to authored compatible ancient objects
-- persist discovered mechanisms/routes through Save V1 flags
-- work on touch, keyboard, and controller
-- reveal useful information without solving unrelated puzzles automatically
+Resonance is a short Axiom pulse, not a permanent detective-vision overlay. It reacts only to authored compatible ancient structures and may reveal routes, memories, combat disruption windows or mechanisms.
 
 Current mappings:
 - Touch: dedicated `◇` button
 - Keyboard: `E`, `R`, or Shift
 - Controller: secondary face button / B-style action
 
-### Puzzle
-Use the doctrine: Teach -> Test -> Combine -> Twist -> Master.
+### Puzzle doctrine
 
-The slice should include at minimum:
-- one simple switch/mechanism puzzle
-- one push/manipulation puzzle
-- one Resonance-authored discovery
-- one Tether teaching room
-- one room combining Tether with pressure or enemies
+**Teach → Test → Combine → Twist → Master**
+
+Current dungeon implementation:
+- Teach: Eastern Descent establishes water, causeway and Archive visual language.
+- Test: Vestibule teaches plate → persistent seal under light enemy pressure.
+- Combine/foreshadow: Catalog Rotunda combines exploration/combat space with a Resonance memory and establishes Tether as the missing manipulation verb.
+
+- Teach: Cistern Walk teaches the push block against a plate no footstep can hold.
+- Teach: Sluice Gallery has Resonance operate a valve rather than only read one.
+- Combine: Reliquary Span puts valve, block and plate together under two live enemies, and
+  opens the shortcut that closes the wing into a loop.
+
+Still required:
+- Tether safe teaching room
+- Tether + enemy pressure
+- Tether + machinery
+- mastery room before boss
 
 ### Boss
-The Archivist must include:
-- readable telegraphs
-- at least two meaningful phase/state changes
-- Tether integration
-- arena state change
-- restart/checkpoint behavior that does not waste the player's time
-- skippable/reduced repeated introduction after first view
+
+The Archivist must include readable telegraphs, meaningful phase/state changes, arena change, Tether integration, recoverable restart behavior and a shortened/skippable repeated introduction.
 
 ### Story
-- establish Kael's occupation and temperament
-- introduce Greyhaven as a place worth returning to
-- awaken the Axiom
-- establish The Vein as active again
-- introduce uncertainty around Kael's relationship to ancient systems
-- end on the Archivist's `WELCOME BACK.` reveal
+
+The slice must establish Kael as a relic hunter, Greyhaven as worth returning to, The Vein waking, the Axiom recognizing Kael, the Archive responding to him, and finally the Archivist's impossible `WELCOME BACK.` recognition.
 
 ### Presentation
-- coherent region palette and visual language
+
 - distinct Greyhaven / Hollow March / Archive identities
-- basic cinematic camera language
-- location title cards or equivalent introduction treatment
-- musical identities or production placeholders with defined intent
-- portrait letterbox regions remain intentionally dark and are never contaminated by gameplay/cinematic fullscreen effects
+- location presentation with strong silhouette/readability
+- coherent Axiom cyan language without flooding the screen
+- authored cinematic moments kept concise
+- intentional dark letterbox/unused viewport areas
+- mobile-scale readability
 
 ### Persistence
-Initial save schema should support:
-- current room/checkpoint
-- health or recovery state as appropriate
-- inventory/key items
-- Axiom abilities
-- world flags
-- opened chests
-- solved puzzles
-- defeated boss flags
-- settings
 
-Current Save V1 additionally persists authored defeated-enemy IDs and Resonance discovery flags. Page hide/background transitions should request an autosave in addition to room-transition autosaves.
-
-Do not overbuild cloud services during this slice. Keep the persistence contract clean enough to support cloud synchronization later.
+Save V1 currently carries player state, Axiom abilities, progression counters and authored world flags. Archive puzzle state uses those world flags rather than runtime-only state. Schema-breaking migration remains deferred until a breaking change is actually required.
 
 ## Acceptance Criteria
 
-The slice is not considered complete merely because all rooms exist.
+The vertical slice is not complete merely because all rooms exist. It is ready for expansion only when movement feels responsive on touch/desktop, transitions and saves are stable, no required puzzle can soft-lock, Resonance and Tether are understandable, the Archivist is readable/recoverable, retry presentation respects the player, and phone/tablet performance remains stable.
 
-It is ready for expansion only when:
-- player movement feels responsive on desktop and touch
-- room transitions are stable
-- save/reload preserves meaningful world state
-- no required puzzle can soft-lock progression
-- Resonance is understandable without becoming a generic scanning overlay
-- Tether is understandable without excessive text instruction
-- the Archivist encounter is readable and recoverable
-- viewed cinematic sequences do not become irritating on retry
-- the game remains usable in phone and tablet layouts
-- portrait presentation keeps non-gameplay letterbox regions dark and intentional
-- performance remains stable during normal combat and boss effects
-- the final reveal lands clearly without requiring lore exposition
+For the current dungeon milestone specifically, see `docs/SUNKEN_ARCHIVE.md` for the owner-device checklist.
 
 ## Scope Discipline
 
-Explicitly deferred until the slice proves itself:
-- large inventory system
-- crafting
-- procedural world generation
+Still deliberately deferred until the slice proves itself:
+- large inventory/crafting systems
 - online multiplayer
 - cloud accounts
 - large skill trees
 - dozens of enemy types
 - final overworld scale
 - full soundtrack
-- final production art for every future region
+- final production art for future regions
 
 Build the smallest version that proves the complete VEILBOUND promise, then expand.

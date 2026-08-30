@@ -83,13 +83,35 @@ The encounter succeeds when a first-time player can understand why they were hit
 
 Before marking ranged combat complete:
 
-- [ ] Sentry has Observe / Position / Telegraph / Fire / Recover states.
-- [ ] Telegraph is readable on iPhone landscape.
-- [ ] Projectile collision with Kael works with i-frames.
-- [ ] Projectile collision with solid world removes the projectile.
-- [ ] Shardblade can defeat the Sentry.
-- [ ] Resonance interrupts an active telegraph without dealing damage.
-- [ ] Sentry defeat persists through Save V1.
-- [ ] Room transitions clear transient projectiles.
-- [ ] Mixed Husk + Sentry encounter is playable without unavoidable damage.
+- [x] Sentry has Observe / Position / Telegraph / Fire / Recover states.
+- [~] Telegraph is readable on iPhone landscape. Authored for it; confirmed on device only.
+- [x] Projectile collision with Kael works with i-frames.
+- [x] Projectile collision with solid world removes the projectile.
+- [x] Shardblade can defeat the Sentry.
+- [x] Resonance interrupts an active telegraph without dealing damage.
+- [~] Sentry defeat persists through Save V1. The machinery works and is still correct, but
+      persistence is now opt-in per enemy and the Sentry does not opt in: see Repopulation.
+- [x] Room transitions clear transient projectiles.
+- [x] Mixed Husk + Sentry encounter is playable without unavoidable damage.
 - [ ] iPhone owner-device acceptance completed.
+
+## Repopulation
+
+Ordinary enemies repopulate their room on every entry, by owner decision. Persistence is kept
+as an explicit per-enemy opt-in so a boss or a story kill can still stay defeated, and saves
+that still carry old defeat flags no longer suppress spawns.
+
+This trades the "clear the road once" feel for standing pressure on every crossing. The
+encounter design above is unchanged; what changes is that it can be met more than once.
+
+## Enemy art
+
+Both enemies now draw from authored sprite sheets with idle, walk, attack, hurt, and death
+clips, and a defeated enemy plays its death animation before leaving the field. Defeat is
+still recorded the moment health reaches zero, so persistence does not depend on the
+animation finishing.
+
+The casting is placeholder. The goblin fits the Husk's melee-pursuit role. Nothing in the
+upload resembles a Vein machine, so the slime stands in for the Sentry; the authored
+telegraph ring and aim line still draw over it, because those carry the readability this
+encounter is tuned around.

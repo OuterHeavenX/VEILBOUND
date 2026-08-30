@@ -20,14 +20,13 @@ html, body {
   overflow: hidden;
 }
 
-body { min-height: 100svh; }
+body { height: 100%; overflow: hidden; }
 button { font: inherit; }
 
 #app {
-  position: relative;
-  width: 100vw;
-  height: 100svh;
-  min-height: 100vh;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
   background: #070a0d;
 }
 
@@ -138,19 +137,35 @@ button { font: inherit; }
   pointer-events: none;
 }
 
-.touch-stick {
+/* The stick is summoned wherever the left side is touched, rather than living in a fixed
+   corner, so the thumb never has to find it. */
+.touch-zone {
   position: absolute;
-  left: max(22px, env(safe-area-inset-left));
-  bottom: max(24px, env(safe-area-inset-bottom));
-  width: 118px;
-  height: 118px;
-  border: 1px solid rgba(232, 237, 240, 0.18);
-  border-radius: 50%;
-  background: rgba(4, 8, 10, 0.34);
-  box-shadow: inset 0 0 24px rgba(127, 231, 225, 0.05);
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 50%;
   pointer-events: auto;
   touch-action: none;
 }
+
+.touch-stick {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 116px;
+  height: 116px;
+  margin: -58px 0 0 -58px;
+  border: 1px solid rgba(127, 231, 225, 0.3);
+  border-radius: 50%;
+  background: rgba(6, 12, 14, 0.34);
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.82);
+  transition: opacity 110ms ease, transform 110ms ease;
+}
+
+.touch-stick.is-active { opacity: 1; transform: scale(1); }
 
 .touch-knob {
   position: absolute;
@@ -208,6 +223,706 @@ button { font: inherit; }
 
 .fatal-error { background: #12090b; }
 .fatal-error h2 { margin: 0 0 0.8rem; font-size: 1.2rem; }
+/* ---- Pause / character menu -------------------------------------------------
+   Same language as the title screen and HUD: near black, thin cyan and amber
+   rules, monospace caps. Icons come from the uploaded kit's amber glyph rows.  */
+
+.reward-toast {
+  position: absolute;
+  z-index: 7;
+  left: 50%;
+  top: calc(21% + var(--stack, 0) * 27px);
+  transform: translateX(-50%);
+  padding: 7px 12px;
+  border: 1px solid rgba(201, 162, 95, 0.4);
+  background: rgba(7, 10, 9, 0.9);
+  color: #e8ddc3;
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: reward-rise 1.35s ease forwards;
+}
+
+@keyframes reward-rise {
+  0% { opacity: 0; transform: translate(-50%, 8px); }
+  15% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -18px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reward-toast { animation-duration: 1.35s; }
+}
+
+.pause-menu {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: max(14px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+  background: radial-gradient(ellipse at 50% 45%, rgba(127,231,225,0.05), transparent 60%), rgba(3, 6, 8, 0.86);
+  backdrop-filter: blur(3px);
+  animation: menu-in 160ms ease-out;
+}
+
+@keyframes menu-in { from { opacity: 0; } to { opacity: 1; } }
+
+.menu-frame {
+  display: flex;
+  flex-direction: column;
+  width: min(1040px, 100%);
+  max-height: 100%;
+  border: 1px solid rgba(201, 162, 95, 0.34);
+  border-radius: 4px;
+  background:
+    linear-gradient(rgba(127,231,225,0.03), transparent 42%),
+    rgba(7, 11, 14, 0.97);
+  box-shadow: 0 26px 80px rgba(0,0,0,0.66), inset 0 0 60px rgba(127,231,225,0.02);
+  overflow: hidden;
+}
+
+.menu-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 13px 18px;
+  border-bottom: 1px solid rgba(201, 162, 95, 0.22);
+  background: rgba(10, 15, 18, 0.9);
+}
+
+.menu-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  font-size: clamp(0.62rem, 1.6vw, 0.76rem);
+  letter-spacing: 0.28em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.menu-mark { color: var(--axiom); }
+
+.menu-tabs { display: flex; gap: 6px; flex: 1; min-width: 0; overflow-x: auto; }
+
+.menu-tab {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55em;
+  padding: 7px 13px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background: transparent;
+  color: var(--muted);
+  font-size: clamp(0.55rem, 1.5vw, 0.66rem);
+  letter-spacing: 0.18em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 120ms ease, border-color 120ms ease, background 120ms ease;
+}
+.menu-tab em { font-style: normal; font-size: 0.72em; opacity: 0.5; letter-spacing: 0.12em; }
+.menu-tab:hover:not([data-locked="true"]) { color: var(--ink); border-color: rgba(127,231,225,0.28); }
+.menu-tab.is-active {
+  color: var(--axiom);
+  border-color: rgba(127, 231, 225, 0.45);
+  background: rgba(127, 231, 225, 0.07);
+}
+.menu-tab[data-locked="true"] { cursor: default; opacity: 0.55; }
+
+.menu-header-right { display: flex; align-items: center; gap: 14px; margin-left: auto; }
+
+.menu-region-label {
+  color: var(--muted);
+  font-size: clamp(0.52rem, 1.4vw, 0.62rem);
+  letter-spacing: 0.2em;
+  white-space: nowrap;
+}
+
+.menu-close {
+  padding: 7px 14px;
+  border: 1px solid rgba(127, 231, 225, 0.34);
+  border-radius: 2px;
+  background: rgba(8, 14, 17, 0.9);
+  color: var(--ink);
+  font-size: clamp(0.55rem, 1.5vw, 0.66rem);
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+.menu-close:hover, .menu-close:focus-visible { border-color: var(--axiom); background: rgba(15, 30, 32, 0.95); outline: none; }
+
+.menu-body {
+  display: grid;
+  grid-template-columns: minmax(200px, 0.85fr) minmax(240px, 1.15fr) minmax(240px, 1.15fr);
+  gap: 1px;
+  background: rgba(201, 162, 95, 0.14);
+  overflow-y: auto;
+}
+
+.menu-card {
+  padding: 20px 20px 22px;
+  background: rgba(7, 11, 14, 0.98);
+}
+
+.menu-card-portrait { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.menu-vitality-block { width: 100%; margin-top: auto; padding-top: 26px; }
+.menu-card-portrait .menu-vitality { justify-content: center; }
+
+/* Kael's own prerendered idle sheet, stepped frame by frame. */
+.menu-portrait-frame {
+  position: relative;
+  --cell: 148px;
+  width: var(--cell);
+  height: var(--cell);
+  margin-bottom: 14px;
+  border: 1px solid rgba(127, 231, 225, 0.2);
+  border-radius: 3px;
+  background-color: rgba(127, 231, 225, 0.035);
+  background-image: url('./assets/sprites/kael_Idle_A.png');
+  background-repeat: no-repeat;
+  background-size: calc(var(--cell) * 6) calc(var(--cell) * 8);  /* 6 frames x 8 directions */
+  background-position: 0 0;                                      /* frame 0, south-facing row */
+  image-rendering: pixelated;
+  animation: kael-breathe 1.6s steps(6) infinite;
+}
+
+@keyframes kael-breathe { to { background-position-x: calc(var(--cell) * -6); } }
+
+.menu-portrait-glow {
+  position: absolute;
+  inset: auto 0 10px;
+  height: 26px;
+  background: radial-gradient(ellipse at 50% 100%, rgba(127,231,225,0.16), transparent 70%);
+}
+
+.menu-name {
+  margin: 0;
+  font-size: clamp(1.05rem, 3vw, 1.4rem);
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+}
+
+.menu-title {
+  margin: 5px 0 0;
+  color: var(--axiom);
+  font-size: clamp(0.55rem, 1.5vw, 0.65rem);
+  letter-spacing: 0.24em;
+  text-indent: 0.24em;
+  opacity: 0.85;
+}
+
+.menu-locale {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin: 16px 0 0;
+  color: var(--muted);
+  font-size: clamp(0.5rem, 1.4vw, 0.6rem);
+  letter-spacing: 0.16em;
+}
+
+.menu-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: clamp(0.52rem, 1.4vw, 0.62rem);
+  font-weight: 400;
+  letter-spacing: 0.24em;
+}
+.menu-heading em { margin-left: auto; font-style: normal; color: var(--axiom); opacity: 0.7; letter-spacing: 0.12em; }
+.menu-heading-spaced { margin-top: 26px; }
+
+.menu-vitality { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+
+.menu-vitality-count {
+  color: var(--ink);
+  font-size: clamp(1.5rem, 4.4vw, 2.1rem);
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+.menu-vitality-count span { color: var(--muted); font-size: 0.48em; letter-spacing: 0.16em; }
+
+.menu-pips { display: flex; gap: 6px; }
+
+.menu-pip {
+  width: 12px;
+  height: 12px;
+  border: 1px solid rgba(217, 111, 111, 0.42);
+  transform: rotate(45deg);
+}
+.menu-pip.is-full { background: var(--danger); border-color: var(--danger); box-shadow: 0 0 9px rgba(217,111,111,0.45); }
+
+.menu-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 22px;
+}
+
+.menu-stat {
+  padding: 11px 12px;
+  border: 1px solid rgba(201, 162, 95, 0.18);
+  border-radius: 2px;
+  background: rgba(11, 16, 20, 0.9);
+}
+
+.menu-stat-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  color: var(--muted);
+  font-size: clamp(0.46rem, 1.3vw, 0.56rem);
+  letter-spacing: 0.2em;
+}
+
+.menu-stat-value {
+  margin-top: 7px;
+  color: var(--ink);
+  font-size: clamp(0.95rem, 2.6vw, 1.2rem);
+  letter-spacing: 0.08em;
+}
+
+.menu-protocols { display: flex; flex-direction: column; gap: 8px; }
+
+.menu-protocol {
+  padding: 11px 13px;
+  border: 1px solid rgba(127, 231, 225, 0.12);
+  border-radius: 2px;
+  background: rgba(11, 16, 20, 0.9);
+  opacity: 0.5;
+}
+.menu-protocol.is-held {
+  border-color: rgba(127, 231, 225, 0.42);
+  background: rgba(14, 26, 28, 0.95);
+  opacity: 1;
+}
+
+.menu-protocol-name {
+  color: var(--axiom);
+  font-size: clamp(0.56rem, 1.5vw, 0.68rem);
+  letter-spacing: 0.2em;
+}
+.menu-protocol:not(.is-held) .menu-protocol-name { color: var(--muted); }
+
+.menu-protocol-hint {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: clamp(0.44rem, 1.25vw, 0.54rem);
+  letter-spacing: 0.14em;
+  opacity: 0.8;
+}
+
+.menu-journey { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 7px; }
+
+.menu-journey-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  color: rgba(141, 154, 163, 0.4);
+  font-size: clamp(0.46rem, 1.3vw, 0.57rem);
+  letter-spacing: 0.16em;
+}
+.menu-journey-row.is-met { color: var(--ink); }
+.menu-journey-rest { margin-top: 6px; font-style: normal; opacity: 0.75; }
+.menu-journey-mark { color: rgba(201, 162, 95, 0.35); }
+.menu-journey-row.is-met .menu-journey-mark { color: #c9a25f; }
+
+.menu-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 11px 18px;
+  border-top: 1px solid rgba(201, 162, 95, 0.22);
+  background: rgba(10, 15, 18, 0.9);
+  color: var(--muted);
+  font-size: clamp(0.46rem, 1.3vw, 0.56rem);
+  letter-spacing: 0.18em;
+}
+.menu-footer-rule { color: rgba(201, 162, 95, 0.7); text-align: right; }
+
+/* 16px glyphs from the uploaded icon sheet, addressed by cell. */
+.menu-icon {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  background-image: url('./assets/menu_buttons/Icons.png');
+  background-size: 84px 266px;     /* 6 x 19 cells at 14px */
+  background-position: calc(var(--ix) * -14px) calc(var(--iy) * -14px);
+  image-rendering: pixelated;
+  opacity: 0.9;
+}
+
+.touch-menu { position: absolute; top: max(12px, env(safe-area-inset-top)); right: max(14px, env(safe-area-inset-right)); pointer-events: auto; }
+
+.menu-button {
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(127, 231, 225, 0.4);
+  border-radius: 50%;
+  background: rgba(6, 12, 14, 0.72);
+  color: var(--axiom);
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+.menu-button:active { transform: scale(0.94); }
+
+/* Two columns once three will not fit, with the portrait row spanning the top. */
+@media (max-width: 1000px) {
+  .menu-body { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .menu-card { padding: 16px; }
+  .menu-card-portrait {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .menu-portrait-frame { --cell: 96px; margin-bottom: 0; }
+  .menu-name { font-size: clamp(0.95rem, 3.4vw, 1.2rem); }
+  .menu-locale { margin: 0; }
+  .menu-vitality-block { width: auto; margin: 0 0 0 auto; padding-top: 0; }
+  .menu-card-portrait .menu-vitality { justify-content: flex-start; }
+  .menu-heading { margin-bottom: 10px; }
+}
+
+/* One column on a phone, and a tighter portrait row so the stats stay near the top. */
+@media (max-width: 620px) {
+  .menu-body { grid-template-columns: minmax(0, 1fr); }
+  .menu-frame { border-radius: 3px; }
+  .menu-header { flex-wrap: wrap; gap: 9px; padding: 11px 13px; }
+  .menu-header-right { width: 100%; justify-content: space-between; }
+  .menu-tabs { flex-wrap: wrap; overflow: visible; width: 100%; }
+  .menu-tab { padding: 6px 10px; }
+  .menu-portrait-frame { --cell: 76px; }
+  .menu-vitality-count { font-size: clamp(1.2rem, 7vw, 1.6rem); }
+  .menu-stat-grid { gap: 7px; margin-top: 16px; }
+  .menu-footer { flex-direction: column; gap: 4px; padding: 10px 13px; }
+  .menu-footer-rule { text-align: left; }
+}
+
+/* Landscape phones are short: shrink the vertical rhythm so more than the portrait shows. */
+@media (max-height: 460px) {
+  .menu-card { padding: 13px 15px; }
+  .menu-portrait-frame { --cell: 76px; }
+  .menu-heading-spaced { margin-top: 16px; }
+  .menu-stat-grid { margin-top: 14px; }
+  .menu-stat { padding: 8px 10px; }
+  .menu-journey { gap: 5px; }
+}
+
+
+.title-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: max(16px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right))
+           max(16px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+  overflow: hidden;
+  text-align: center;
+  background:
+    radial-gradient(ellipse at 50% 42%, rgba(127, 231, 225, 0.07), transparent 62%),
+    linear-gradient(180deg, #060b0e 0%, #04080a 50%, #020506 100%);
+}
+
+/* The title plate is the key art with the menu set into the empty right third of the
+   painting. Everything is layered over the art rather than beside it, so the composition
+   survives any viewport the letterboxed world does. */
+.title-screen-art {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.title-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Biased up and to the left. The painting is 16:9; anything narrower crops horizontally,
+     and the three figures sit left of centre while the right third is empty ruins the menu
+     covers anyway, so the crop should take its loss from the right and from the bare rock
+     along the bottom. */
+  object-position: 30% 38%;
+  pointer-events: none;
+}
+
+/* A failed image leaves the base gradient rather than a broken box. */
+.title-art.is-missing { display: none; }
+
+.title-scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(270deg, rgba(3, 6, 8, 0.88) 0%, rgba(3, 6, 8, 0.72) 22%, rgba(3, 6, 8, 0.33) 46%, transparent 66%),
+    linear-gradient(0deg, rgba(3, 6, 8, 0.7) 0%, transparent 34%);
+}
+
+.title-panel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: min(360px, 46%);
+  max-height: 100%;
+  text-align: right;
+}
+
+.title-mark {
+  color: var(--axiom);
+  font-size: clamp(1.1rem, 2.6vw, 1.7rem);
+  animation: pulse 2.6s ease-in-out infinite;
+}
+
+.title-word {
+  margin: 0.1rem 0 0;
+  font-size: clamp(1.4rem, 4.4vw, 2.6rem);
+  font-weight: 400;
+  letter-spacing: clamp(0.1em, 0.7vw, 0.2em);
+  text-shadow: 0 0 32px rgba(127, 231, 225, 0.28), 0 2px 14px rgba(0, 0, 0, 0.9);
+  white-space: nowrap;
+}
+
+.title-word-small { font-size: clamp(1.1rem, 4.4vw, 1.6rem); }
+
+.title-tagline {
+  margin: 0.35rem 0 0;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(127, 231, 225, 0.2);
+  color: var(--muted);
+  font-size: clamp(0.48rem, 1.4vw, 0.66rem);
+  letter-spacing: 0.3em;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+}
+
+.title-panel .title-tagline { align-self: stretch; }
+
+.title-notice {
+  max-width: 34rem;
+  margin: 0.85rem 0 0;
+  padding: 8px 12px;
+  border: 1px solid rgba(217, 111, 111, 0.4);
+  background: rgba(30, 12, 14, 0.72);
+  color: #e9c6c6;
+  font-size: clamp(0.55rem, 1.6vw, 0.7rem);
+  line-height: 1.6;
+  letter-spacing: 0.06em;
+}
+
+.title-menu, .title-confirm {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: clamp(6px, 1.2vh, 10px);
+  width: min(340px, 100%);
+  margin-top: clamp(0.8rem, 2.4vh, 1.4rem);
+}
+
+.title-confirm-text {
+  margin: 0 0 0.3rem;
+  color: var(--muted);
+  font-size: clamp(0.6rem, 2vw, 0.72rem);
+  line-height: 1.6;
+}
+
+.title-button {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: clamp(9px, 1.7vh, 14px) 16px;
+  border: 1px solid rgba(127, 231, 225, 0.28);
+  border-left-width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgba(14, 30, 33, 0.88), rgba(8, 14, 17, 0.7));
+  color: var(--ink);
+  font-size: clamp(0.62rem, 1.9vw, 0.78rem);
+  letter-spacing: 0.22em;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 140ms ease, background 140ms ease, transform 140ms ease;
+}
+
+.title-button:hover, .title-button:focus-visible {
+  border-color: var(--axiom);
+  background: linear-gradient(90deg, rgba(22, 48, 51, 0.94), rgba(10, 20, 23, 0.8));
+  transform: translateX(3px);
+  outline: none;
+}
+
+/* Set into the right edge of the plate, so the accent and the motion mirror that edge. */
+.title-panel .title-button {
+  align-items: flex-end;
+  border-left-width: 1px;
+  border-right-width: 2px;
+  background: linear-gradient(270deg, rgba(14, 30, 33, 0.9), rgba(6, 12, 15, 0.66));
+  text-align: right;
+  backdrop-filter: blur(2px);
+}
+
+.title-panel .title-button:hover, .title-panel .title-button:focus-visible {
+  background: linear-gradient(270deg, rgba(24, 52, 55, 0.96), rgba(8, 18, 21, 0.78));
+  transform: translateX(-3px);
+}
+
+.title-button-detail {
+  color: var(--muted);
+  font-size: 0.7em;
+  letter-spacing: 0.14em;
+}
+
+.title-button-danger { border-color: rgba(217, 111, 111, 0.45); }
+.title-button-danger:hover, .title-button-danger:focus-visible {
+  border-color: var(--danger);
+  background: linear-gradient(90deg, rgba(46, 18, 21, 0.96), rgba(20, 10, 12, 0.8));
+}
+
+.title-hint {
+  margin: clamp(0.7rem, 2.2vh, 1.2rem) 0 0;
+  color: var(--muted);
+  font-size: clamp(0.44rem, 1.3vw, 0.58rem);
+  letter-spacing: 0.16em;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+  opacity: 0.85;
+}
+
+/* Bottom left, opposite the menu, so it never crowds a button. */
+.title-version {
+  position: absolute;
+  left: max(14px, env(safe-area-inset-left));
+  bottom: max(10px, env(safe-area-inset-bottom));
+  z-index: 1;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.56rem;
+  letter-spacing: 0.18em;
+  opacity: 0.5;
+}
+
+@media (max-height: 430px) {
+  .title-panel { width: min(320px, 50%); }
+}
+
+/* Portrait windows that the rotate gate does not hold — a desktop window resized tall. The
+   painting is 16:9, so at this shape the menu goes over the middle instead of the edge. */
+@media (max-aspect-ratio: 9 / 10) {
+  .title-screen-art { justify-content: center; }
+  .title-panel { align-items: center; width: min(340px, 88%); text-align: center; }
+  .title-panel .title-button { align-items: center; text-align: center; border-right-width: 1px; }
+  .title-scrim { background: linear-gradient(0deg, rgba(3, 6, 8, 0.92) 18%, rgba(3, 6, 8, 0.62) 52%, rgba(3, 6, 8, 0.35) 100%); }
+  .title-art { object-position: 50% 30%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title-mark, .rotate-phone, .rotate-phone-screen { animation: none; }
+}
+
+/* The rotate gate. Above everything, including the HUD and the pause menu, because it is
+   the one state where nothing underneath is playable. */
+.rotate-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  padding: 24px;
+  text-align: center;
+  background:
+    radial-gradient(ellipse at 50% 44%, rgba(127, 231, 225, 0.08), transparent 60%),
+    #04080a;
+}
+
+.rotate-glyph svg {
+  width: clamp(132px, 42vw, 196px);
+  height: auto;
+  overflow: visible;
+}
+
+.rotate-phone {
+  fill: none;
+  stroke: var(--axiom);
+  stroke-width: 2.5;
+  opacity: 0.9;
+  transform-origin: 60px 31px;
+  animation: rotate-hint 3.4s ease-in-out infinite;
+}
+
+.rotate-phone-screen {
+  fill: rgba(127, 231, 225, 0.16);
+  stroke: none;
+  transform-origin: 60px 31px;
+  animation: rotate-hint 3.4s ease-in-out infinite;
+}
+
+.rotate-arrow {
+  fill: none;
+  stroke: rgba(127, 231, 225, 0.45);
+  stroke-width: 2;
+  stroke-dasharray: 3 6;
+  stroke-linecap: round;
+}
+
+.rotate-arrow-head { fill: rgba(127, 231, 225, 0.45); }
+
+@keyframes rotate-hint {
+  0%, 30% { transform: rotate(0deg); }
+  60%, 100% { transform: rotate(-90deg); }
+}
+
+.rotate-title {
+  margin: 0;
+  font-size: clamp(0.85rem, 5vw, 1.15rem);
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  color: var(--ink);
+}
+
+.rotate-text {
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(0.6rem, 3.4vw, 0.74rem);
+  letter-spacing: 0.16em;
+}
+
+.interact-prompt {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: max(196px, calc(env(safe-area-inset-bottom) + 178px));
+  z-index: 6;
+  display: flex;
+  align-items: baseline;
+  gap: 0.7em;
+  padding: 7px 14px;
+  border: 1px solid rgba(127, 231, 225, 0.34);
+  border-radius: 3px;
+  background: rgba(5, 10, 12, 0.86);
+  font-size: clamp(0.6rem, 1.8vw, 0.74rem);
+  letter-spacing: 0.16em;
+  white-space: nowrap;
+  pointer-events: none;
+  text-shadow: 0 1px 4px #000;
+}
+
+.interact-prompt-verb { color: var(--axiom); }
+.interact-prompt-verb::before { content: '\2299'; margin-right: 0.5em; }
+.interact-prompt-name { color: var(--muted); }
+
 .debug-overlay {
   position: absolute;
   z-index: 5;
@@ -235,6 +950,7 @@ button { font: inherit; }
 
 @media (pointer: fine) {
   .touch-controls { display: none !important; }
+  .interact-prompt { bottom: 96px; }
   .dialogue { bottom: 28px; }
 }
 
@@ -243,6 +959,7 @@ button { font: inherit; }
   .action-button { width: 68px; height: 68px; }
   .resonance-button { width: 52px; height: 52px; margin-bottom: 40px; }
   .dialogue { bottom: max(132px, calc(env(safe-area-inset-bottom) + 114px)); }
+  .interact-prompt { bottom: max(202px, calc(env(safe-area-inset-bottom) + 184px)); }
   .debug-overlay { max-width: 74vw; max-height: 46svh; font-size: 0.5rem; }
 }
 

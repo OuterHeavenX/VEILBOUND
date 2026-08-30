@@ -6,6 +6,86 @@ Use this file together with `ROADMAP.md`, `docs/VERTICAL_SLICE.md`, `docs/CANON.
 
 ---
 
+## 2026-08-30 — v0.3.4 Greyhaven is painted
+
+The owner supplied eleven map images "to try and replicate greyhaven". Three of them are
+full-town plates, and the layout in them is not a coincidence: they were painted from this
+room's authored collision. Overlaying the room's eight building rects on the plate stretched
+to 960x540 puts every one of them on its building — inn, lift gate, three market stalls,
+workshop, house, bell tower. A uniform crop does not do that. So the plate is stretched, and
+Greyhaven now paints it instead of its procedural art.
+
+Two measurements decided the approach before any code was written:
+
+- **Scale.** The figures painted into the town measure 61-69 world units tall. Kael draws at
+  58 and NPCs at 54. The plate's implied character scale is the game's own, so nobody stands
+  in this town looking like a giant. That was the single biggest risk and it was already right.
+- **Aspect.** The plate is 2.16 against the world's 1.78, so stretching squashes it about 18%
+  horizontally. Visibly fine, and it is what keeps art and collision agreeing.
+
+### Which plate, and why the gate is drawn rather than swapped
+
+Of the three town plates, only the dormant one is usable: the lit one has NPCs painted into
+it that would fight the game's own NPC sprites at the same positions.
+
+The obvious idea — ship both and swap on `story.axiomAwakened` — does not survive contact
+with the files. Diffing them, 14% of pixels differ and the changed region covers the whole
+image, so they are independent generations, not one render with the gate relit. Their grass,
+puddles and lighting do not match, so neither compositing a crop nor cross-fading them works.
+
+Instead the town keeps one plate and the engine lights the gate: a flag-gated radial glow
+composited in `lighter`, shaped as a core inside an annulus because the painted door is
+concentric rings and an even blob just fogs the stone. `docs/CANON.md` asks that Greyhaven
+change over the course of the game; this is the first time it visibly does.
+
+### The general mechanism
+
+`src/data/roomArt.js` and `src/core/RoomArt.js` are new and reusable — any room can name a
+plate. Painting one skips that room's ground fill, terrain tiler and details pass, and its
+wall-rect fill, since in a painted room the buildings are the art. Collision is untouched.
+
+### Bug found while building
+
+- The room's wall rects were still being filled with flat `#111817` over the plate, hiding
+  the painted buildings and the gate glow with them. Only visible once real art was behind
+  them; the procedural rooms had always drawn their walls that way because there was nothing
+  underneath to hide.
+
+### What is not wired, and why
+
+`march-field.png` is a rainy field with a broken road, a pine and a Vein crystal shrine. Its
+obstacles do not line up with the authored collision of either Hollow March field — checked
+the same way as Greyhaven, and the boxes land on open grass while the real obstacles sit
+elsewhere. Wiring it would ship art that disagrees with the walls, which is the thing
+`docs/SUNKEN_ARCHIVE.md` forbids. It needs a room authored to it, or its walls re-authored to
+the painting; either is a deliberate piece of work rather than a drop-in.
+
+The seven building elevations are likewise unused. They are front-facing sprites of the
+structures already baked into the town plate, so they are material for a future room, not for
+this one.
+
+### Also
+- The eleven uploads had UUID filenames and a stray 5-byte `Files`. Renamed to what they are;
+  the junk file is gone.
+- `/favicon.ico` had always 404'd, which surfaced as a console error in the `town` suite once
+  timings shifted. An inline SVG diamond replaces it, so the suites stay trustworthy.
+
+### Verification
+- A new `roomart` suite: the plate loads and paints, buildings are art rather than flat wall
+  blocks, the gate is measurably cyan only once the Axiom wakes (delta 117 on the blue/green
+  axis), a blocked plate falls back to the procedural town with no fatal error, and rooms
+  with no plate are untouched.
+- Every existing suite passes. Two failures during development were the test's fault, not the
+  code's: both seeded the Vestibule at a position inside a wall — one of them inside the
+  closed south seal — and the save-recovery path correctly rescued the player to Greyhaven.
+
+### Owner-device acceptance — PENDING
+- [ ] The painted town reads at phone scale, and Kael reads against it.
+- [ ] The horizontal squash is not noticeable in play.
+- [ ] The lift gate visibly wakes after the Axiom does.
+- [ ] The 423 KB plate does not stall the first entry to Greyhaven on mobile data.
+
+
 ## 2026-08-30 — v0.3.3 The threshold: landscape lock and a cast on the plate
 
 ### The game now insists on landscape

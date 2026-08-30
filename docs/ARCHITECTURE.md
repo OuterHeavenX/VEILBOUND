@@ -1,7 +1,7 @@
 # VEILBOUND — Technical Architecture Foundation
 
 Owner: **FORGE**  
-Current runtime: **v0.3.3-threshold**
+Current runtime: **v0.3.4-greyhaven**
 
 ## Core principles
 
@@ -20,7 +20,7 @@ Current runtime: **v0.3.3-threshold**
 
 The browser game must remain launchable from static hosting without npm, a bundler or a local development server. Development-only tools may use dependencies as long as committed browser-ready output keeps the game itself zero-build.
 
-Current launch chain includes SaveManager, Audio, Sprites, Puzzles, sprite/data registries, orientation/interaction/title/pause UI, Progression, and `src/main.js`.
+Current launch chain includes SaveManager, Audio, Sprites, RoomArt, Puzzles, sprite/data registries, orientation/interaction/title/pause UI, Progression, and `src/main.js`.
 
 Startup failure must surface visibly rather than leaving a blank canvas. Mobile safe areas and responsive canvas sizing are required.
 
@@ -35,6 +35,7 @@ Already separated:
 - `src/core/Sprites.js`
 - `src/core/Progression.js`
 - `src/core/Puzzles.js`
+- `src/core/RoomArt.js`
 - `src/ui/Orientation.js`
 - `src/ui/TitleScreen.js`
 - `src/ui/PauseMenu.js`
@@ -249,6 +250,30 @@ Presentation hooks should remain bounded so stacked particles/flash/projectiles 
 Abilities are persistent player capabilities. Resonance is implemented as a short expanding pulse against authored compatible targets. It is not a global visibility filter.
 
 The next major ability is **Tether**. Its implementation must support traversal, object/machinery manipulation and combat use from the same core targeting rules, with touch and controller considered from the first pass.
+
+## Room art
+
+A room may declare an authored background plate in `src/data/roomArt.js`. When
+`src/core/RoomArt.js` has that image decoded it paints the whole plate and the runtime skips
+three procedural passes for that room: the flat ground fill, the terrain tiler, and the
+`details` overlay. It also skips filling the room's wall rects, because in a painted room the
+buildings *are* the art and drawing collision blocks over them hides the painting.
+
+Collision is untouched by any of this. Walls, exits, mechanisms, props, interactables and
+figures all still draw and simulate exactly as before, so a plate is presentation only.
+
+The fallback is the default rather than the exception: `draw()` returns false for a room with
+no plate, and for a plate still loading or failed, and every one of those cases keeps the
+procedural art it had before. A missing background can never take a room out of play.
+
+`fit: 'stretch'` maps the image onto the full 960x540 world. Greyhaven's plate is 1844x853
+(2.16) against the world's 1.78, so it squashes about 18% horizontally. That is deliberate:
+the plate was painted from this room's authored layout, and stretched, every building lands on
+the collision box that already existed, which a uniform crop does not do.
+
+A plate may also declare `awakenGlow` — a flag-gated radial light composited over the plate in
+`lighter`. Greyhaven's lift gate uses it so the town visibly answers `story.axiomAwakened`,
+which `docs/CANON.md` asks of Greyhaven, without shipping a second multi-megabyte plate.
 
 ## Title presentation
 

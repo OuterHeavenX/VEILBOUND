@@ -21,6 +21,7 @@
       {
         id: 'greyhaven.npc.innkeeper',
         kind: 'npc',
+        sprite: 'innkeeper',
         name: 'MARETH',
         place: "WAYFARER'S REST",
         x: 182, y: 230, radius: 13, reach: 46, solid: true,
@@ -91,6 +92,7 @@
       {
         id: 'greyhaven.npc.workshop',
         kind: 'npc',
+        sprite: 'workshop',
         name: 'TOLL',
         place: 'RELIC WORKSHOP',
         x: 186, y: 332, radius: 13, reach: 46, solid: true,
@@ -128,6 +130,7 @@
       {
         id: 'greyhaven.npc.researcher',
         kind: 'npc',
+        sprite: 'researcher',
         name: 'ISEN',
         place: "ARCHIVIST'S HOUSE",
         x: 645, y: 328, radius: 13, reach: 46, solid: true,
@@ -166,6 +169,7 @@
       {
         id: 'greyhaven.npc.resident',
         kind: 'npc',
+        sprite: 'resident',
         name: 'BRAY',
         place: 'MARKET ROW',
         x: 718, y: 196, radius: 13, reach: 46, solid: true,
@@ -197,6 +201,7 @@
       {
         id: 'greyhaven.npc.wren',
         kind: 'npc',
+        sprite: 'wren',
         name: 'WREN',
         place: 'GREYHAVEN',
         x: 330, y: 152, radius: 11, reach: 44, solid: true,

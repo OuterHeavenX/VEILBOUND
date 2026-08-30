@@ -3,7 +3,7 @@
 ## Current Implementation Status
 
 **Current playable branch:** `feature/vertical-slice-foundation`  
-**Current playable version:** `v0.1.7-ambience`  
+**Current playable version:** `v0.1.8-characters`  
 **Last updated:** 2026-08-29
 
 Implemented and awaiting owner-device acceptance:
@@ -35,10 +35,11 @@ Implemented and awaiting owner-device acceptance:
 - [x] device-level settings persistence outside the save
 - [x] procedural audio system with no assets and no build step
 - [x] title ambience: Vein drone, wind, and the Greyhaven bell
+- [x] character sprites for Kael and all five Greyhaven NPCs, prerendered from the uploaded models
 
 Still required before Phase 1 exits:
 
-- [ ] owner-device acceptance of `v0.1.7-ambience`, carrying the unconfirmed v0.1.3 through v0.1.6 items
+- [ ] owner-device acceptance of `v0.1.8-characters`, carrying the unconfirmed v0.1.3 through v0.1.7 items
 - [~] second ranged/area-control enemy fully authored; acceptance outstanding
 - [x] Greyhaven NPC/dialogue interaction layer
 - [x] first save/rest point

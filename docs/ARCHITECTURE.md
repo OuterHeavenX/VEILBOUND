@@ -156,6 +156,30 @@ Device-level preferences live outside the save, under `veilbound.settings.v1`, v
 they must survive erasing or replacing a save, and must be settable before any save exists.
 The save's own `settings` field stays reserved for per-journey settings.
 
+### Character sprites
+The uploaded characters are 3D glTF models, and the runtime is Canvas 2D. Rather than
+replace the renderer, `tools/prerender-characters.mjs` renders each model once, offline,
+into 8-direction sprite sheets that the 2D runtime draws like any image.
+
+- The tool is dev-only. It needs `npm install` inside `tools/`; the game itself still has
+  no dependencies, no build step, and launches from `file://`.
+- Sheets load as plain `<img>`, and the manifest is generated as `src/data/characterSprites.js`
+  rather than JSON, because `fetch()` is blocked on `file://`.
+- Direction index 0 faces the camera and turns clockwise, so a facing vector maps onto a
+  sheet row directly through `atan2(facingX, facingY)`.
+- Sprites are anchored on the feet, measured from the generated sheets, so they stand on the
+  same ground line the procedural figures used.
+- Every draw reports whether it succeeded. When a sheet is missing or still loading the
+  runtime falls back to its procedural figures, so a fresh clone is playable before anyone
+  runs the prerenderer.
+
+The KayKit models carry no clips of their own; the clips live in the shared-rig files under
+`Animations/`, keyed by node name, so a clip bound to a character's skeleton plays without
+retargeting. There is no attack clip in the pack, so the Shardblade swing borrows `Use_Item`.
+
+Casting is placeholder, recorded in the tool's `CAST` table: Kael is `Rogue_Hooded`, and the
+five Greyhaven NPCs take the remaining five models. See `assets/ATTRIBUTION.md`.
+
 ### Audio
 Every voice is synthesised through Web Audio. VEILBOUND ships zero-build and
 file://-friendly, so there are no audio assets to fetch, and procedural synthesis keeps

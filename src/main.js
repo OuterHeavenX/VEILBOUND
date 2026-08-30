@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '0.1.7-ambience';
+  const VERSION = '0.1.8-characters';
   const canvas = document.getElementById('game-canvas');
   const boot = document.getElementById('boot-screen');
   const status = document.getElementById('boot-status');
@@ -30,17 +30,20 @@
   const Interactables = window.Veilbound && window.Veilbound.Interactables;
   const TitleScreen = window.Veilbound && window.Veilbound.TitleScreen;
   const Audio = window.Veilbound && window.Veilbound.Audio;
+  const Sprites = window.Veilbound && window.Veilbound.Sprites;
   if (!SaveManager) throw new Error('SaveManager failed to load.');
   if (!EnemyRegistry) throw new Error('Enemy registry failed to load.');
   if (!Interactables) throw new Error('Interaction registry failed to load.');
   if (!TitleScreen) throw new Error('Title screen failed to load.');
   if (!Audio) throw new Error('Audio system failed to load.');
+  if (!Sprites) throw new Error('Sprite system failed to load.');
 
   const WORLD = { width: 960, height: 540 };
   // Shared by the live combat checks and the debug overlay so drawn boxes
   // always describe the values the simulation actually uses.
   const ATTACK_REACH = 62, ATTACK_ARC_DOT = .15, ATTACK_ACTIVE_UNTIL = .07, HUSK_CHASE_RANGE = 270;
   const DEBUG_FRAME_SAMPLES = 45, DEBUG_TEXT_INTERVAL = .12;
+  const KAEL_SPRITE_SIZE = 58, NPC_SPRITE_SIZE = 54;
   const ACTION_GLYPH = { attack: '\u2694', TALK: '\u2299', INSPECT: '\u2299', REST: '\u2299' };
   const particles = [];
   const enemies = [];
@@ -137,6 +140,7 @@
       `HP ${player.health}/${player.maxHealth}  IFRAME ${player.invuln.toFixed(2)}  ATK ${player.attackTimer.toFixed(2)}/${player.attackCooldown.toFixed(2)}`,
       `RESONANCE ${resonance}  PULSE r=${resonanceRadius.toFixed(0)}`,
       `ENTITIES enemy ${enemies.length}  proj ${projectiles.length}  fx ${particles.length}`,
+      `SPRITES ${(()=>{const p=Sprites.state();return `${p.ready}/${p.sheets} ready${p.failed?` ${p.failed} failed`:''}`;})()}`,
       `AUDIO ${(()=>{const a=Audio.state();return `${a.enabled?'on':'off'} ctx=${a.context} bed=${a.ambient?'playing':'silent'} gain=${a.gain} rms=${a.level}`;})()}`,
       `TARGET ${debugTargetLabel()}`,
       `NODE ${debugNodeLabel()}`,
@@ -226,7 +230,7 @@
     const now=performance.now();
     for(const it of roomInteractables(roomId)){
       const targeted=interactTarget===it;
-      if(it.kind==='npc')drawNpc(ctx,it,targeted,now);
+      if(it.kind==='npc'){if(!drawNpcSprite(ctx,it,now))drawNpc(ctx,it,targeted,now);else if(targeted){ctx.strokeStyle='rgba(127,231,225,.30)';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(it.x,it.y+13,17,7,0,0,Math.PI*2);ctx.stroke();}}
       else if(targeted||it.kind!=='rest'){
         const pulse=.30+Math.sin(now*.003+it.x)*.12,alpha=targeted?.92:pulse;
         ctx.save();ctx.translate(it.x,it.y);ctx.rotate(Math.PI*.25);
@@ -236,6 +240,12 @@
       ctx.strokeStyle='rgba(127,231,225,.55)';ctx.lineWidth=2;ctx.setLineDash([4,5]);
       ctx.beginPath();ctx.arc(it.x,it.y,it.radius+11,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
     }
+  }
+  function drawNpcSprite(ctx,it,now){
+    if(!it.sprite||!Sprites.ready(it.sprite,'Idle_A'))return false;
+    ctx.fillStyle='rgba(0,0,0,.24)';ctx.beginPath();ctx.ellipse(it.x,it.y+13,15,6,0,0,Math.PI*2);ctx.fill();
+    // Each NPC breathes on its own offset so a street of them never moves in lockstep.
+    return Sprites.draw(ctx,it.sprite,'Idle_A',{x:it.x,y:it.y,facingX:it.facingX||0,facingY:it.facingY===undefined?1:it.facingY,frame:now*.0035+it.x,size:NPC_SPRITE_SIZE,groundOffset:13});
   }
   function drawNpc(ctx,it,targeted,now){
     const p=it.palette,bob=Math.sin(now*.0016+it.x)*1.2,small=it.mark==='small';
@@ -260,7 +270,22 @@
   function drawProjectiles(ctx){for(const p of projectiles){ctx.fillStyle='rgba(127,231,225,.20)';ctx.beginPath();ctx.arc(p.x,p.y,p.radius+7,0,Math.PI*2);ctx.fill();ctx.fillStyle='#dffcf8';ctx.beginPath();ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);ctx.fill();}}
   function drawEnemies(ctx){for(const e of enemies){ctx.save();ctx.translate(e.x,e.y);ctx.fillStyle='rgba(0,0,0,.24)';ctx.beginPath();ctx.ellipse(0,10,17,7,0,0,Math.PI*2);ctx.fill();ctx.fillStyle=e.flash>0?'#e8fff9':e.type==='sentry'?'#6d8079':'#665f58';ctx.beginPath();ctx.arc(0,0,e.radius,0,Math.PI*2);ctx.fill();ctx.strokeStyle=e.type==='sentry'?'#7fe7e1':'#9c8c7d';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,e.radius-4,0,Math.PI*2);ctx.stroke();if(e.type==='sentry'){const cfg=EnemyRegistry.sentry;if(e.state==='telegraph'){const progress=1-Math.max(0,e.stateTimer)/cfg.attack.telegraphSeconds;ctx.strokeStyle=`rgba(255,214,137,${.45+progress*.5})`;ctx.lineWidth=3+progress*3;ctx.beginPath();ctx.arc(0,0,25+progress*9,0,Math.PI*2);ctx.stroke();ctx.setLineDash([7,7]);ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(e.aimX*155,e.aimY*155);ctx.stroke();ctx.setLineDash([]);}else if(e.state==='disrupted'){ctx.strokeStyle='#7fe7e1';ctx.lineWidth=4;ctx.beginPath();ctx.arc(0,0,29+Math.sin(e.phase*8)*3,0,Math.PI*2);ctx.stroke();}else{ctx.rotate(e.phase);ctx.beginPath();ctx.moveTo(-22,0);ctx.lineTo(22,0);ctx.moveTo(0,-22);ctx.lineTo(0,22);ctx.stroke();}}ctx.restore();}}
   function drawParticles(ctx){for(const p of particles){ctx.globalAlpha=Math.max(0,p.life/p.maxLife);ctx.fillStyle=p.color;ctx.fillRect(p.x-2,p.y-2,4,4);}ctx.globalAlpha=1;}
-  function drawKael(ctx){const bob=Math.sin(player.walkPhase)*1.4,fx=player.facingX,fy=player.facingY;ctx.save();ctx.translate(player.x,player.y+bob);if(player.invuln>0&&Math.floor(player.invuln*18)%2===0)ctx.globalAlpha=.42;ctx.fillStyle='rgba(0,0,0,.25)';ctx.beginPath();ctx.ellipse(0,14,16,7,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#15191a';ctx.beginPath();ctx.moveTo(-13,6);ctx.lineTo(-8,-16);ctx.lineTo(0,-23);ctx.lineTo(8,-16);ctx.lineTo(13,6);ctx.lineTo(7,16);ctx.lineTo(-7,16);ctx.closePath();ctx.fill();ctx.fillStyle='#d5d1c6';ctx.beginPath();ctx.ellipse(fx*2,-17+fy,8,7,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#202628';ctx.fillRect(-5+fx*3,-18+fy,10,3);ctx.strokeStyle='#7fe7e1';ctx.lineWidth=3;ctx.beginPath();ctx.arc(-11+fx*2,-1+fy*2,5,0,Math.PI*2);ctx.stroke();if(player.attackTimer>0){const angle=Math.atan2(fy,fx);ctx.strokeStyle='#d9f6ef';ctx.lineWidth=5;ctx.beginPath();ctx.arc(0,0,44,angle-.72,angle+.72);ctx.stroke();}else{ctx.strokeStyle='#b8b4aa';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(7,1);ctx.lineTo(18+fx*10,-8+fy*10);ctx.stroke();}ctx.restore();}
+  function kaelClip(){if(player.attackTimer>0)return'Use_Item';return(Math.abs(input.moveX)>.01||Math.abs(input.moveY)>.01)?'Walking_A':'Idle_A';}
+  function drawKaelSprite(ctx){
+    const clip=kaelClip();
+    if(!Sprites.ready('kael',clip))return false;
+    // Walk reads off the existing gait phase so footfalls match the movement already tuned;
+    // idle and the attack pose advance on their own clocks.
+    const frame=clip==='Walking_A'?player.walkPhase*.9:(clip==='Use_Item'?(.22-player.attackTimer)*22:performance.now()*.004);
+    if(player.invuln>0&&Math.floor(player.invuln*18)%2===0)ctx.globalAlpha=.42;
+    ctx.fillStyle='rgba(0,0,0,.25)';ctx.beginPath();ctx.ellipse(player.x,player.y+14,16,7,0,0,Math.PI*2);ctx.fill();
+    const drawn=Sprites.draw(ctx,'kael',clip,{x:player.x,y:player.y,facingX:player.facingX,facingY:player.facingY,frame,size:KAEL_SPRITE_SIZE});
+    if(drawn&&player.attackTimer>0){const angle=Math.atan2(player.facingY,player.facingX);ctx.strokeStyle='#d9f6ef';ctx.lineWidth=5;ctx.beginPath();ctx.arc(player.x,player.y,44,angle-.72,angle+.72);ctx.stroke();}
+    ctx.globalAlpha=1;
+    return drawn;
+  }
+  function drawKaelProcedural(ctx){const bob=Math.sin(player.walkPhase)*1.4,fx=player.facingX,fy=player.facingY;ctx.save();ctx.translate(player.x,player.y+bob);if(player.invuln>0&&Math.floor(player.invuln*18)%2===0)ctx.globalAlpha=.42;ctx.fillStyle='rgba(0,0,0,.25)';ctx.beginPath();ctx.ellipse(0,14,16,7,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#15191a';ctx.beginPath();ctx.moveTo(-13,6);ctx.lineTo(-8,-16);ctx.lineTo(0,-23);ctx.lineTo(8,-16);ctx.lineTo(13,6);ctx.lineTo(7,16);ctx.lineTo(-7,16);ctx.closePath();ctx.fill();ctx.fillStyle='#d5d1c6';ctx.beginPath();ctx.ellipse(fx*2,-17+fy,8,7,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#202628';ctx.fillRect(-5+fx*3,-18+fy,10,3);ctx.strokeStyle='#7fe7e1';ctx.lineWidth=3;ctx.beginPath();ctx.arc(-11+fx*2,-1+fy*2,5,0,Math.PI*2);ctx.stroke();if(player.attackTimer>0){const angle=Math.atan2(fy,fx);ctx.strokeStyle='#d9f6ef';ctx.lineWidth=5;ctx.beginPath();ctx.arc(0,0,44,angle-.72,angle+.72);ctx.stroke();}else{ctx.strokeStyle='#b8b4aa';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(7,1);ctx.lineTo(18+fx*10,-8+fy*10);ctx.stroke();}ctx.restore();}
+  function drawKael(ctx){if(!drawKaelSprite(ctx))drawKaelProcedural(ctx);}
   function refreshHud(){if(hudRoom)hudRoom.textContent=rooms[player.room].name;if(hudHealth){let text='';for(let i=0;i<player.maxHealth;i++)text+=`${i<player.health?'◆':'◇'} `;hudHealth.textContent=text.trim();}const unlocked=hasAbility('resonance');if(hudAbility)hudAbility.textContent=unlocked?'AXIOM: RESONANCE ◇':'AXIOM: DORMANT';if(resonanceButton)resonanceButton.hidden=!unlocked;}
   function setupKeyboard(){addEventListener('keydown',e=>{if(!running)return;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();if(!e.repeat&&['Space','KeyZ','KeyJ'].includes(e.code))actionPressed();if(!e.repeat&&['KeyE','KeyR','ShiftLeft','ShiftRight'].includes(e.code))resonancePressed();if(!e.repeat&&(e.code==='F3'||e.code==='Backquote')){e.preventDefault();toggleDebug();}input.keys.add(e.code);});addEventListener('keyup',e=>input.keys.delete(e.code));addEventListener('blur',()=>input.keys.clear());}
   function setupTouch(){if(!touchStick||!touchKnob)return;let pointerId=null;const max=38,updateStick=e=>{const r=touchStick.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let dx=e.clientX-cx,dy=e.clientY-cy,len=Math.hypot(dx,dy);if(len>max){dx=dx/len*max;dy=dy/len*max;}input.touchX=dx/max;input.touchY=dy/max;touchKnob.style.transform=`translate(${dx}px, ${dy}px)`;};touchStick.addEventListener('pointerdown',e=>{pointerId=e.pointerId;touchStick.setPointerCapture(pointerId);updateStick(e);});touchStick.addEventListener('pointermove',e=>{if(e.pointerId===pointerId)updateStick(e);});const release=e=>{if(pointerId!==null&&e.pointerId!==pointerId)return;pointerId=null;input.touchX=0;input.touchY=0;touchKnob.style.transform='translate(0, 0)';};touchStick.addEventListener('pointerup',release);touchStick.addEventListener('pointercancel',release);if(actionButton)actionButton.addEventListener('pointerdown',e=>{e.preventDefault();actionPressed();});if(resonanceButton)resonanceButton.addEventListener('pointerdown',e=>{e.preventDefault();resonancePressed();});if(dialogue)dialogue.addEventListener('pointerdown',e=>{e.preventDefault();if(dialogueSequence)advanceDialogue();});}
@@ -306,6 +331,7 @@
     setDebugMode(debugRequestedByUrl()||Boolean(deviceSettings.debugOverlay),false);
     setupKeyboard();
     setupTouch();
+    Sprites.preload();
     Audio.configure(deviceSettings);
     armAudio();
     setTimeout(()=>{if(boot)boot.hidden=true;presentTitle();},350);

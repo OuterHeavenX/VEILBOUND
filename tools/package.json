@@ -1,0 +1,13 @@
+{
+  "name": "veilbound-tools",
+  "private": true,
+  "type": "module",
+  "description": "Offline authoring tools. Never shipped, and never required to run the game.",
+  "scripts": {
+    "prerender": "node prerender-characters.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.56.0",
+    "three": "^0.169.0"
+  }
+}

@@ -294,8 +294,78 @@ The last open item in section 1.1, and the project's first audio of any kind.
 
 ---
 
+## 2026-08-30 — v0.1.8 Characters
+
+Asset upload landed on `main`. What arrived did not match the description, so the shape of
+this milestone was decided before any code was written.
+
+### What was actually uploaded
+- `assets/characters/Characters/` holds **3D models** (`.glb`/`.fbx`) from the KayKit pack:
+  Barbarian, Knight, Mage, Ranger, Rogue, Rogue_Hooded. The runtime is Canvas 2D and cannot
+  draw them.
+- `assets/characters/main_character/` holds **no character**. It is 2D furniture, icon,
+  object and chest sheets plus a Tiled map and PSD sources, duplicated from `assets/`.
+- There are **no 2D character sprites anywhere** in the upload.
+- Two placeholder files were committed by accident: `assets/characters/main_character/test`
+  and `assets/characters/text2`.
+- `Textures/` duplicates the character textures already under `assets/characters/Characters/`.
+
+Direction chosen: prerender the 3D models into 2D sprite sheets, keeping the Canvas 2D
+renderer and the zero-build launch. The alternative, adopting a 3D renderer, would have
+replaced the renderer, the authored 960x540 world contract, collision, and most of the
+architecture document.
+
+### FORGE — offline prerenderer
+- Added `tools/prerender-characters.mjs`. It loads each model, binds clips from the
+  shared-rig files under `Animations/`, and renders 8 directions per clip to sprite sheets.
+- Dev-only. It needs `npm install` inside `tools/`; the game keeps no dependencies, no build
+  step, and still launches from `file://`.
+- The manifest is generated as `src/data/characterSprites.js` rather than JSON, because
+  `fetch()` is blocked on `file://` and the launch contract depends on that working.
+
+### FORGE — runtime sprites
+- Added `src/core/Sprites.js`. Sheets load as plain images; every draw reports whether it
+  succeeded.
+- Direction index 0 faces the camera and turns clockwise, so a facing vector maps onto a
+  sheet row directly through `atan2(facingX, facingY)`.
+- Sprites are anchored on the feet, measured from the generated sheets rather than guessed,
+  so they stand on the same ground line the procedural figures used.
+- Kael draws idle, walk, and an attack stand-in. Walk reads off the existing gait phase so
+  footfalls match movement that was already tuned.
+- All five Greyhaven NPCs draw from sheets, each breathing on its own offset so a street of
+  them never moves in lockstep.
+- When a sheet is missing or still loading, the procedural figures draw instead. A fresh
+  clone is playable before anyone runs the prerenderer.
+
+### Placeholder status
+- The cast is placeholder: Kael is `Rogue_Hooded`, the NPCs take the remaining five models.
+  The pack is recognizable low-poly fantasy and does not match `docs/CANON.md`.
+- Added `assets/ATTRIBUTION.md` recording sources and two unresolved questions: no licence
+  file was committed with the KayKit upload, and the 2D sheets have no recorded origin.
+- The pack contains no attack clip, so the Shardblade swing borrows `Use_Item`.
+
+### Verification
+- Prerender produces 8 sheets. Frame stepping confirmed by pixel difference: the walk cycle
+  advances 7-15 per-pixel between frames, idle is a subtle 0-1, which is what those clips are.
+- Direction rows verified by extracting each row: 0 south, 2 east, 4 north, 6 west.
+- In-game facing checked at 3x zoom in all four cardinal directions.
+- Fallback verified by serving every sheet as 404: the game boots, plays, moves, and reports
+  `SPRITES 0/8 ready 8 failed` in diagnostics.
+- Fixed a bug found in that fallback pass: both the sprite and procedural paths painted a
+  ground shadow, so a missing sheet double-darkened it. Readiness is now checked before
+  anything is painted.
+- Full v0.1.4 through v0.1.7 regression passes unchanged. No console or page errors.
+
+### Owner-device acceptance — PENDING
+- [ ] HUD displays `v0.1.8-characters` after refresh.
+- [ ] Character sprites are readable at phone scale and do not blur into the ground.
+- [ ] Kael's facing reads correctly in all eight directions while moving.
+- [ ] Sprite sheets do not cost noticeable frame time on device.
+
+---
+
 ## Current immediate production order
-1. Complete v0.1.7 iPhone acceptance, including the deferred v0.1.3 through v0.1.6 items.
+1. Complete v0.1.8 iPhone acceptance, including the deferred v0.1.3 through v0.1.7 items.
 2. Build Sunken Archive entrance revealed through Resonance progression.
 3. Build reusable switch, persistent door, and push/manipulation primitives.
 4. Build Tether acquisition and teaching sequence.

@@ -94,7 +94,12 @@ button { font: inherit; }
 .hud-right { text-align: right; }
 .save-status { margin-top: 7px; color: var(--muted); font-size: 0.78em; opacity: 0.8; }
 
+/* The box becomes a row once a speaker has a portrait; without one the body is the only
+   child and the layout is exactly what it was. */
 .dialogue {
+  display: flex;
+  align-items: stretch;
+  gap: 14px;
   position: absolute;
   left: max(18px, env(safe-area-inset-left));
   right: max(18px, env(safe-area-inset-right));
@@ -108,6 +113,23 @@ button { font: inherit; }
   box-shadow: 0 14px 44px rgba(0,0,0,0.42), inset 0 0 30px rgba(127,231,225,0.025);
   pointer-events: auto;
 }
+
+.dialogue-body { flex: 1; min-width: 0; }
+
+.dialogue-portrait {
+  flex: 0 0 auto;
+  align-self: flex-end;
+  width: clamp(52px, 11vw, 96px);
+  height: clamp(52px, 11vw, 96px);
+  margin: -4px 0 -2px;
+  border: 1px solid rgba(127, 231, 225, 0.28);
+  background: linear-gradient(180deg, rgba(12, 26, 29, 0.9), rgba(5, 10, 12, 0.9));
+  object-fit: cover;
+  object-position: top center;
+  image-rendering: pixelated;
+}
+
+.dialogue-portrait[hidden] { display: none; }
 
 .dialogue-speaker {
   color: var(--axiom);
@@ -369,7 +391,8 @@ button { font: inherit; }
 .menu-vitality-block { width: 100%; margin-top: auto; padding-top: 26px; }
 .menu-card-portrait .menu-vitality { justify-content: center; }
 
-/* Kael's own prerendered idle sheet, stepped frame by frame. */
+/* Kael's authored figure. Framed head-and-shoulders and anchored to the top of the art, so
+   the hood and the Axiom read at every size the menu takes. */
 .menu-portrait-frame {
   position: relative;
   --cell: 148px;
@@ -379,15 +402,12 @@ button { font: inherit; }
   border: 1px solid rgba(127, 231, 225, 0.2);
   border-radius: 3px;
   background-color: rgba(127, 231, 225, 0.035);
-  background-image: url('./assets/sprites/kael_Idle_A.png');
+  background-image: url('./assets/characters/kael_bust.png');
   background-repeat: no-repeat;
-  background-size: calc(var(--cell) * 6) calc(var(--cell) * 8);  /* 6 frames x 8 directions */
-  background-position: 0 0;                                      /* frame 0, south-facing row */
+  background-size: cover;
+  background-position: top center;
   image-rendering: pixelated;
-  animation: kael-breathe 1.6s steps(6) infinite;
 }
-
-@keyframes kael-breathe { to { background-position-x: calc(var(--cell) * -6); } }
 
 .menu-portrait-glow {
   position: absolute;

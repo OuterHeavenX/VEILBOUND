@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '0.4.2-prologue';
+  const VERSION = '0.4.3-kael';
   const canvas = document.getElementById('game-canvas');
   const boot = document.getElementById('boot-screen');
   const status = document.getElementById('boot-status');
@@ -26,6 +26,7 @@
   const interactPrompt = document.getElementById('interact-prompt');
   const interactPromptVerb = document.getElementById('interact-prompt-verb');
   const interactPromptName = document.getElementById('interact-prompt-name');
+  const dialoguePortrait = document.getElementById('dialogue-portrait');
   const skipPrompt = document.getElementById('skip-prompt');
   const skipFill = document.getElementById('skip-fill');
 
@@ -42,6 +43,7 @@
   const Cutscene = window.Veilbound && window.Veilbound.Cutscene;
   const TitleCard = window.Veilbound && window.Veilbound.TitleCard;
   const Prologue = window.Veilbound && window.Veilbound.Prologue;
+  const Portraits = (window.Veilbound && window.Veilbound.Portraits) || {};
   const EnemySprites = window.Veilbound && window.Veilbound.EnemySprites;
   const Props = (window.Veilbound && window.Veilbound.Props) || {};
   const Terrain = (window.Veilbound && window.Veilbound.Terrain) || {};
@@ -223,7 +225,17 @@
   function updateParticles(dt){for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.life-=dt;if(p.life<=0){particles.splice(i,1);continue;}p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.96;p.vy*=.96;}}
   function update(dt){if(TitleCard)TitleCard.update(dt);updateSkipHold(dt);if(Cutscene&&!Cutscene.settled())Cutscene.update(dt);if(Cutscene&&Cutscene.active()){updateParticles(dt);if(debugEnabled){debugTextTimer-=dt;if(debugTextTimer<=0){debugTextTimer=DEBUG_TEXT_INTERVAL;refreshDebugText();}}return;}updateInput();Progression.updateControls();saveStatusTimer=Math.max(0,saveStatusTimer-dt);if(saveStatus&&saveStatusTimer<=0)saveStatus.textContent='SAVE V1 READY';screenFlash=Math.max(0,screenFlash-dt);resonanceCooldown=Math.max(0,resonanceCooldown-dt);player.invuln=Math.max(0,player.invuln-dt);player.attackTimer=Math.max(0,player.attackTimer-dt);player.attackCooldown=Math.max(0,player.attackCooldown-dt);if(resonanceTimer>0){resonanceTimer=Math.max(0,resonanceTimer-dt);resonanceRadius=Math.min(230,resonanceRadius+dt*410);evaluateResonance();}if(resonanceButton)resonanceButton.classList.toggle('cooldown',resonanceCooldown>0);if(pendingAwakening>0){pendingAwakening-=dt;if(pendingAwakening<=0)startAwakeningCutscene();}interactTarget=findInteractTarget();refreshInteractPrompt();if(!dialogueSequence){if(Math.abs(input.moveX)>.01||Math.abs(input.moveY)>.01){player.facingX=input.moveX;player.facingY=input.moveY;const len=Math.hypot(player.facingX,player.facingY)||1;player.facingX/=len;player.facingY/=len;player.walkPhase+=dt*9;tryMovePlayer(input.moveX*player.speed*dt,input.moveY*player.speed*dt);}updateRoomMechanisms();checkPrologueTriggers();transitionIfNeeded();if(Math.abs(player.knockX)>1||Math.abs(player.knockY)>1){tryMovePlayer(player.knockX*dt,player.knockY*dt);player.knockX*=.82;player.knockY*=.82;}updateEnemies(dt);updateProjectiles(dt);Progression.updateWorld(dt);}updateParticles(dt);if(debugEnabled){debugTextTimer-=dt;if(debugTextTimer<=0){debugTextTimer=DEBUG_TEXT_INTERVAL;refreshDebugText();}}}
   function startDialogue(lines,onComplete=null){dialogueSequence={lines};dialogueIndex=0;dialogueOnComplete=onComplete;if(dialogue)dialogue.hidden=false;showDialogueLine();}
-  function showDialogueLine(){if(!dialogueSequence)return;dialogueShownAt=performance.now();Audio.sfx('blip');const line=dialogueSequence.lines[dialogueIndex];if(dialogueSpeaker)dialogueSpeaker.textContent=line.speaker||'';if(dialogueText)dialogueText.textContent=line.text;if(line.flash)screenFlash=.22;}
+  // A speaker with no portrait hides the slot, so one character's art never obliges the rest.
+  function setDialoguePortrait(speaker,mood){
+    if(!dialoguePortrait)return;
+    const entry=Portraits[speaker];
+    const file=entry&&entry.expressions&&(entry.expressions[mood||'neutral']||entry.expressions.neutral);
+    if(!file){dialoguePortrait.hidden=true;return;}
+    if(dialoguePortrait.getAttribute('src')!==file){dialoguePortrait.setAttribute('src',file);}
+    dialoguePortrait.alt=speaker;
+    dialoguePortrait.hidden=false;
+  }
+  function showDialogueLine(){if(!dialogueSequence)return;dialogueShownAt=performance.now();Audio.sfx('blip');const line=dialogueSequence.lines[dialogueIndex];setDialoguePortrait(line.speaker,line.mood);if(dialogueSpeaker)dialogueSpeaker.textContent=line.speaker||'';if(dialogueText)dialogueText.textContent=line.text;if(line.flash)screenFlash=.22;}
   function advanceDialogue(){if(!dialogueSequence)return;if(performance.now()-dialogueShownAt<DIALOGUE_MIN_MS)return;dialogueIndex++;if(dialogueIndex>=dialogueSequence.lines.length){const done=dialogueOnComplete;dialogueSequence=null;dialogueOnComplete=null;if(dialogue)dialogue.hidden=true;if(done)done();return;}showDialogueLine();}
   // Scenes are played through the sequencer rather than hand-rolled. `once` guards on a
   // world flag, so a scene the player has already seen never replays on reload — the

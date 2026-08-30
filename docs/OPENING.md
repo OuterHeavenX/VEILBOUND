@@ -162,10 +162,23 @@ the bell as a summons are all new and all load-bearing.
 - **Interrupted:** closing the tab part-way through resumes from the scene you had not
   reached, rather than losing the rest.
 
+## Art direction — an open conflict
+
+`ROADMAP.md` 2.14 settles VEILBOUND's register as **painted**. Kael's character art, supplied
+in v0.4.3 and now on screen in the dialogue box and the character menu, is **pixel art**.
+
+Both cannot be right. Either the rule moves, or this art is reference for a painted version of
+the same design. It is wired in as-is because it is enormously better than the placeholder it
+replaced, and the conflict is recorded rather than quietly resolved.
+
 ## Still to build
 
 - The four Scene 4 interactive points, once someone writes what they say.
-- Character portraits and expression frames for the dialogue box.
+- Portraits for everyone but Kael. The system is built and Kael has one; Elara, Mira,
+  Caldris, Serac and the creature do not, and correctly show none.
+- A portrait for **YOUNG KAEL**, who is a different speaker from KAEL. The supplied art is
+  adult Kael — it carries the Axiom and the Shardblade, neither of which he has in Scene 1 —
+  so it is deliberately not mapped to the child.
 - Elara's melody, and the bell ringing it.
 - Painted plates for The Forest Path and the Hunter Hall.
 - Art for the Vein-Corrupted, which currently borrows the March Husk's sheet.

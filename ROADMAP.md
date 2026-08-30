@@ -2,9 +2,9 @@
 
 **Document owner:** ORACLE — Game Director & Planning  
 **Repository:** `OuterHeavenX/VEILBOUND`  
-**Integration branch:** `main` — carries the full slice as of `v0.4.2-prologue`  
+**Integration branch:** `main` — carries the full slice as of `v0.4.3-kael`  
 **Current development branch:** `claude/todo-implementation-td5zeq`  
-**Current playable version:** `v0.4.2-prologue`  
+**Current playable version:** `v0.4.3-kael`  
 **Roadmap status:** ACTIVE  
 **Last roadmap update:** 2026-08-30
 
@@ -65,7 +65,7 @@ that is already cited; add new rules at the end.
 
 ---
 
-## 3. Current playable state — v0.4.2-prologue
+## 3. Current playable state — v0.4.3-kael
 
 ### Foundation / presentation
 - [x] zero-build Canvas 2D runtime
@@ -154,7 +154,7 @@ that is already cited; add new rules at the end.
 ## 3.1 Owner-device acceptance backlog
 
 Implementation completion and owner-device acceptance are separate states, and the gap is now
-seven releases wide. Nothing below is a code defect; all of it is untested on the owner's
+eight releases wide. Nothing below is a code defect; all of it is untested on the owner's
 hardware.
 
 | Version | What it added | Checklist |
@@ -166,8 +166,9 @@ hardware.
 | `v0.3.4-greyhaven` | painted Greyhaven town plate | `docs/PROGRESS.md` § v0.3.4 |
 | `v0.3.6-march` | painted Hollow March fields, collision authored to them | `docs/PROGRESS.md` § v0.3.5-6 |
 | `v0.4.2-prologue` | the six-scene opening, the cutscene sequencer, hold-to-skip | `docs/OPENING.md` |
+| `v0.4.3-kael` | Kael's character art, dialogue portraits | `docs/OPENING.md` |
 
-One device pass on `v0.4.2-prologue` covers all seven, since each release carries the ones
+One device pass on `v0.4.3-kael` covers all eight, since each release carries the ones
 before it. That pass is the single largest open item in this roadmap.
 
 ---
@@ -386,7 +387,7 @@ Still held until justified:
 
 # 10. Immediate production order
 
-1. Test `v0.4.2-prologue` on iPhone using the checklist in `docs/SUNKEN_ARCHIVE.md`, plus:
+1. Test `v0.4.3-kael` on iPhone using the checklist in `docs/SUNKEN_ARCHIVE.md`, plus:
    the world sits centred with even letterboxing; the stick appears under the thumb
    anywhere on the left; each region sounds distinct and music sits under the cues; the
    rotate gate appears upright and hands the game back on turning.

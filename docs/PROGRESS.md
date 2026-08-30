@@ -6,6 +6,51 @@ Use this file together with `ROADMAP.md`, `docs/VERTICAL_SLICE.md`, `docs/CANON.
 
 ---
 
+## 2026-08-30 — v0.4.3 Kael has a face, or the absence of one
+
+The owner supplied two images of Kael and the blueprint's portrait system finally had
+something to show.
+
+### Getting the art usable
+
+The first image's transparency was a checkerboard **painted into the picture** — it arrived as
+RGB with no alpha channel at all, so dropping it in would have put a grey chequered square
+behind him. The checkerboard was keyed out by colour, the figure trimmed to its own bounds,
+and a head-and-shoulders bust cut by measuring where the cloak first flares wider than the
+shoulders rather than by guessing a fraction of the height.
+
+### Portraits
+
+`src/data/portraits.js` maps a speaker to expression art, which is the blueprint's "expression
+frame swappers" contract. Kael has `neutral`; every other speaker has no entry and correctly
+shows no portrait, so the box lays out exactly as it did before for them. That matters more
+than it sounds: art for one character must never oblige art for the rest.
+
+The character menu's portrait frame had been stepping through Kael's placeholder KayKit idle
+sheet. It now shows the authored figure.
+
+### Two things flagged rather than decided
+
+**The art is pixel art, and `ROADMAP.md` 2.14 settles the register as painted** — a rule the
+owner set two milestones ago. Both cannot be right. It is wired in as-is because it is
+enormously better than what it replaced, and the conflict is recorded in `docs/OPENING.md`.
+
+**It was labelled "Young Kael", but it is adult Kael.** It carries the Axiom gauntlet and, in
+the second image, the mask and the Shardblade — and the child in Scene 1 has none of those:
+the Axiom awakens years later in the Forgotten Relic Chamber. `YOUNG KAEL` is a separate
+speaker in the script and is deliberately left without a portrait rather than given one that
+contradicts the story it appears in.
+
+### Verification
+- A new `portrait` suite: Kael's lines show the bust, it is the file we cut, Mira's lines show
+  none, and the image actually decodes.
+- Every suite passes.
+
+### Owner-device acceptance — PENDING
+- [ ] The portrait reads at phone scale beside the text.
+- [ ] The hooded void face is legible rather than muddy at the smallest size.
+
+
 ## 2026-08-30 — v0.4.2 The opening, made survivable
 
 Asked what else the opening needed, I probed it instead of guessing, and found three real

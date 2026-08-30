@@ -22,6 +22,11 @@ Visual anchors:
 - damaged Shardblade
 - ancient mechanical gauntlet fused around one forearm
 
+Reference art for all four exists as of v0.4.3: `assets/characters/kael_portrait.png` (the
+figure, hood and Axiom) and `assets/characters/kael_keyart.jpg` (mask and Shardblade). The
+bust crop is the dialogue and character-menu portrait. The gameplay sprite sheet is still the
+placeholder prerender and does not match it.
+
 Kael is not initially a chosen hero in his own understanding. He is a scavenger and explorer accustomed to entering dead ruins for salvage.
 
 ## Elara

@@ -1,7 +1,7 @@
 # VEILBOUND — Technical Architecture Foundation
 
 Owner: **FORGE**  
-Current runtime: **v0.4.2-prologue**
+Current runtime: **v0.4.3-kael**
 
 ## Core principles
 
@@ -293,6 +293,16 @@ The painting is 16:9, so anything narrower crops horizontally; `object-position`
 crop up and to the left, because the three figures sit left of centre and the right third is
 ruins the menu covers anyway. Art that fails to load hides itself and falls back to the
 gradient the section already paints, so a missing file costs the painting and nothing else.
+
+## Dialogue portraits
+
+`src/data/portraits.js` maps a speaker name to expression art. A line may name a mood with
+`{ speaker, text, mood }`; an unknown mood falls back to `neutral`, and a speaker with no
+entry hides the portrait slot entirely, so art for one character never obliges art for the
+rest. The box is a flex row: with no portrait it lays out exactly as it did before.
+
+Portraits are DOM images rather than canvas draws, so they stay sharp at any device scale and
+carry the speaker's name as alt text.
 
 ## Sprite architecture
 

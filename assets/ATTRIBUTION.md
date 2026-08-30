@@ -82,6 +82,24 @@ rest of this file asks.
 **Unresolved:** origin and licence not recorded, as with the title key art. With the town and
 both Hollow March fields now painted, this is most of what the player looks at.
 
+## Kael's character art
+
+- In-repo: `assets/characters/kael_portrait.png` (the figure, background keyed out and
+  trimmed), `assets/characters/kael_bust.png` (a head-and-shoulders crop of it, used as the
+  dialogue and character-menu portrait), and `assets/characters/kael_keyart.jpg` (the second
+  supplied image, a full scene, kept as reference and not yet wired).
+- Supplied by the owner in v0.4.3. The first image arrived as RGB with the transparency
+  checkerboard *painted into it* rather than as an alpha channel; the checkerboard was keyed
+  out and the figure trimmed to its own bounds.
+- It matches `docs/CANON.md`'s visual anchors for Kael closely: the dark travel cloak, the
+  mechanical gauntlet fused around one forearm, and — in the second image — the pale mask and
+  the damaged Shardblade.
+
+**Unresolved:** origin and licence not recorded, as with the title key art and the map plates.
+
+**Also unresolved:** this art is pixel art, and `ROADMAP.md` 2.14 settles VEILBOUND's register
+as painted. See `docs/OPENING.md` § Art direction. Either the rule or this art needs to give.
+
 ## Generated, not third-party
 
 - `assets/sprites/` is produced by `tools/prerender-characters.mjs` from the KayKit models.

@@ -118,7 +118,7 @@ the Vestibule. The wing becomes a loop rather than a corridor walked twice.
 - Every new room's geometry checked programmatically before authoring: no plate, block, valve, spawn
   or door overlaps a wall, and every block has clearance on the axis it must be pushed along.
 - The block cannot be pushed into a wall, into another block, or across undrained water.
-- Flags survive room change and Save V1 reload; blocks reset on entry, per rule 2.6.
+- Flags survive room change and Save V1 reload; blocks reset on entry, per rule 2.5.
 
 ### Owner-device acceptance — PENDING
 - [ ] The plate reads as needing weight, not a footstep, at phone scale.
@@ -324,13 +324,5 @@ Branch: `feature/sunken-archive-foundation`
 
 ## Immediate production order
 
-1. Complete `v0.3.0-archive` iPhone acceptance.
-2. Fix any Archive collision/readability/save regression found by the owner-device pass.
-3. Add the reusable push/manipulation block.
-4. Add water/energy routing and the first meaningful shortcut loop.
-5. Build the Tether acquisition chamber.
-6. Implement Tether traversal/object/combat use and teach it progressively.
-7. Build deeper mastery rooms.
-8. Build The Archivist framework.
-9. Produce the `WELCOME BACK.` sequence.
-10. Run full vertical-slice acceptance on iPhone, iPad, desktop and controller before expanding world scale.
+Lives in `ROADMAP.md` § 10, which is the single copy. This log records what happened; the
+roadmap records what happens next.

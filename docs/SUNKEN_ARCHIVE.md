@@ -49,6 +49,46 @@ SUNKEN ARCHIVE — CATALOG ROTUNDA
        Tether later
 ```
 
+### 1. Eastern Descent — TEACH / ARRIVAL
+
+Goal: establish the Archive's identity before asking the player to solve anything.
+
+- Entry is reachable from Hollow March Field 2 only after `march.field2.resonanceRouteRevealed`.
+- A long dry central causeway runs between drowned side chambers.
+- Deep water is visually water and mechanically impassable; collision and art agree through shared authored geometry.
+- First entry records `archive.entered` and gives one concise Axiom acknowledgement.
+- No required fight in the arrival room.
+
+### 2. Vestibule — TEST
+
+Goal: teach the first reusable dungeon mechanism under light combat pressure.
+
+- Mixed March Husk + Vein Sentry encounter.
+- One authored floor switch: `archive.vestibule.floorSwitch`.
+- Standing on the switch sets persistent flag `archive.vestibule.sealOpen`.
+- The south seal is a real collision body while closed and disappears from collision when opened.
+- The south exit also requires the same flag, preventing transition desynchronization.
+- Switch state survives room changes and Save V1 reload through the world flag.
+
+This is deliberately simple. The player should immediately understand the visual language of plate → mechanism → opened route before later rooms combine it with movement, enemies, Resonance, push blocks, and Tether.
+
+### 3. Catalog Rotunda — COMBINE / FORESHADOW
+
+Goal: combine existing combat/exploration language with authored Resonance and establish the next missing verb.
+
+- Circular archive machinery dominates the room.
+- A Resonance-compatible memory node sits at the central catalog mechanism.
+- Discovery flag: `archive.rotunda.resonanceRead`.
+- The Axiom identifies deeper manipulation infrastructure but cannot operate it yet.
+- The deeper Archive bulkhead remains sealed in this milestone.
+- The room points directly toward the later Tether acquisition path without granting Tether early.
+
+Current memory response:
+
+- `CATALOG MEMORY LATTICE RESPONDING.`
+- `DEEPER ACCESS REQUIRES MANIPULATION AUTHORITY.`
+- `PROTOCOL TRACE: TETHER.`
+
 ## Cistern wing — v0.3.2
 
 A west branch off the Rotunda, before the Tether-gated bulkhead, so the wing adds puzzle
@@ -91,46 +131,6 @@ block south across it onto the plate, and `archive.span.shortcutOpen` opens a tw
 back to the Vestibule. That is the first meaningful shortcut: the wing becomes a loop rather
 than a corridor walked twice.
 
-### 1. Eastern Descent — TEACH / ARRIVAL
-
-Goal: establish the Archive's identity before asking the player to solve anything.
-
-- Entry is reachable from Hollow March Field 2 only after `march.field2.resonanceRouteRevealed`.
-- A long dry central causeway runs between drowned side chambers.
-- Deep water is visually water and mechanically impassable; collision and art agree through shared authored geometry.
-- First entry records `archive.entered` and gives one concise Axiom acknowledgement.
-- No required fight in the arrival room.
-
-### 2. Vestibule — TEST
-
-Goal: teach the first reusable dungeon mechanism under light combat pressure.
-
-- Mixed March Husk + Vein Sentry encounter.
-- One authored floor switch: `archive.vestibule.floorSwitch`.
-- Standing on the switch sets persistent flag `archive.vestibule.sealOpen`.
-- The south seal is a real collision body while closed and disappears from collision when opened.
-- The south exit also requires the same flag, preventing transition desynchronization.
-- Switch state survives room changes and Save V1 reload through the world flag.
-
-This is deliberately simple. The player should immediately understand the visual language of plate → mechanism → opened route before later rooms combine it with movement, enemies, Resonance, push blocks, and Tether.
-
-### 3. Catalog Rotunda — COMBINE / FORESHADOW
-
-Goal: combine existing combat/exploration language with authored Resonance and establish the next missing verb.
-
-- Circular archive machinery dominates the room.
-- A Resonance-compatible memory node sits at the central catalog mechanism.
-- Discovery flag: `archive.rotunda.resonanceRead`.
-- The Axiom identifies deeper manipulation infrastructure but cannot operate it yet.
-- The deeper Archive bulkhead remains sealed in this milestone.
-- The room points directly toward the later Tether acquisition path without granting Tether early.
-
-Current memory response:
-
-- `CATALOG MEMORY LATTICE RESPONDING.`
-- `DEEPER ACCESS REQUIRES MANIPULATION AUTHORITY.`
-- `PROTOCOL TRACE: TETHER.`
-
 ## Reusable puzzle primitive contract
 
 Now owned by `src/core/Puzzles.js` rather than the main runtime, as this document asked.
@@ -144,7 +144,7 @@ water:    [{ x, y, w, h, flag }]                  // impassable until the flag d
 
 A `needsBlock` switch ignores the player and only latches under a block. Block positions are
 room-local and reset on entry; anything that must outlive the room is a world flag, per rule
-2.6, so a solved puzzle stays solved without persisting the block itself.
+2.5, so a solved puzzle stays solved without persisting the block itself.
 
 Pushing moves the block only when its own path is clear, so a push succeeds or fails as a
 whole rather than letting a block enter a wall. The pusher travels with the block, because
@@ -155,8 +155,6 @@ A switch is inactive while its flag is false. Player overlap activates it once, 
 A door is closed while its flag is false. A closed door participates in player, enemy, and projectile collision. When the flag becomes true the door is removed from collision and rendered as an opened mechanism.
 
 Exit definitions may declare `requiresFlag`. A gated exit is neither rendered as available nor transitioned through until its flag is true.
-
-This contract is now live in `src/main.js` and should be extracted into dedicated puzzle modules as the dungeon grows rather than allowing the main runtime to become the permanent home of every dungeon rule.
 
 ## Tether boundary
 

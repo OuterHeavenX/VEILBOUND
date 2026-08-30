@@ -2,7 +2,7 @@
 
 ## Current Implementation Status
 
-**Current playable branch:** `feature/sunken-archive-foundation`  
+**Current playable branch:** `claude/todo-implementation-td5zeq`  
 **Current playable version:** `v0.3.3-threshold`  
 **Last updated:** 2026-08-30
 
@@ -102,12 +102,24 @@ The player should experience exploration, combat, a returning town, Axiom discov
      v
 [SUNKEN ARCHIVE — EASTERN DESCENT]
      |
-[SUNKEN ARCHIVE — VESTIBULE]
-     |
-     | persistent floor switch / seal
+[SUNKEN ARCHIVE — VESTIBULE] <--------------+
+     |                                     |
+     | persistent floor switch / seal      | shortcut
+     v                                     |
+[SUNKEN ARCHIVE — CATALOG ROTUNDA]         |
+     |                    \                |
+     |                     \ west          |
+     |                      v              |
+     |          [SUNKEN ARCHIVE — CISTERN WALK]
+     |                      |     push block -> weight plate
+     |                      v
+     |          [SUNKEN ARCHIVE — SLUICE GALLERY]
+     |                      |     Resonance valve -> drained channel
+     |                      v
+     |          [SUNKEN ARCHIVE — RELIQUARY SPAN]
+     |                      |              |
+     |                      +--------------+
      v
-[SUNKEN ARCHIVE — CATALOG ROTUNDA]
-     |
  [DEEP ARCHIVE — SEALED]
      |
    TETHER
@@ -179,9 +191,12 @@ Current dungeon implementation:
 - Test: Vestibule teaches plate → persistent seal under light enemy pressure.
 - Combine/foreshadow: Catalog Rotunda combines exploration/combat space with a Resonance memory and establishes Tether as the missing manipulation verb.
 
+- Teach: Cistern Walk teaches the push block against a plate no footstep can hold.
+- Teach: Sluice Gallery has Resonance operate a valve rather than only read one.
+- Combine: Reliquary Span puts valve, block and plate together under two live enemies, and
+  opens the shortcut that closes the wing into a loop.
+
 Still required:
-- push/manipulation puzzle
-- water/energy-routing state
 - Tether safe teaching room
 - Tether + enemy pressure
 - Tether + machinery

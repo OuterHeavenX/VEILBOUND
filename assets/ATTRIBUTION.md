@@ -8,7 +8,7 @@ Third-party assets currently in the repository, and what is still unresolved abo
 - In-repo: `assets/characters/Characters/`, `Animations/`, `Textures/`, the root
   `Rock*.png` set, and the loose `.obj`/`.gltf` weapon props.
 - Used as **placeholder art**. See `docs/CANON.md` for the intended visual direction, which
-  this pack does not match. Roadmap rule 2.9 requires an original identity for the shipped
+  this pack does not match. Roadmap rule 2.12 requires an original identity for the shipped
   game, so these are staging material, not the final look.
 
 **Unresolved:** no licence file was committed with the upload. Before any public release,

@@ -1,7 +1,7 @@
 # VEILBOUND — Technical Architecture Foundation
 
 Owner: **FORGE**  
-Current runtime: **v0.3.0-archive**
+Current runtime: **v0.3.3-threshold**
 
 ## Core principles
 
@@ -112,9 +112,14 @@ A room may currently define:
   enemies: [],
   resonanceNodes: [],
   switches: [],
-  doors: []
+  doors: [],
+  blocks: [],
+  water: []
 }
 ```
+
+`switches`, `doors`, `blocks` and `water` are read by `src/core/Puzzles.js`, not by the room
+loader; their shapes are specified under **Sunken Archive puzzle primitives** below.
 
 An exit may include:
 
@@ -187,7 +192,7 @@ other blocks, so a push either succeeds whole or not at all. The pusher advances
 distance the block moved; without that the two alternate frames and pushing crawls at half speed.
 
 Block positions are room-local and reset on entry. Anything that must outlive the room is a world
-flag (rule 2.6), so a solved puzzle stays solved without the block itself being persisted.
+flag (rule 2.5), so a solved puzzle stays solved without the block itself being persisted.
 
 A switch may declare `needsBlock`, which makes it ignore the player entirely and latch only under a
 seated block. That is what makes the block the answer rather than a thing to stand on.
@@ -245,14 +250,18 @@ Abilities are persistent player capabilities. Resonance is implemented as a shor
 
 The next major ability is **Tether**. Its implementation must support traversal, object/machinery manipulation and combat use from the same core targeting rules, with touch and controller considered from the first pass.
 
-## Sprite architecture
+## Title presentation
 
-The title screen does not use this pipeline at all. It is a single piece of authored key art
+The title screen uses no runtime rendering at all. It is a single piece of authored key art
 (`assets/title/keyart.jpg`) drawn as a plain `<img>` with `object-fit: cover`, with the menu
-layered into the empty right third of the painting over a scrim. The painting is 16:9, so
-anything narrower crops horizontally; `object-position` biases the crop up and to the left,
-because the three figures sit left of centre and the right third is ruins the menu covers
-anyway. Art that fails to load hides itself and falls back to the section's gradient.
+layered into the empty right third of the painting over a scrim.
+
+The painting is 16:9, so anything narrower crops horizontally; `object-position` biases the
+crop up and to the left, because the three figures sit left of centre and the right third is
+ruins the menu covers anyway. Art that fails to load hides itself and falls back to the
+gradient the section already paints, so a missing file costs the painting and nothing else.
+
+## Sprite architecture
 
 Generated 8-direction character sheets and authored enemy sheets both flow through `src/core/Sprites.js`. Missing art must fall back safely rather than block game startup.
 

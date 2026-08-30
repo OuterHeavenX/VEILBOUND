@@ -56,12 +56,15 @@ Controls:
 
 ## Implementation split
 
-`src/core/Progression.js` owns the rules: the reward values, the coin drops and their
-pickup, the reward toasts, and the controller's menu button. It holds no reference to the
-menu, so the presentation can change without touching the contract.
-
-`src/ui/PauseMenu.js` owns the presentation only, and `paused` in `src/main.js` is the single
-source of truth for whether the menu is up.
+- `src/core/Progression.js` owns the rules: reward values, coin drops and their pickup,
+  progression snapshots, the reward toasts, and the controller's menu button. It holds no
+  reference to the menu, so the presentation can change without touching the contract.
+- `src/ui/PauseMenu.js` owns the presentation only. `paused` in `src/main.js` is the single
+  source of truth for whether the menu is up.
+- `styles.css` owns menu presentation, including the use of the uploaded menu UI assets.
+- `src/core/SaveManager.js` owns normalization and persistence of XP, JP and Coins.
+- `src/main.js` remains authoritative for enemy death, world simulation, room transitions and
+  rendering integration.
 
 ## Open
 
@@ -76,25 +79,28 @@ The menu uses the uploaded `assets/menu_buttons/` CraftPix UI art as development
 
 The asset licensing warning in `assets/ATTRIBUTION.md` remains authoritative. The menu art is not treated as final original VEILBOUND identity and must not bypass the repository's public-release licensing gate.
 
-## Runtime boundaries
-
-- `src/core/Progression.js` owns kill rewards, coin drops, coin pickup, progression snapshots, and controller menu polling.
-- `src/ui/CharacterMenu.js` owns the menu DOM and pause-facing UI surface.
-- `menu.css` owns menu presentation and use of the uploaded menu UI assets.
-- `src/core/SaveManager.js` owns normalization/persistence of XP, JP, and Coins.
-- `src/main.js` remains authoritative for enemy death, world simulation, room transitions, and rendering integration.
-
 ## Acceptance checklist
 
-- [ ] iPhone displays `v0.2.1-menu`.
-- [ ] Touch menu button opens the Character menu.
-- [ ] World simulation visibly pauses while the menu is open.
-- [ ] Character menu reports the correct HP, location, Shardblade level, and Axiom abilities.
-- [ ] A fresh enemy defeat shows `+2 XP +1 JP` once.
-- [ ] Exactly one gold Coin appears at the defeated enemy's position.
-- [ ] Walking over the Coin removes the drop and increments Coins by `1`.
-- [ ] Menu values update after rewards/pickup.
-- [ ] Defeating multiple enemies accumulates at the exact `2 XP / 1 JP / 1 Coin` rate.
-- [ ] Refresh / Continue preserves XP, JP, and collected Coins.
-- [ ] Existing pre-v0.2.1 save loads without losing prior progress.
-- [ ] Movement, dialogue, Shardblade, Resonance, Sentry combat, title flow, and save/rest behavior remain stable.
+Confirmed by the owner on device at `v0.2.1-menu`, from a real run reported as
+10 XP / 5 JP / 5 Coins after five defeats (`docs/PROGRESS.md` § v0.2.1+):
+
+- [x] Touch menu button opens the Character menu.
+- [x] Character menu reports the correct HP, location, Shardblade level, and Axiom abilities.
+- [x] A fresh enemy defeat shows `+2 XP +1 JP` once.
+- [x] Exactly one gold Coin appears at the defeated enemy's position.
+- [x] Walking over the Coin removes the drop and increments Coins by `1`.
+- [x] Menu values update after rewards/pickup.
+- [x] Defeating multiple enemies accumulates at the exact `2 XP / 1 JP / 1 Coin` rate.
+
+Covered by the automated suites rather than by a device pass:
+
+- [x] World simulation visibly pauses while the menu is open.
+- [x] Refresh / Continue preserves XP, JP, and collected Coins.
+- [x] Existing pre-v0.2.1 save loads without losing prior progress.
+
+Still open, and rolled into the acceptance backlog in `ROADMAP.md` § 3.1:
+
+- [ ] The menu opens and reads correctly on the owner's phone at `v0.3.3-threshold`, including
+      from inside the Sunken Archive.
+- [ ] Movement, dialogue, Shardblade, Resonance, Sentry combat, title flow, and save/rest
+      behavior remain stable on device at the current version.

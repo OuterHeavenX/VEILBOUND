@@ -2,7 +2,7 @@
 
 **Document owner:** ORACLE — Game Director & Planning  
 **Repository:** `OuterHeavenX/VEILBOUND`  
-**Current development branch:** `feature/sunken-archive-foundation`  
+**Current development branch:** `claude/todo-implementation-td5zeq`  
 **Current playable version:** `v0.3.3-threshold`  
 **Roadmap status:** ACTIVE  
 **Last roadmap update:** 2026-08-30
@@ -13,6 +13,7 @@
 
 Before meaningful implementation work, read this file plus:
 
+- `README.md`
 - `AGENTS.md`
 - `docs/CANON.md`
 - `docs/ARCHITECTURE.md`
@@ -21,6 +22,7 @@ Before meaningful implementation work, read this file plus:
 - `docs/COMBAT.md`
 - `docs/PROGRESSION.md`
 - `docs/SUNKEN_ARCHIVE.md`
+- `assets/ATTRIBUTION.md`
 
 Every meaningful milestone updates the relevant documentation. Implementation completion and owner-device acceptance are separate states.
 
@@ -40,17 +42,22 @@ One codebase must remain first-class on phone, tablet, desktop, keyboard, touch 
 
 ## 2. Non-negotiable rules
 
-- `index.html` remains the canonical zero-build launch path.
-- Static hosting must work without npm/bundling for the game runtime.
-- Mobile is a primary target, not a later port.
-- Backtracking must reward memory rather than create travel tax.
-- Persistent world state uses stable authored IDs and Save V1 flags.
-- Ordinary enemies may repopulate; bosses/story kills opt into persistence.
-- Axiom powers should affect more than one system where practical.
-- Resonance is selective authored interaction, not generic detective vision.
-- Cutscenes stay concise and retry-aware.
-- Third-party art currently in the repository remains placeholder/development material until licensing and final-art direction are resolved.
-- No major full-game expansion until the complete vertical slice is stable and accepted.
+These are numbered so other documents can cite one and be checked. Do not renumber a rule
+that is already cited; add new rules at the end.
+
+- **2.1** `index.html` remains the canonical zero-build launch path.
+- **2.2** Static hosting must work without npm/bundling for the game runtime.
+- **2.3** Mobile is a primary target, not a later port.
+- **2.4** Backtracking must reward memory rather than create travel tax.
+- **2.5** Persistent world state uses stable authored IDs and Save V1 flags.
+- **2.6** Ordinary enemies may repopulate; bosses/story kills opt into persistence.
+- **2.7** Axiom powers should affect more than one system where practical.
+- **2.8** Resonance is selective authored interaction, not generic detective vision.
+- **2.9** Cutscenes stay concise and retry-aware.
+- **2.10** Third-party art currently in the repository remains placeholder/development material until licensing and final-art direction are resolved.
+- **2.11** No major full-game expansion until the complete vertical slice is stable and accepted.
+- **2.12** VEILBOUND's shipped art, audio and UI must be an original identity rather than another game's visual language. (`AGENTS.md` design pillar 9.)
+- **2.13** Documentation states what is true of the current build. A claim that has stopped being true is a defect, not stale prose.
 
 ---
 
@@ -135,6 +142,24 @@ One codebase must remain first-class on phone, tablet, desktop, keyboard, touch 
 - [x] `PROTOCOL TRACE: TETHER.` foreshadowing
 - [x] deeper Archive bulkhead intentionally sealed
 - [ ] owner-device acceptance of v0.3.0
+
+---
+
+## 3.1 Owner-device acceptance backlog
+
+Implementation completion and owner-device acceptance are separate states, and the gap is now
+four releases wide. Nothing below is a code defect; all of it is untested on the owner's
+hardware.
+
+| Version | What it added | Checklist |
+|---|---|---|
+| `v0.3.0-archive` | Eastern Descent, Vestibule, Catalog Rotunda | `docs/SUNKEN_ARCHIVE.md` § Acceptance — opening pass |
+| `v0.3.1-sound` | region beds, gameplay cues, centring, summoned stick | `docs/PROGRESS.md` § v0.3.1 |
+| `v0.3.2-cistern` | Cistern Walk, Sluice Gallery, Reliquary Span, shortcut | `docs/SUNKEN_ARCHIVE.md` § Cistern wing acceptance |
+| `v0.3.3-threshold` | landscape gate, key-art title | `docs/PROGRESS.md` § v0.3.3 |
+
+One device pass on `v0.3.3-threshold` covers all four, since each release carries the ones
+before it. That pass is the single largest open item in this roadmap.
 
 ---
 

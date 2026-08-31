@@ -14,6 +14,18 @@ from static hosting or straight off the filesystem, and that is a non-negotiable
 
 Landscape only: the world is authored at 960x540, so a phone held upright is asked to turn.
 
+## Greyhaven town source
+
+`vendor/greyhaven` is a submodule holding a Blender-generated build of Greyhaven
+(town plates, 19 interiors, collision, nav grid, markers) plus a Phaser harness
+for walking it. It is **development material under 2.10**, not shipped art —
+it is pixel art and 2.14 sets the register as painted. See
+`docs/GREYHAVEN_TOWN.md` before using any of it.
+
+```bash
+git submodule update --init --recursive
+```
+
 ## Current state — `v0.4.7-views`
 
 Playable end to end from the title through Greyhaven, the Hollow March and the first six
